@@ -156,6 +156,17 @@ app.get('/api/ice-servers', authenticateToken, (_req: AuthRequest, res) => {
 // Socket.io
 setupSocket(io);
 
+// Раздача фронтенда (продакшен)
+if (process.env.NODE_ENV === 'production') {
+  const webDist = path.join(__dirname, '../../web/dist');
+  app.use(express.static(webDist));
+  
+  // Все неизвестные маршруты → index.html (для SPA роутинга)
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(webDist, 'index.html'));
+  });
+}
+
 // При старте сервера сбросить всех в offline
 prisma.user.updateMany({ data: { isOnline: false, lastSeen: new Date() } })
   .then(() => console.log('  ✔ Все пользователи сброшены в offline'))
