@@ -134,9 +134,14 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
   addMessage: (message) => {
     const userId = useAuthStore.getState().user?.id;
+    // Normalize media array
+    if (!Array.isArray(message.media)) {
+      message.media = [];
+    }
+
     set((state) => {
       const chatMessages = state.messages[message.chatId] || [];
-      
+
       // Check if message already exists
       if (chatMessages.some((m) => m.id === message.id)) return state;
 

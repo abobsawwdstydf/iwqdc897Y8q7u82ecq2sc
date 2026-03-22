@@ -289,7 +289,7 @@ export function setupSocket(io: Server) {
         if (scheduledAt && scheduledAt.getTime() > Date.now()) {
           socket.emit('new_message', {
             ...message,
-            readBy: [{ userId }],
+            readBy: message.readBy || [{ userId }],
           });
 
           const delay = Math.min(scheduledAt.getTime() - Date.now(), MAX_TIMEOUT);
@@ -395,7 +395,7 @@ export function setupSocket(io: Server) {
 
         io.to(`chat:${data.chatId}`).emit('new_message', {
           ...message,
-          readBy: [{ userId }],
+          readBy: message.readBy || [{ userId }],
         });
       } catch (error) {
         console.error('Send message error:', error);

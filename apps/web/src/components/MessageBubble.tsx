@@ -305,7 +305,7 @@ function MessageBubble({
     );
   }
 
-  const media = message.media || [];
+  const media = Array.isArray(message.media) ? message.media : [];
   const hasImage = media.some((m) => m.type === 'image');
   const hasVoice = message.type === 'voice' || media.some((m) => m.type === 'voice');
   const hasAudio = !hasVoice && (message.type === 'audio' || media.some((m) => m.type === 'audio'));
