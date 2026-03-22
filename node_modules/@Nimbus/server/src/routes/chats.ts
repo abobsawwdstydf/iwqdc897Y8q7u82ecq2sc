@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Response } from 'express';
 import { Prisma } from '@prisma/client';
 import { prisma } from '../db';
 import { AuthRequest } from '../middleware/auth';
@@ -7,20 +7,22 @@ import multer from 'multer';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
+// Multer file interface
+interface MulterFile {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  destination: string;
+  filename: string;
+  path: string;
+  size: number;
+}
+
 const router = Router();
 
-// Compact user select for chat member lists (no bio/birthday)
-const CHAT_USER_SELECT = {
-  id: true,
-  username: true,
-  displayName: true,
-  avatar: true,
-  isOnline: true,
-  lastSeen: true,
-};
-
 // Получить все чаты пользователя
-router.get('/', async (req: AuthRequest, res) => {
+router.get('/', async (req: AuthRequest, res: Response) => {
   try {
     const chats = await prisma.chat.findMany({
       where: {
@@ -113,7 +115,7 @@ router.get('/', async (req: AuthRequest, res) => {
 // Создать личный чат
 router.post('/personal', async (req: AuthRequest, res) => {
   try {
-    const { userId } = req.body;
+    const { userId } = req.body as { userId?: number };
     if (!userId) {
       res.status(400).json({ error: 'ID пользователя обязателен' });
       return;
@@ -218,7 +220,7 @@ router.post('/favorites', async (req: AuthRequest, res) => {
 // Создать групповой чат
 router.post('/group', async (req: AuthRequest, res) => {
   try {
-    const { name, memberIds } = req.body;
+    const { name, memberIds } = req.body as { name?: string; memberIds?: number[] };
     if (!name || !memberIds || !Array.isArray(memberIds)) {
       res.status(400).json({ error: 'Название и участники обязательны' });
       return;
@@ -263,9 +265,9 @@ router.post('/group', async (req: AuthRequest, res) => {
 });
 
 // Создать канал
-router.post('/channel', async (req: AuthRequest, res) => {
+router.post('/channel', async (req: AuthRequest, res: Response) => {
   try {
-    const { name, username, description, memberIds } = req.body;
+    const { name, username, description, memberIds } = req.body as { name?: string; username?: string; description?: string; memberIds?: number[] };
 
     // Validate name
     if (!name || typeof name !== 'string' || name.trim().length === 0 || name.length > 100) {
@@ -366,10 +368,10 @@ router.get('/:id', async (req: AuthRequest, res) => {
 });
 
 // Обновить группу (только админ)
-router.put('/:id', async (req: AuthRequest, res) => {
+router.put('/:id', async (req: AuthRequest, res: Response) => {
   try {
-    const chatId = parseInt(req.params.id as string, 10);
-    const { name } = req.body;
+    const chatId = parseInt((req.params as { id?: string }).id as string, 10);
+    const { name } = req.body as { name?: string };
 
     const member = await prisma.chatMember.findUnique({
       where: { chatId_userId: { chatId, userId: req.userId! } },
@@ -530,7 +532,7 @@ router.post('/:id/avatars', uploadMultipleAvatars.array('avatars', 100), encrypt
       return;
     }
 
-    const files = req.files as Express.Multer.File[];
+    const files = (req as any).files as MulterFile[];
     
     // Get current max position
     const existingAvatars = await prisma.chatAvatar.findMany({
@@ -596,10 +598,10 @@ router.get('/:id/avatars', async (req: AuthRequest, res) => {
 });
 
 // Обновить порядок аватаров
-router.put('/:id/avatars/reorder', async (req: AuthRequest, res) => {
+router.put('/:id/avatars/reorder', async (req: AuthRequest, res: Response) => {
   try {
-    const chatId = parseInt(req.params.id as string, 10);
-    const { avatarIds } = req.body;
+    const chatId = parseInt((req.params as { id?: string }).id as string, 10);
+    const { avatarIds } = req.body as { avatarIds?: number[] };
 
     if (!avatarIds || !Array.isArray(avatarIds)) {
       res.status(400).json({ error: 'Необходимо указать массив ID' });
@@ -633,10 +635,10 @@ router.put('/:id/avatars/reorder', async (req: AuthRequest, res) => {
 });
 
 // Установить главный аватар
-router.put('/:id/avatars/:avatarId/main', async (req: AuthRequest, res) => {
+router.put('/:id/avatars/:avatarId/main', async (req: AuthRequest, res: Response) => {
   try {
-    const chatId = parseInt(req.params.id as string, 10);
-    const avatarId = parseInt(req.params.avatarId as string, 10);
+    const chatId = parseInt((req.params as { id?: string }).id as string, 10);
+    const avatarId = parseInt((req.params as { avatarId?: string }).avatarId as string, 10);
 
     const member = await prisma.chatMember.findUnique({
       where: { chatId_userId: { chatId, userId: req.userId! } },
@@ -682,10 +684,10 @@ router.put('/:id/avatars/:avatarId/main', async (req: AuthRequest, res) => {
 });
 
 // Удалить аватар
-router.delete('/:id/avatars/:avatarId', async (req: AuthRequest, res) => {
+router.delete('/:id/avatars/:avatarId', async (req: AuthRequest, res: Response) => {
   try {
-    const chatId = parseInt(req.params.id as string, 10);
-    const avatarId = parseInt(req.params.avatarId as string, 10);
+    const chatId = parseInt((req.params as { id?: string }).id as string, 10);
+    const avatarId = parseInt((req.params as { avatarId?: string }).avatarId as string, 10);
 
     const member = await prisma.chatMember.findUnique({
       where: { chatId_userId: { chatId, userId: req.userId! } },
@@ -745,10 +747,10 @@ router.delete('/:id/avatars/:avatarId', async (req: AuthRequest, res) => {
 });
 
 // Добавить участников в группу (только админ)
-router.post('/:id/members', async (req: AuthRequest, res) => {
+router.post('/:id/members', async (req: AuthRequest, res: Response) => {
   try {
-    const chatId = parseInt(req.params.id as string, 10);
-    const { userIds } = req.body;
+    const chatId = parseInt((req.params as { id?: string }).id as string, 10);
+    const { userIds } = req.body as { userIds?: number[] };
 
     if (!userIds || !Array.isArray(userIds) || userIds.length === 0) {
       res.status(400).json({ error: 'Необходимо указать пользователей' });
@@ -801,10 +803,10 @@ router.post('/:id/members', async (req: AuthRequest, res) => {
 });
 
 // Удалить участника из группы (только админ)
-router.delete('/:id/members/:userId', async (req: AuthRequest, res) => {
+router.delete('/:id/members/:userId', async (req: AuthRequest, res: Response) => {
   try {
-    const chatId = parseInt(req.params.id as string, 10);
-    const targetUserId = parseInt(req.params.userId as string, 10);
+    const chatId = parseInt((req.params as { id?: string }).id as string, 10);
+    const targetUserId = parseInt((req.params as { userId?: string }).userId as string, 10);
 
     const member = await prisma.chatMember.findUnique({
       where: { chatId_userId: { chatId, userId: req.userId! } },
@@ -847,9 +849,9 @@ router.delete('/:id/members/:userId', async (req: AuthRequest, res) => {
 });
 
 // Очистить чат для себя
-router.post('/:id/clear', async (req: AuthRequest, res) => {
+router.post('/:id/clear', async (req: AuthRequest, res: Response) => {
   try {
-    const chatId = parseInt(req.params.id as string, 10);
+    const chatId = parseInt((req.params as { id?: string }).id as string, 10);
     const userId = req.userId!;
 
     const chat = await prisma.chat.findUnique({
@@ -894,9 +896,9 @@ router.post('/:id/clear', async (req: AuthRequest, res) => {
 });
 
 // Удалить чат (для текущего пользователя — выйти из чата)
-router.delete('/:id', async (req: AuthRequest, res) => {
+router.delete('/:id', async (req: AuthRequest, res: Response) => {
   try {
-    const chatId = parseInt(req.params.id as string, 10);
+    const chatId = parseInt((req.params as { id?: string }).id as string, 10);
     const userId = req.userId!;
 
     const chat = await prisma.chat.findUnique({
@@ -950,9 +952,9 @@ router.delete('/:id', async (req: AuthRequest, res) => {
 });
 
 // Закрепить / открепить чат
-router.post('/:id/pin', async (req: AuthRequest, res) => {
+router.post('/:id/pin', async (req: AuthRequest, res: Response) => {
   try {
-    const chatId = parseInt(req.params.id as string, 10);
+    const chatId = parseInt((req.params as { id?: string }).id as string, 10);
     const userId = req.userId!;
 
     const member = await prisma.chatMember.findUnique({
@@ -977,10 +979,10 @@ router.post('/:id/pin', async (req: AuthRequest, res) => {
 });
 
 // Пригласить пользователей в канал (только владелец/админ)
-router.post('/:id/invite', async (req: AuthRequest, res) => {
+router.post('/:id/invite', async (req: AuthRequest, res: Response) => {
   try {
-    const chatId = parseInt(req.params.id as string, 10);
-    const { userIds } = req.body;
+    const chatId = parseInt((req.params as { id?: string }).id as string, 10);
+    const { userIds } = req.body as { userIds?: number[] };
 
     if (!userIds || !Array.isArray(userIds) || userIds.length === 0) {
       res.status(400).json({ error: 'Необходимо указать пользователей' });

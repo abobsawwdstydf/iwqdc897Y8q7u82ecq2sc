@@ -38,7 +38,7 @@ router.get('/search', async (req: AuthRequest, res: Response) => {
 router.get('/:id', async (req: AuthRequest, res: Response) => {
   try {
     const user = await prisma.user.findUnique({
-      where: { id: parseInt(req.params.id as string, 10) },
+      where: { id: parseInt((req.params as { id?: string }).id as string, 10) },
       select: USER_SELECT,
     });
 
@@ -56,7 +56,7 @@ router.get('/:id', async (req: AuthRequest, res: Response) => {
 // Загрузить аватар
 router.post('/avatar', uploadUserAvatar.single('avatar'), async (req: AuthRequest, res: Response) => {
   try {
-    if (!req.file) {
+    if (!(req as any).file) {
       res.status(400).json({ error: 'Файл не загружен' });
       return;
     }
@@ -65,7 +65,7 @@ router.post('/avatar', uploadUserAvatar.single('avatar'), async (req: AuthReques
     const currentUser = await prisma.user.findUnique({ where: { id: req.userId }, select: { avatar: true } });
     if (currentUser?.avatar) deleteUploadedFile(currentUser.avatar);
 
-    const avatarUrl = `/uploads/avatars/${req.file.filename}`;
+    const avatarUrl = `/uploads/avatars/${(req as any).file.filename}`;
 
     const user = await prisma.user.update({
       where: { id: req.userId },

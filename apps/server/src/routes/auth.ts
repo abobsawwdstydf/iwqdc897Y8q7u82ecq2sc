@@ -1,6 +1,6 @@
-import { Router } from 'express';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import { Router, Response } from 'express';
+import * as bcrypt from 'bcryptjs';
+import * as jwt from 'jsonwebtoken';
 import { prisma } from '../db';
 import { config } from '../config';
 import { USER_SELECT } from '../shared';
@@ -31,9 +31,9 @@ const FINGERPRINT_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 hours
 const MAX_FINGERPRINT_ATTEMPTS = 3; // Max 3 registrations per fingerprint per day
 
 // Registration endpoint
-router.post('/register', registerLimiter, async (req, res) => {
+router.post('/register', registerLimiter, async (req: AuthRequest, res: Response) => {
   try {
-    const { username, displayName, password, bio, fingerprint, captchaAnswer } = req.body;
+    const { username, displayName, password, bio, fingerprint, captchaAnswer } = req.body as { username?: string; displayName?: string; password?: string; bio?: string; fingerprint?: string; captchaAnswer?: string };
 
     // ── Fingerprint check ──
     if (fingerprint) {
@@ -144,9 +144,9 @@ router.post('/register', registerLimiter, async (req, res) => {
 });
 
 // Вход
-router.post('/login', async (req, res) => {
+router.post('/login', async (req: AuthRequest, res: Response) => {
   try {
-    const { username, password } = req.body;
+    const { username, password } = req.body as { username?: string; password?: string };
 
     if (!username || !password) {
       res.status(400).json({ error: 'Username и пароль обязательны' });
@@ -191,7 +191,7 @@ router.post('/login', async (req, res) => {
 });
 
 // Текущий пользователь — uses authenticateToken middleware instead of duplicating JWT parsing
-router.get('/me', authenticateToken, async (req: AuthRequest, res) => {
+router.get('/me', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.userId },

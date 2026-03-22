@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Response, NextFunction } from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
@@ -53,7 +53,7 @@ app.use(cors({ origin: config.corsOrigins }));
 app.use(express.json({ limit: '10mb' }));
 
 // Serve uploads — decrypts encrypted files on the fly
-app.use('/uploads', (req, res, next) => {
+app.use('/uploads', (req: express.Request, res: Response, next: NextFunction) => {
   // Security headers
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('Content-Security-Policy', "default-src 'none'");
@@ -120,12 +120,12 @@ app.use('/api/stories', apiLimiter, authenticateToken, storyRoutes);
 app.use('/api/friends', apiLimiter, authenticateToken, friendRoutes);
 
 // Проверка здоровья
-app.get('/api/health', (_req, res) => {
+app.get('/api/health', (_req: express.Request, res: Response) => {
   res.json({ status: 'ok', name: 'Nimbus Server' });
 });
 
 // ICE серверы для WebRTC звонков
-app.get('/api/ice-servers', authenticateToken, (_req: AuthRequest, res) => {
+app.get('/api/ice-servers', authenticateToken, (_req: AuthRequest, res: Response) => {
   const iceServers: Array<{ urls: string | string[]; username?: string; credential?: string }> = [];
 
   // STUN серверы
@@ -160,9 +160,9 @@ setupSocket(io);
 if (process.env.NODE_ENV === 'production') {
   const webDist = path.join(__dirname, '../../web/dist');
   app.use(express.static(webDist));
-  
+
   // Все неизвестные маршруты → index.html (для SPA роутинга)
-  app.get('*', (req, res) => {
+  app.get('*', (req: express.Request, res: Response) => {
     res.sendFile(path.join(webDist, 'index.html'));
   });
 }

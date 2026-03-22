@@ -4,6 +4,18 @@ import { Prisma } from '@prisma/client';
 import { AuthRequest } from '../middleware/auth';
 import { SENDER_SELECT, MESSAGE_INCLUDE, uploadFile, deleteUploadedFile, encryptUploadedFile } from '../shared';
 
+// Multer file interface
+interface MulterFile {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  destination: string;
+  filename: string;
+  path: string;
+  size: number;
+}
+
 const router = Router();
 
 // Получить сообщения чата
@@ -75,14 +87,14 @@ router.post('/upload', uploadFile.single('file'), encryptUploadedFile, async (re
 });
 
 // Загрузка нескольких файлов
-router.post('/upload-multiple', uploadFile.array('files', 20), encryptUploadedFile, async (req: AuthRequest, res) => {
+router.post('/upload-multiple', uploadFile.array('files', 20), encryptUploadedFile, async (req: AuthRequest, res: Response) => {
   try {
-    if (!req.files || !Array.isArray(req.files) || req.files.length === 0) {
+    if (!(req as any).files || !Array.isArray((req as any).files) || (req as any).files.length === 0) {
       res.status(400).json({ error: 'Файлы не загружены' });
       return;
     }
 
-    const results = req.files.map((file) => {
+    const results = (req as any).files.map((file: MulterFile) => {
       const fileUrl = `/uploads/${file.filename}`;
       const originalName = Buffer.from(file.originalname, 'latin1').toString('utf8');
       return {
@@ -101,10 +113,10 @@ router.post('/upload-multiple', uploadFile.array('files', 20), encryptUploadedFi
 });
 
 // Редактировать сообщение
-router.put('/:id', async (req: AuthRequest, res) => {
+router.put('/:id', async (req: AuthRequest, res: Response) => {
   try {
-    const { content } = req.body;
-    const id = parseInt(req.params.id as string, 10);
+    const { content } = req.body as { content?: string };
+    const id = parseInt((req.params as { id?: string }).id as string, 10);
 
     if (!content || typeof content !== 'string' || content.length > 10000) {
       res.status(400).json({ error: 'Содержимое обязательно и не должно превышать 10000 символов' });

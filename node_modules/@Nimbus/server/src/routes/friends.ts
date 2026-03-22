@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Response } from 'express';
 import { prisma } from '../db';
 import { AuthRequest } from '../middleware/auth';
 import { USER_SELECT } from '../shared';
@@ -6,7 +6,7 @@ import { USER_SELECT } from '../shared';
 const router = Router();
 
 // ─── Get accepted friends list ───────────────────────────────────────
-router.get('/', async (req: AuthRequest, res) => {
+router.get('/', async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.userId!;
 
@@ -74,10 +74,10 @@ router.get('/outgoing', async (req: AuthRequest, res) => {
 });
 
 // ─── Get friendship status with a user ───────────────────────────────
-router.get('/status/:userId', async (req: AuthRequest, res) => {
+router.get('/status/:userId', async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.userId!;
-    const targetId = parseInt(req.params.userId as string, 10);
+    const targetId = parseInt((req.params as { userId?: string }).userId as string, 10);
 
     if (userId === targetId) {
       res.json({ status: 'self' });
@@ -108,10 +108,10 @@ router.get('/status/:userId', async (req: AuthRequest, res) => {
 });
 
 // ─── Send friend request ─────────────────────────────────────────────
-router.post('/request', async (req: AuthRequest, res) => {
+router.post('/request', async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.userId!;
-    const { friendId } = req.body;
+    const { friendId } = req.body as { friendId?: number };
 
     if (!friendId || typeof friendId !== 'number') {
       res.status(400).json({ error: 'ID пользователя обязателен' });
@@ -183,10 +183,10 @@ router.post('/request', async (req: AuthRequest, res) => {
 });
 
 // ─── Accept friend request ───────────────────────────────────────────
-router.post('/:id/accept', async (req: AuthRequest, res) => {
+router.post('/:id/accept', async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.userId!;
-    const friendshipId = parseInt(req.params.id as string, 10);
+    const friendshipId = parseInt((req.params as { id?: string }).id as string, 10);
 
     const friendship = await prisma.friendship.findUnique({ where: { id: friendshipId } });
 
@@ -209,10 +209,10 @@ router.post('/:id/accept', async (req: AuthRequest, res) => {
 });
 
 // ─── Decline friend request ──────────────────────────────────────────
-router.post('/:id/decline', async (req: AuthRequest, res) => {
+router.post('/:id/decline', async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.userId!;
-    const friendshipId = parseInt(req.params.id as string, 10);
+    const friendshipId = parseInt((req.params as { id?: string }).id as string, 10);
 
     const friendship = await prisma.friendship.findUnique({ where: { id: friendshipId } });
 
@@ -234,10 +234,10 @@ router.post('/:id/decline', async (req: AuthRequest, res) => {
 });
 
 // ─── Remove friend ───────────────────────────────────────────────────
-router.delete('/:id', async (req: AuthRequest, res) => {
+router.delete('/:id', async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.userId!;
-    const friendshipId = parseInt(req.params.id as string, 10);
+    const friendshipId = parseInt((req.params as { id?: string }).id as string, 10);
 
     const friendship = await prisma.friendship.findUnique({ where: { id: friendshipId } });
 
