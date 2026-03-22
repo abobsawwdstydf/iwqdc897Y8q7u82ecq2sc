@@ -9,8 +9,10 @@
     "build": "npm run build -w apps/server && npm run build -w apps/web",
     "db:push": "npm run db:push -w apps/server",
     "db:seed": "npm run db:seed -w apps/server",
-    "setup": "npm install && npm run db:push && npm run db:seed",
-    "start": "npm run dev"
+    "setup": "npm install && npm run build && npm run db:setup",
+    "db:setup": "cd apps/server && npx prisma generate && npx prisma db push --accept-data-loss && npx prisma db seed",
+    "start": "npm run dev",
+    "start:server": "npm run start -w apps/server"
   },
   "devDependencies": {
     "concurrently": "^9.1.0"
