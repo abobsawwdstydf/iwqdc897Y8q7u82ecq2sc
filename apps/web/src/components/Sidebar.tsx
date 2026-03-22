@@ -21,7 +21,7 @@ import UserProfile from './UserProfile';
 import SideMenu from './SideMenu';
 import StoryViewer, { CreateStoryModal } from './StoryViewer';
 
-const API_URL = import.meta.env.VITE_API_URL || '';
+const API_URL = (import.meta as any).env?.VITE_API_URL || '';
 
 interface SidebarProps {
   onChatSelect?: () => void;

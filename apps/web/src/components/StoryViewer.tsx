@@ -8,7 +8,7 @@ import { getInitials, generateAvatarColor } from '../lib/utils';
 import Avatar from './Avatar';
 import { StoryGroup } from '../lib/types';
 
-const API_URL = import.meta.env.VITE_API_URL || '';
+const API_URL = (import.meta as any).env?.VITE_API_URL || '';
 
 const STORY_BG_COLORS = [
   '#6366f1', '#8b5cf6', '#ec4899', '#f43f5e', '#ef4444',

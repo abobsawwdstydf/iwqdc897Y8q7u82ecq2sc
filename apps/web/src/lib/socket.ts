@@ -5,11 +5,11 @@ let socket: Socket | null = null;
 // Get API URL from environment or derive from current origin
 const getApiUrl = () => {
   // Check if we have an explicit API URL in environment
-  const envUrl = import.meta.env.VITE_API_URL;
+  const envUrl = (import.meta as any).env?.VITE_API_URL;
   if (envUrl) {
     return envUrl.replace('/api', '');
   }
-  
+
   // For production or when accessed via IP, use the same origin
   return window.location.origin;
 };
