@@ -22,6 +22,8 @@ export interface AuthRequest extends Request {
   file?: MulterFile;
   files?: MulterFile[];
   headers?: Record<string, string | undefined>;
+  ip?: string;
+  socket?: { remoteAddress?: string };
 }
 
 export function authenticateToken(req: AuthRequest, res: Response, next: NextFunction) {

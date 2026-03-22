@@ -21,6 +21,16 @@ interface MulterFile {
 
 const router = Router();
 
+// Compact user select for chat member lists (no bio/birthday)
+const CHAT_USER_SELECT = {
+  id: true,
+  username: true,
+  displayName: true,
+  avatar: true,
+  isOnline: true,
+  lastSeen: true,
+};
+
 // Получить все чаты пользователя
 router.get('/', async (req: AuthRequest, res: Response) => {
   try {
