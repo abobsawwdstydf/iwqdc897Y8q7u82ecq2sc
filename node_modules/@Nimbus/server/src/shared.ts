@@ -1,9 +1,21 @@
-import multer, { DiskStorageOptions } from 'multer';
+import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
 import { Request, Response, NextFunction } from 'express';
 import { encryptFileInPlace, isEncryptionEnabled } from './encrypt';
+
+// Multer file interface
+interface MulterFile {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  destination: string;
+  filename: string;
+  path: string;
+  size: number;
+}
 
 // ─── Prisma select objects ────────────────────────────────────────────
 
@@ -86,8 +98,8 @@ export const ALLOWED_IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.gif'
 
 function createAvatarStorage(prefix = '') {
   return multer.diskStorage({
-    destination: (_req: Request, _file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) => cb(null, avatarsDir),
-    filename: (_req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) => {
+    destination: (_req: Request, _file: MulterFile, cb: (error: Error | null, destination: string) => void) => cb(null, avatarsDir),
+    filename: (_req: Request, file: MulterFile, cb: (error: Error | null, filename: string) => void) => {
       const ext = path.extname(file.originalname).toLowerCase();
       cb(null, `${prefix}${uuidv4()}${ext}`);
     },
@@ -98,7 +110,7 @@ function createAvatarStorage(prefix = '') {
 export const uploadUserAvatar = multer({
   storage: createAvatarStorage(''),
   limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter: (_req: Request, file: Express.Multer.File, cb: (error: Error | null, acceptFile?: boolean) => void) => {
+  fileFilter: (_req: Request, file: MulterFile, cb: (error: Error | null, acceptFile?: boolean) => void) => {
     const ext = path.extname(file.originalname).toLowerCase();
     if (file.mimetype.startsWith('image/') && ALLOWED_IMAGE_EXTENSIONS.has(ext)) cb(null, true);
     else cb(new Error('Только изображения (jpg, png, gif, webp, avif)'));
@@ -109,7 +121,7 @@ export const uploadUserAvatar = multer({
 export const uploadGroupAvatar = multer({
   storage: createAvatarStorage('group-'),
   limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter: (_req: Request, file: Express.Multer.File, cb: (error: Error | null, acceptFile?: boolean) => void) => {
+  fileFilter: (_req: Request, file: MulterFile, cb: (error: Error | null, acceptFile?: boolean) => void) => {
     const ext = path.extname(file.originalname).toLowerCase();
     if (file.mimetype.startsWith('image/') && ALLOWED_IMAGE_EXTENSIONS.has(ext)) cb(null, true);
     else cb(new Error('Только изображения (jpg, png, gif, webp, avif)'));
@@ -137,14 +149,14 @@ const ALLOWED_DOCUMENT_EXTENSIONS = new Set(['.pdf', '.doc', '.docx', '.txt', '.
 /** Multer middleware for general file uploads (max 20GB). */
 export const uploadFile = multer({
   storage: multer.diskStorage({
-    destination: (_req: Request, _file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) => cb(null, uploadsRoot),
-    filename: (_req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) => {
+    destination: (_req: Request, _file: MulterFile, cb: (error: Error | null, destination: string) => void) => cb(null, uploadsRoot),
+    filename: (_req: Request, file: MulterFile, cb: (error: Error | null, filename: string) => void) => {
       const ext = path.extname(file.originalname).toLowerCase();
       cb(null, `${uuidv4()}${ext}`);
     },
   }),
   limits: { fileSize: 20 * 1024 * 1024 * 1024 },
-  fileFilter: (_req: Request, file: Express.Multer.File, cb: (error: Error | null, acceptFile?: boolean) => void) => {
+  fileFilter: (_req: Request, file: MulterFile, cb: (error: Error | null, acceptFile?: boolean) => void) => {
     const ext = path.extname(file.originalname).toLowerCase();
 
     // Allow audio files explicitly

@@ -1,9 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 import { config } from '../config';
 
 export interface AuthRequest extends Request {
   userId?: number;
+  query?: Record<string, string | undefined>;
+  params?: Record<string, string>;
+  body?: Record<string, unknown>;
+  file?: Express.Multer.File;
 }
 
 export function authenticateToken(req: AuthRequest, res: Response, next: NextFunction) {

@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Response } from 'express';
 import { prisma } from '../db';
 import { Prisma } from '@prisma/client';
 import { AuthRequest } from '../middleware/auth';
@@ -130,9 +130,9 @@ router.put('/:id', async (req: AuthRequest, res) => {
 });
 
 // Удалить сообщение
-router.delete('/:id', async (req: AuthRequest, res) => {
+router.delete('/:id', async (req: AuthRequest, res: Response) => {
   try {
-    const id = parseInt(req.params.id as string, 10);
+    const id = parseInt((req.params as { id?: string }).id as string, 10);
 
     const message = await prisma.message.findUnique({
       where: { id },
@@ -163,10 +163,10 @@ router.delete('/:id', async (req: AuthRequest, res) => {
 });
 
 // Получить общие медиа/файлы/ссылки чата
-router.get('/chat/:chatId/shared', async (req: AuthRequest, res) => {
+router.get('/chat/:chatId/shared', async (req: AuthRequest, res: Response) => {
   try {
-    const chatId = parseInt(req.params.chatId as string, 10);
-    const { type } = req.query; // 'media' | 'files' | 'links'
+    const chatId = parseInt((req.params as { chatId?: string }).chatId as string, 10);
+    const { type } = req.query as { type?: string };
 
     // Check membership
     const member = await prisma.chatMember.findUnique({

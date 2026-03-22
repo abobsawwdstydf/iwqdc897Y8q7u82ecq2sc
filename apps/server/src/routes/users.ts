@@ -1,4 +1,5 @@
 import { Router, Response } from 'express';
+import type { Request } from 'express';
 import { prisma } from '../db';
 import { AuthRequest } from '../middleware/auth';
 import { USER_SELECT, SENDER_SELECT, uploadUserAvatar, deleteUploadedFile, encryptUploadedFile } from '../shared';

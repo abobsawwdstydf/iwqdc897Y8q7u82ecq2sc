@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Response } from 'express';
 import { prisma } from '../db';
 import { AuthRequest } from '../middleware/auth';
 import { deleteUploadedFile } from '../shared';
@@ -8,7 +8,7 @@ const router = Router();
 const STORY_EXPIRY_HOURS = 48;
 
 // Get all active stories (grouped by user) - only stories from last 48 hours
-router.get('/', async (req: AuthRequest, res) => {
+router.get('/', async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.userId!;
     const now = new Date();
@@ -104,10 +104,10 @@ router.get('/', async (req: AuthRequest, res) => {
 });
 
 // Create a story
-router.post('/', async (req: AuthRequest, res) => {
+router.post('/', async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.userId!;
-    const { type, mediaUrl, content, bgColor } = req.body;
+    const { type, mediaUrl, content, bgColor } = req.body as { type?: string; mediaUrl?: string; content?: string; bgColor?: string };
 
     // Validate mediaUrl to prevent path traversal
     if (mediaUrl) {
@@ -142,10 +142,10 @@ router.post('/', async (req: AuthRequest, res) => {
 });
 
 // View a story - 1 view per person per day
-router.post('/:storyId/view', async (req: AuthRequest, res) => {
+router.post('/:storyId/view', async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.userId!;
-    const storyId = parseInt(req.params.storyId as string, 10);
+    const storyId = parseInt((req.params as { storyId?: string }).storyId as string, 10);
 
     // Verify story exists and viewer is the owner or a friend
     const story = await prisma.story.findUnique({ 
@@ -199,10 +199,10 @@ router.post('/:storyId/view', async (req: AuthRequest, res) => {
 });
 
 // Get story viewers
-router.get('/:storyId/viewers', async (req: AuthRequest, res) => {
+router.get('/:storyId/viewers', async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.userId!;
-    const storyId = parseInt(req.params.storyId as string, 10);
+    const storyId = parseInt((req.params as { storyId?: string }).storyId as string, 10);
 
     const story = await prisma.story.findUnique({ where: { id: storyId }, select: { userId: true } });
     if (!story || story.userId !== userId) {
@@ -237,9 +237,9 @@ router.get('/:storyId/viewers', async (req: AuthRequest, res) => {
 });
 
 // Get all user stories (for profile tab) - includes expired stories
-router.get('/user/:userId/all', async (req: AuthRequest, res) => {
+router.get('/user/:userId/all', async (req: AuthRequest, res: Response) => {
   try {
-    const targetUserId = parseInt(req.params.userId as string, 10);
+    const targetUserId = parseInt((req.params as { userId?: string }).userId as string, 10);
     const requestingUserId = req.userId!;
 
     // Check if users are friends or viewing own stories
@@ -294,10 +294,10 @@ router.get('/user/:userId/all', async (req: AuthRequest, res) => {
 });
 
 // Delete own story
-router.delete('/:storyId', async (req: AuthRequest, res) => {
+router.delete('/:storyId', async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.userId!;
-    const storyId = parseInt(req.params.storyId as string, 10);
+    const storyId = parseInt((req.params as { storyId?: string }).storyId as string, 10);
 
     const story = await prisma.story.findUnique({ where: { id: storyId } });
     if (!story || story.userId !== userId) {
