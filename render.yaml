@@ -14,23 +14,14 @@ services:
       - key: NODE_ENV
         value: production
       - key: JWT_SECRET
-        generateValue: true
+        value: 36427af4278b7198dc850c7235c4c85feda7275d89fe3d360c79a1af94579765
       - key: DATABASE_URL
-        fromDatabase:
-          name: nimbus-db
-          property: connectionString
+        value: postgresql://nimbus:VMEWWc3q2eUrIIVjbgkBRnDlZv9RRBrg@dpg-d70231p5pdvs738vfg0g-a.frankfurt-postgres.render.com/nimbus_wnbp
       - key: CORS_ORIGINS
         value: "*"
       - key: ENCRYPTION_KEY
-        generateValue: true
+        value: 36427af4278b7198dc850c7235c4c85feda7275d89fe3d360c79a1af94579765
       - key: MAX_REGISTRATIONS_PER_IP
         value: "5"
       - key: PORT
         value: "3001"
-
-databases:
-  - name: nimbus-db
-    databaseName: nimbus
-    user: nimbus
-    plan: free
-    region: frankfurt
