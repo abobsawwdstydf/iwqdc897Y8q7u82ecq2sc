@@ -412,16 +412,16 @@ export function CreateStoryModal({ onClose, onCreated }: CreateStoryModalProps) 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center"
+      className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4 overflow-y-auto"
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}
     >
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="w-full max-w-[400px] rounded-2xl glass-strong border border-white/10 overflow-hidden"
+        className="w-full max-w-[400px] max-h-[90vh] rounded-2xl glass-strong border border-white/10 overflow-hidden flex flex-col"
       >
-        <div className="p-4 border-b border-white/10 flex items-center justify-between">
+        <div className="p-4 border-b border-white/10 flex items-center justify-between shrink-0">
           <h3 className="text-lg font-semibold text-white">{t('newStory')}</h3>
           <button onClick={onClose} className="text-zinc-400 hover:text-white">
             <X size={18} />
@@ -429,7 +429,7 @@ export function CreateStoryModal({ onClose, onCreated }: CreateStoryModalProps) 
         </div>
 
         {/* Mode tabs */}
-        <div className="flex border-b border-white/10">
+        <div className="flex border-b border-white/10 shrink-0">
           <button
             onClick={() => setMode('text')}
             className={`flex-1 py-2.5 text-sm font-medium transition-colors ${mode === 'text' ? 'text-Nimbus-400 border-b-2 border-Nimbus-400' : 'text-zinc-400'}`}
@@ -458,7 +458,7 @@ export function CreateStoryModal({ onClose, onCreated }: CreateStoryModalProps) 
           onChange={handleImageSelect}
         />
 
-        <div className="p-4">
+        <div className="p-4 overflow-y-auto flex-1 min-h-0">
           {mode === 'text' ? (
             <>
               {/* Preview */}
@@ -526,7 +526,7 @@ export function CreateStoryModal({ onClose, onCreated }: CreateStoryModalProps) 
           <button
             onClick={handleCreate}
             disabled={isUploading || (mode === 'text' && !text.trim()) || ((mode === 'image' || mode === 'video') && !imageFile)}
-            className="w-full py-2.5 rounded-xl bg-accent hover:bg-accent-hover text-white text-sm font-medium transition-colors disabled:opacity-50"
+            className="w-full py-2.5 rounded-xl bg-accent hover:bg-accent-hover text-white text-sm font-medium transition-colors disabled:opacity-50 shrink-0 mt-auto"
           >
             {isUploading ? '...' : t('publishStory')}
           </button>

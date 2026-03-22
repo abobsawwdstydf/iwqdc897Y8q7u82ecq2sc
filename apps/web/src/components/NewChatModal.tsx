@@ -142,12 +142,12 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto"
         onClick={(e) => e.target === e.currentTarget && onClose()}
       >
-        <div className="w-full max-w-md rounded-2xl glass-strong shadow-2xl overflow-hidden" role="dialog" aria-modal="true" aria-label={t('newChat')}>
+        <div className="w-full max-w-md max-h-[90vh] rounded-2xl glass-strong shadow-2xl overflow-hidden flex flex-col" role="dialog" aria-modal="true" aria-label={t('newChat')}>
           {/* Шапка */}
-          <div className="flex items-center justify-between p-4 border-b border-border">
+          <div className="flex items-center justify-between p-4 border-b border-border shrink-0">
             <div className="flex items-center gap-2">
               {mode !== 'menu' && (
                 <button
@@ -178,7 +178,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
 
           {/* Главное меню */}
           {mode === 'menu' && (
-            <div className="p-4 space-y-3">
+            <div className="p-4 space-y-3 overflow-y-auto flex-1 min-h-0">
               <button
                 onClick={() => setMode('group-select')}
                 className="w-full flex items-center gap-3 px-3 py-3 rounded-xl bg-surface-tertiary hover:bg-surface-hover transition-colors border border-border"
@@ -209,7 +209,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
 
           {/* Создание канала */}
           {mode === 'channel' && (
-            <div className="p-4 space-y-4">
+            <div className="p-4 space-y-4 overflow-y-auto flex-1 min-h-0">
               <div>
                 <label className="text-xs text-zinc-400 mb-1 block">{t('channelName')}</label>
                 <input
@@ -277,7 +277,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
               <button
                 onClick={handleCreateChannel}
                 disabled={!channelName.trim() || !channelUsername.trim() || !!usernameError || isCreating}
-                className="w-full py-2.5 rounded-xl bg-accent hover:bg-accent-hover text-white text-sm font-medium transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full py-2.5 rounded-xl bg-accent hover:bg-accent-hover text-white text-sm font-medium transition-colors disabled:opacity-50 flex items-center justify-center gap-2 shrink-0"
               >
                 {isCreating ? (
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -293,7 +293,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
 
           {/* Создание группы - шаг 2 */}
           {mode === 'group-name' && (
-            <div className="p-4 space-y-4">
+            <div className="p-4 space-y-4 overflow-y-auto flex-1 min-h-0">
               <input
                 type="text"
                 placeholder={t('groupNamePlaceholder')}
@@ -333,7 +333,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
               <button
                 onClick={handleCreateGroup}
                 disabled={!groupName.trim() || isCreating}
-                className="w-full py-2.5 rounded-xl bg-accent hover:bg-accent-hover text-white text-sm font-medium transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full py-2.5 rounded-xl bg-accent hover:bg-accent-hover text-white text-sm font-medium transition-colors disabled:opacity-50 flex items-center justify-center gap-2 shrink-0"
               >
                 {isCreating ? (
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -351,7 +351,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
           {mode === 'group-select' && (
             <>
               {/* Поиск */}
-              <div className="p-4 space-y-3">
+              <div className="p-4 space-y-3 overflow-y-auto flex-1 min-h-0">
                 {mode === 'group-select' && selectedUsers.length > 0 && (
                   <div className="flex items-center gap-2 flex-wrap">
                     {selectedUsers.map((u) => (
