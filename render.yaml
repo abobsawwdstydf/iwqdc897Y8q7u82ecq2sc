@@ -7,7 +7,7 @@ services:
     plan: free
     branch: main
     rootDir: .
-    buildCommand: npm install && npm run build -w apps/server && cd apps/server && npx prisma migrate deploy
+    buildCommand: npm install && npm run build -w apps/server && cd apps/server && npx prisma db push
     startCommand: node apps/server/dist/index.js
     healthCheckPath: /api/health
     envVars:
