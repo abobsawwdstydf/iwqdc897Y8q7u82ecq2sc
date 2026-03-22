@@ -1,5 +1,5 @@
 import { Server, Socket } from 'socket.io';
-import jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 import { prisma } from '../db';
 import { config } from '../config';
 import { SENDER_SELECT, deleteUploadedFile } from '../shared';
