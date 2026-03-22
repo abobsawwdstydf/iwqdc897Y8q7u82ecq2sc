@@ -35,6 +35,8 @@ const io = new Server(server, {
       }
       // Check against allowed origins
       if (config.corsOrigins.includes(origin)) return callback(null, true);
+      // In production, allow the render domain
+      if (origin?.includes('onrender.com')) return callback(null, true);
       // In development, allow all
       if (process.env.NODE_ENV !== 'production') {
         return callback(null, true);
