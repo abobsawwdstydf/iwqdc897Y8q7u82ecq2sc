@@ -50,20 +50,26 @@ Root Directory: (оставь пустым)
 Runtime: Node
 ```
 
-### Build & Start Commands
+### Build & Start Commands (ИСПРАВЛЕНО!)
 ```
-Build Command: npm install && npm run build
+Build Command: npm install && NODE_OPTIONS="--max-old-space-size=2048" npm run build
 
-Start Command: npm run prod
+Start Command: node apps/server/dist/index.js
 ```
+
+**⚠️ ВАЖНО:**
+- `NODE_OPTIONS` увеличивает память до 2GB (иначе падает сборка)
+- `Start Command` запускает готовый сервер напрямую
 
 ### Instance Type
 ```
-Type: Free
+Type: Starter ($7/мес)
 ```
 
-**⚠️ Free тариф засыпает через 15 мин без активности!**
-Для продакшена лучше **Starter ($7/мес)**
+**⚠️ Free тариф НЕ рекомендуется:**
+- Засыпает через 15 мин
+- Мало памяти (512MB) → сборка падает
+- Для тестов ок, для продакшена — Starter
 
 ---
 

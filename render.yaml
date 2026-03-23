@@ -1,35 +1,46 @@
-﻿services:
-  # Backend + Frontend service
+﻿# ============================================
+# Render.com Configuration
+# ============================================
+
+services:
+  # Web Service
   - type: web
-    name: Nexo-messenger
+    name: nexo-messenger
     env: node
     region: frankfurt
-    plan: free
-    branch: main
-    rootDir: .
-    buildCommand: npm install && cd apps/server && node ../../node_modules/prisma/build/index.js generate --schema=./prisma/schema.prisma && node ../../node_modules/prisma/build/index.js db push --schema=./prisma/schema.prisma && cd ../.. && npm run build
+    plan: starter
+    buildCommand: npm install && NODE_OPTIONS="--max-old-space-size=2048" npm run build
     startCommand: node apps/server/dist/index.js
-    healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production
-      - key: JWT_SECRET
-        value: 36427af4278b7198dc850c7235c4c85feda7275d89fe3d360c79a1af94579765
+      - key: PORT
+        value: 3001
       - key: DATABASE_URL
-        value: postgresql://Nexo:VMEWWc3q2eUrIIVjbgkBRnDlZv9RRBrg@dpg-d70231p5pdvs738vfg0g-a.frankfurt-postgres.render.com/Nexo_wnbp
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: ENCRYPTION_KEY
+        sync: false
+      - key: MASTER_KEY
+        sync: false
       - key: CORS_ORIGINS
         value: "*"
-      - key: ENCRYPTION_KEY
-        value: 36427af4278b7198dc850c7235c4c85feda7275d89fe3d360c79a1af94579765
       - key: MAX_REGISTRATIONS_PER_IP
-        value: "5"
-      - key: PORT
-        value: "3001"
+        value: 22
+      - key: MAX_FILE_SIZE
+        value: 53687091200
+      - key: CHUNK_SIZE
+        value: 19922944
+      - key: DB_ENCRYPTION_ENABLED
+        value: "true"
       - key: TELEGRAM_BOT_TOKENS
-        value: 8758209438:AAEnaXcJ7ke88fjjHNPwQVTt_u9LYrSzPFk,8748554768:AAEnJcHklmilbjih9glo3GITnQXSx4YmM_8,8554202189:AAGN0wLfcgkqK3KJ9XOJFl40rp2kjkIcm1Y,8744960493:AAHB5bn3VxlZWKJjCr70yLYJnVTyXp2zHIs,8687986079:AAGPYjnq4gdXCkf2wT81f0l2tQalKCIIyds,8141008503:AAEaCM1RrN2ppbZmUzhpW4EeLUgT1qQ2QS0,8758985233:AAF7QfRApnccaByBYa1qjGs7u-erQ47OZcQ,8733182475:AAFBitv4g4LVRuvGnssyqHQpttBydeAda9Y,8774720953:AAGvExABKj4Z-DYfKdqF-OMEdoeySeOeOoY,8674460757:AAFm7WVkDx4ISkx22toTQyrQUeGQfLdF8QM
+        sync: false
       - key: TELEGRAM_CHANNEL_IDS
-        value: -1003850596987,-1003878106202,-1003738083520,-1003868880877
+        sync: false
       - key: DISCORD_WEBHOOK_URLS
-        value: https://discord.com/api/webhooks/1485562630663049298/N2zoK3IJrfFEEuzQldGF835RHUkb3qBS7WFHDknhJ6ZsmoZfF8tLtl_GyHxfMgcjbYbs,https://discord.com/api/webhooks/1485563746725265418/2mDS_yV88cn3rzPifyLmLdSVJxm3mkC-CdkvCBUv-lFU_NCbGP9hQ5ajjiUFoGGxDZQ7
+        sync: false
       - key: ADMIN_TOKEN
-        value: qwertyuiopasd
+        sync: false
+      - key: REDIS_URL
+        sync: false
