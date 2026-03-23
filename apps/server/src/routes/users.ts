@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Router, Response } from 'express';
 import type { Request } from 'express';
 import { prisma } from '../db';
@@ -6,7 +6,7 @@ import { USER_SELECT, SENDER_SELECT, uploadUserAvatar, deleteUploadedFile, encry
 
 const router = Router();
 
-// Поиск пользователей
+// РџРѕРёСЃРє РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
 router.get('/search', async (req: Request, res: Response) => {
   try {
     const { q } = req.query as { q?: string };
@@ -30,11 +30,11 @@ router.get('/search', async (req: Request, res: Response) => {
     res.json(users);
   } catch (error) {
     console.error('Search users error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Профиль пользователя
+// РџСЂРѕС„РёР»СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 router.get('/:id', async (req: Request, res: Response) => {
   try {
     const user = await prisma.user.findUnique({
@@ -43,21 +43,21 @@ router.get('/:id', async (req: Request, res: Response) => {
     });
 
     if (!user) {
-      res.status(404).json({ error: 'Пользователь не найден' });
+      res.status(404).json({ error: 'РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РЅР°Р№РґРµРЅ' });
       return;
     }
 
     res.json(user);
   } catch (error) {
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Загрузить аватар
+// Р—Р°РіСЂСѓР·РёС‚СЊ Р°РІР°С‚Р°СЂ
 router.post('/avatar', uploadUserAvatar.single('avatar'), async (req: Request, res: Response) => {
   try {
     if (!(req as any).file) {
-      res.status(400).json({ error: 'Файл не загружен' });
+      res.status(400).json({ error: 'Р¤Р°Р№Р» РЅРµ Р·Р°РіСЂСѓР¶РµРЅ' });
       return;
     }
 
@@ -76,11 +76,11 @@ router.post('/avatar', uploadUserAvatar.single('avatar'), async (req: Request, r
     res.json(user);
   } catch (error: any) {
     console.error('Avatar upload error:', error);
-    res.status(500).json({ error: error?.message || 'Ошибка загрузки аватара' });
+    res.status(500).json({ error: error?.message || 'РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё Р°РІР°С‚Р°СЂР°' });
   }
 });
 
-// Удалить аватар
+// РЈРґР°Р»РёС‚СЊ Р°РІР°С‚Р°СЂ
 router.delete('/avatar', async (req: Request, res: Response) => {
   try {
     // Delete file from disk
@@ -94,27 +94,27 @@ router.delete('/avatar', async (req: Request, res: Response) => {
     });
     res.json(user);
   } catch (error) {
-    res.status(500).json({ error: 'Ошибка удаления аватара' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ Р°РІР°С‚Р°СЂР°' });
   }
 });
 
-// Обновить профиль (username НЕ меняется!)
+// РћР±РЅРѕРІРёС‚СЊ РїСЂРѕС„РёР»СЊ (username РќР• РјРµРЅСЏРµС‚СЃСЏ!)
 router.put('/profile', async (req: Request, res: Response) => {
   try {
     const { displayName, bio, birthday } = req.body as { displayName?: string; bio?: string; birthday?: string };
 
     // Validate field lengths
     if (displayName !== undefined && (typeof displayName !== 'string' || displayName.length === 0 || displayName.length > 50)) {
-      res.status(400).json({ error: 'Имя должно быть от 1 до 50 символов' });
+      res.status(400).json({ error: 'РРјСЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РѕС‚ 1 РґРѕ 50 СЃРёРјРІРѕР»РѕРІ' });
       return;
     }
     if (bio !== undefined && bio !== null && (typeof bio !== 'string' || bio.length > 500)) {
-      res.status(400).json({ error: 'Био должно быть не длиннее 500 символов' });
+      res.status(400).json({ error: 'Р‘РёРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РЅРµ РґР»РёРЅРЅРµРµ 500 СЃРёРјРІРѕР»РѕРІ' });
       return;
     }
     if (birthday !== undefined && birthday !== null) {
       if (typeof birthday !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(birthday) || isNaN(Date.parse(birthday))) {
-        res.status(400).json({ error: 'Некорректный формат даты рождения (YYYY-MM-DD)' });
+        res.status(400).json({ error: 'РќРµРєРѕСЂСЂРµРєС‚РЅС‹Р№ С„РѕСЂРјР°С‚ РґР°С‚С‹ СЂРѕР¶РґРµРЅРёСЏ (YYYY-MM-DD)' });
         return;
       }
     }
@@ -132,11 +132,11 @@ router.put('/profile', async (req: Request, res: Response) => {
 
     res.json(user);
   } catch (error) {
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Поиск пользователей и каналов (глобальный поиск)
+// РџРѕРёСЃРє РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ Рё РєР°РЅР°Р»РѕРІ (РіР»РѕР±Р°Р»СЊРЅС‹Р№ РїРѕРёСЃРє)
 router.get('/search-global', async (req: Request, res: Response) => {
   try {
     const { q } = req.query as { q?: string };
@@ -190,11 +190,11 @@ router.get('/search-global', async (req: Request, res: Response) => {
     res.json({ users, channels });
   } catch (error) {
     console.error('Global search error:', error);
-    res.status(500).json({ error: 'Ошибка поиска' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° РїРѕРёСЃРєР°' });
   }
 });
 
-// Поиск сообщений
+// РџРѕРёСЃРє СЃРѕРѕР±С‰РµРЅРёР№
 router.get('/messages/search', async (req: Request, res: Response) => {
   try {
     const { q, chatId } = req.query as { q?: string; chatId?: string };
@@ -267,11 +267,11 @@ router.get('/messages/search', async (req: Request, res: Response) => {
     res.json(filtered);
   } catch (error) {
     console.error('Search messages error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Обновить настройки приватности
+// РћР±РЅРѕРІРёС‚СЊ РЅР°СЃС‚СЂРѕР№РєРё РїСЂРёРІР°С‚РЅРѕСЃС‚Рё
 router.put('/settings', async (req: Request, res: Response) => {
   try {
     const { hideStoryViews } = req.body as { hideStoryViews?: boolean };
@@ -287,7 +287,7 @@ router.put('/settings', async (req: Request, res: Response) => {
 
     res.json(user);
   } catch (error) {
-    res.status(500).json({ error: 'Ошибка сохранения настроек' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРѕС…СЂР°РЅРµРЅРёСЏ РЅР°СЃС‚СЂРѕРµРє' });
   }
 });
 

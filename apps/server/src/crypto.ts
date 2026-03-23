@@ -1,11 +1,11 @@
-/**
- * Nimbus Server-Side Cryptography
+﻿/**
+ * Nexo Server-Side Cryptography
  * Multi-layer encryption for server operations
  */
 
 import crypto from 'crypto';
 
-// ─── Constants ────────────────────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Constants в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
 const ALGORITHMS = {
   aes256gcm: 'aes-256-gcm',
@@ -25,7 +25,7 @@ const CONFIG = {
   chachaNonceLength: 12,
 } as const;
 
-// ─── Types ────────────────────────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Types в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
 export interface EncryptedPayload {
   ciphertext: string;
@@ -49,7 +49,7 @@ export interface AuthenticatedEnvelope {
   timestamp: number;
 }
 
-// ─── Utility Functions ────────────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Utility Functions в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
 function bufferToBase64(buffer: Buffer): string {
   return buffer.toString('base64');
@@ -72,7 +72,7 @@ function constantTimeCompare(a: Buffer, b: Buffer): boolean {
   return result === 0;
 }
 
-// ─── Key Generation ───────────────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Key Generation в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
 /**
  * Generate AES-256 key for symmetric encryption
@@ -147,7 +147,7 @@ export function deriveKeyHKDF(
   );
 }
 
-// ─── Encryption ───────────────────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Encryption в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
 /**
  * Encrypt with AES-256-GCM (primary method)
@@ -267,7 +267,7 @@ export function decryptChaCha20(
   return plaintext.toString('utf8');
 }
 
-// ─── Key Wrapping (RSA) ───────────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Key Wrapping (RSA) в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
 /**
  * Wrap symmetric key with RSA public key
@@ -310,7 +310,7 @@ export function unwrapKeyWithRSA(
   );
 }
 
-// ─── Hashing & Authentication ─────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Hashing & Authentication в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
 /**
  * Hash with SHA-384
@@ -349,7 +349,7 @@ export function verifyHMAC(
   );
 }
 
-// ─── Authenticated Envelopes ──────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Authenticated Envelopes в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
 /**
  * Create authenticated encryption envelope
@@ -399,7 +399,7 @@ export function verifyAndDecryptEnvelope(
   return decryptMessage(envelope.encrypted, encryptionKey);
 }
 
-// ─── Session Management ───────────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Session Management в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
 /**
  * Create secure session with Perfect Forward Secrecy
@@ -443,12 +443,12 @@ export function completeSessionHandshake(
   
   // Derive final key with HKDF
   const saltValue = salt || generateRandomBytes(CONFIG.saltLength);
-  const info = Buffer.from('Nimbus-Session-v1', 'utf8');
+  const info = Buffer.from('Nexo-Session-v1', 'utf8');
   
   return deriveKeyHKDF(sessionKey, saltValue, info);
 }
 
-// ─── Multi-Layer Encryption (Maximum Security) ────────────────────────
+// в”Ђв”Ђв”Ђ Multi-Layer Encryption (Maximum Security) в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
 /**
  * Triple encryption layer for maximum security
@@ -525,9 +525,9 @@ export function tripleDecrypt(
   return decryptMessage(layer1Payload, aesKey);
 }
 
-// ─── Export ───────────────────────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Export в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
-export const NimbusServerCrypto = {
+export const NexoServerCrypto = {
   // Key generation
   generateAESKey,
   generateRSAKeyPair,
@@ -568,4 +568,4 @@ export const NimbusServerCrypto = {
   constantTimeCompare,
 };
 
-export default NimbusServerCrypto;
+export default NexoServerCrypto;

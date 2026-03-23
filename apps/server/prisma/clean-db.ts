@@ -1,9 +1,9 @@
-/**
- * Полная очистка базы данных от тестовых данных.
- * Удаляет ВСЕ: пользователей, чаты, сообщения, истории, дружбы.
- * Таблицы и схема остаются на месте.
+﻿/**
+ * РџРѕР»РЅР°СЏ РѕС‡РёСЃС‚РєР° Р±Р°Р·С‹ РґР°РЅРЅС‹С… РѕС‚ С‚РµСЃС‚РѕРІС‹С… РґР°РЅРЅС‹С….
+ * РЈРґР°Р»СЏРµС‚ Р’РЎР•: РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№, С‡Р°С‚С‹, СЃРѕРѕР±С‰РµРЅРёСЏ, РёСЃС‚РѕСЂРёРё, РґСЂСѓР¶Р±С‹.
+ * РўР°Р±Р»РёС†С‹ Рё СЃС…РµРјР° РѕСЃС‚Р°СЋС‚СЃСЏ РЅР° РјРµСЃС‚Рµ.
  *
- * Запуск: npx tsx prisma/clean-db.ts
+ * Р—Р°РїСѓСЃРє: npx tsx prisma/clean-db.ts
  */
 
 import { PrismaClient } from '@prisma/client';
@@ -13,12 +13,12 @@ import path from 'path';
 const prisma = new PrismaClient();
 
 async function cleanDatabase() {
-  console.log('⚠️  ВНИМАНИЕ: Полная очистка базы данных!\n');
+  console.log('вљ пёЏ  Р’РќРРњРђРќРР•: РџРѕР»РЅР°СЏ РѕС‡РёСЃС‚РєР° Р±Р°Р·С‹ РґР°РЅРЅС‹С…!\n');
 
-  // Удаляем в правильном порядке (зависимости → родители)
+  // РЈРґР°Р»СЏРµРј РІ РїСЂР°РІРёР»СЊРЅРѕРј РїРѕСЂСЏРґРєРµ (Р·Р°РІРёСЃРёРјРѕСЃС‚Рё в†’ СЂРѕРґРёС‚РµР»Рё)
   const counts: Record<string, number> = {};
 
-  // 1. Зависимые таблицы
+  // 1. Р—Р°РІРёСЃРёРјС‹Рµ С‚Р°Р±Р»РёС†С‹
   const r1 = await prisma.hiddenMessage.deleteMany();
   counts['HiddenMessage'] = r1.count;
 
@@ -40,26 +40,26 @@ async function cleanDatabase() {
   const r7 = await prisma.story.deleteMany();
   counts['Story'] = r7.count;
 
-  // 2. Сообщения
+  // 2. РЎРѕРѕР±С‰РµРЅРёСЏ
   const r8 = await prisma.message.deleteMany();
   counts['Message'] = r8.count;
 
-  // 3. Чаты
+  // 3. Р§Р°С‚С‹
   const r9 = await prisma.chatMember.deleteMany();
   counts['ChatMember'] = r9.count;
 
   const r10 = await prisma.chat.deleteMany();
   counts['Chat'] = r10.count;
 
-  // 4. Дружбы
+  // 4. Р”СЂСѓР¶Р±С‹
   const r11 = await prisma.friendship.deleteMany();
   counts['Friendship'] = r11.count;
 
-  // 5. Пользователи
+  // 5. РџРѕР»СЊР·РѕРІР°С‚РµР»Рё
   const r12 = await prisma.user.deleteMany();
   counts['User'] = r12.count;
 
-  // 6. Чистка папки uploads (кроме avatars/.gitkeep)
+  // 6. Р§РёСЃС‚РєР° РїР°РїРєРё uploads (РєСЂРѕРјРµ avatars/.gitkeep)
   const uploadsDir = path.join(__dirname, '..', 'uploads');
   let filesDeleted = 0;
 
@@ -70,7 +70,7 @@ async function cleanDatabase() {
       const stat = fs.statSync(fullPath);
 
       if (stat.isDirectory()) {
-        // Для папки avatars — очистить содержимое, но оставить папку
+        // Р”Р»СЏ РїР°РїРєРё avatars вЂ” РѕС‡РёСЃС‚РёС‚СЊ СЃРѕРґРµСЂР¶РёРјРѕРµ, РЅРѕ РѕСЃС‚Р°РІРёС‚СЊ РїР°РїРєСѓ
         if (entry === 'avatars') {
           const avatarFiles = fs.readdirSync(fullPath);
           for (const f of avatarFiles) {
@@ -80,7 +80,7 @@ async function cleanDatabase() {
           }
         }
       } else {
-        // Файлы в корне uploads
+        // Р¤Р°Р№Р»С‹ РІ РєРѕСЂРЅРµ uploads
         if (entry !== '.gitkeep') {
           fs.unlinkSync(fullPath);
           filesDeleted++;
@@ -89,25 +89,25 @@ async function cleanDatabase() {
     }
   }
 
-  // Вывод результатов
-  console.log('┌──────────────────────────────────────┐');
-  console.log('│     🧹 База данных очищена!          │');
-  console.log('├──────────────────────────────────────┤');
+  // Р’С‹РІРѕРґ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ
+  console.log('в”Њв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”ђ');
+  console.log('в”‚     рџ§№ Р‘Р°Р·Р° РґР°РЅРЅС‹С… РѕС‡РёС‰РµРЅР°!          в”‚');
+  console.log('в”њв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”¤');
   for (const [table, count] of Object.entries(counts)) {
     if (count > 0) {
-      console.log(`│  ${table.padEnd(20)} ${String(count).padStart(6)} удалено  │`);
+      console.log(`в”‚  ${table.padEnd(20)} ${String(count).padStart(6)} СѓРґР°Р»РµРЅРѕ  в”‚`);
     }
   }
   if (filesDeleted > 0) {
-    console.log(`│  ${'Файлы (uploads)'.padEnd(20)} ${String(filesDeleted).padStart(6)} удалено  │`);
+    console.log(`в”‚  ${'Р¤Р°Р№Р»С‹ (uploads)'.padEnd(20)} ${String(filesDeleted).padStart(6)} СѓРґР°Р»РµРЅРѕ  в”‚`);
   }
-  console.log('└──────────────────────────────────────┘');
-  console.log('\n✅ Готово. БД чистая, можно начинать с нуля.');
+  console.log('в””в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”');
+  console.log('\nвњ… Р“РѕС‚РѕРІРѕ. Р‘Р” С‡РёСЃС‚Р°СЏ, РјРѕР¶РЅРѕ РЅР°С‡РёРЅР°С‚СЊ СЃ РЅСѓР»СЏ.');
 }
 
 cleanDatabase()
   .catch((e) => {
-    console.error('❌ Ошибка очистки:', e);
+    console.error('вќЊ РћС€РёР±РєР° РѕС‡РёСЃС‚РєРё:', e);
     process.exit(1);
   })
   .finally(() => prisma.$disconnect());

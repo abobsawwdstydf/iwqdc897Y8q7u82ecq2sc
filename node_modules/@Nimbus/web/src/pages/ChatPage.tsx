@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+﻿import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useChatStore } from '../stores/chatStore';
 import { useAuthStore } from '../stores/authStore';
@@ -83,7 +83,7 @@ export default function ChatPage() {
     }
   }, [activeChat]);
 
-  // Обработка закрытия вкладки — отправить disconnect
+  // РћР±СЂР°Р±РѕС‚РєР° Р·Р°РєСЂС‹С‚РёСЏ РІРєР»Р°РґРєРё вЂ” РѕС‚РїСЂР°РІРёС‚СЊ disconnect
   useEffect(() => {
     const handleBeforeUnload = () => {
       const socket = getSocket();
@@ -127,20 +127,20 @@ export default function ChatPage() {
         
         if (isMentioned) {
           // Show in-app mention notification
-          const senderName = message.sender?.displayName || message.sender?.username || 'Неизвестный';
-          mention('Вас упомянули', `${senderName} упомянул(а) вас в сообщении`, () => {
+          const senderName = message.sender?.displayName || message.sender?.username || 'РќРµРёР·РІРµСЃС‚РЅС‹Р№';
+          mention('Р’Р°СЃ СѓРїРѕРјСЏРЅСѓР»Рё', `${senderName} СѓРїРѕРјСЏРЅСѓР»(Р°) РІР°СЃ РІ СЃРѕРѕР±С‰РµРЅРёРё`, () => {
             setActiveChat(message.chatId);
             loadMessages(message.chatId);
           });
         }
         
         // Show browser notification
-        const senderName = message.sender?.displayName || message.sender?.username || 'Неизвестный';
+        const senderName = message.sender?.displayName || message.sender?.username || 'РќРµРёР·РІРµСЃС‚РЅС‹Р№';
         const preview = message.content ||
-          message.type === 'image' ? '📷 Фото' :
-          message.type === 'video' ? '🎬 Видео' :
-          message.type === 'voice' ? '🎤 Голосовое' :
-          message.type === 'file' ? '📁 Файл' : 'Сообщение';
+          message.type === 'image' ? 'рџ“· Р¤РѕС‚Рѕ' :
+          message.type === 'video' ? 'рџЋ¬ Р’РёРґРµРѕ' :
+          message.type === 'voice' ? 'рџЋ¤ Р“РѕР»РѕСЃРѕРІРѕРµ' :
+          message.type === 'file' ? 'рџ“Ѓ Р¤Р°Р№Р»' : 'РЎРѕРѕР±С‰РµРЅРёРµ';
         showMessageNotification(senderName, preview, message.chatId);
       }
     });

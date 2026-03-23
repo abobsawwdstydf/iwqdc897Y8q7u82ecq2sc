@@ -1,4 +1,4 @@
-/** Initialise encryption with a 64-char hex key (32 bytes). */
+﻿/** Initialise encryption with a 64-char hex key (32 bytes). */
 export declare function initEncryption(hexKey: string): void;
 /** Returns true if encryption is enabled (key configured). */
 export declare function isEncryptionEnabled(): boolean;
@@ -13,7 +13,7 @@ export declare function decryptText(ciphertext: string): string;
 export declare function encryptFileInPlace(filePath: string): void;
 /**
  * Check if a file appears to be encrypted (has valid header size).
- * This is a heuristic — not 100% reliable on tiny files, but good enough.
+ * This is a heuristic вЂ” not 100% reliable on tiny files, but good enough.
  */
 export declare function isFileEncrypted(filePath: string): boolean;
 /**

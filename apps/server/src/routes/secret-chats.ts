@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Router, Response } from 'express';
 import { prisma } from '../db';
 import crypto from 'crypto';
@@ -6,10 +6,10 @@ import crypto from 'crypto';
 const router = Router();
 
 // ============================================
-// 🔒 СЕКРЕТНЫЕ ЧАТЫ (с таймером удаления)
+// рџ”’ РЎР•РљР Р•РўРќР«Р• Р§РђРўР« (СЃ С‚Р°Р№РјРµСЂРѕРј СѓРґР°Р»РµРЅРёСЏ)
 // ============================================
 
-// Создать секретный чат
+// РЎРѕР·РґР°С‚СЊ СЃРµРєСЂРµС‚РЅС‹Р№ С‡Р°С‚
 router.post('/', async (req: Request, res: Response) => {
   try {
     const { receiverId, ttl } = req.body as {
@@ -18,12 +18,12 @@ router.post('/', async (req: Request, res: Response) => {
     };
 
     if (!receiverId) {
-      res.status(400).json({ error: 'ID получателя обязателен' });
+      res.status(400).json({ error: 'ID РїРѕР»СѓС‡Р°С‚РµР»СЏ РѕР±СЏР·Р°С‚РµР»РµРЅ' });
       return;
     }
 
     if (receiverId === req.userId) {
-      res.status(400).json({ error: 'Нельзя создать секретный чат с самим собой' });
+      res.status(400).json({ error: 'РќРµР»СЊР·СЏ СЃРѕР·РґР°С‚СЊ СЃРµРєСЂРµС‚РЅС‹Р№ С‡Р°С‚ СЃ СЃР°РјРёРј СЃРѕР±РѕР№' });
       return;
     }
 
@@ -89,11 +89,11 @@ router.post('/', async (req: Request, res: Response) => {
     res.json(secretChat);
   } catch (error) {
     console.error('Create secret chat error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Получить все секретные чаты пользователя
+// РџРѕР»СѓС‡РёС‚СЊ РІСЃРµ СЃРµРєСЂРµС‚РЅС‹Рµ С‡Р°С‚С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 router.get('/', async (req: Request, res: Response) => {
   try {
     const secretChats = await prisma.secretChat.findMany({
@@ -129,11 +129,11 @@ router.get('/', async (req: Request, res: Response) => {
     res.json(secretChats);
   } catch (error) {
     console.error('Get secret chats error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Получить секретный чат по ID
+// РџРѕР»СѓС‡РёС‚СЊ СЃРµРєСЂРµС‚РЅС‹Р№ С‡Р°С‚ РїРѕ ID
 router.get('/:id', async (req: Request, res: Response) => {
   try {
     const secretChatId = parseInt(req.params.id as string, 10);
@@ -165,18 +165,18 @@ router.get('/:id', async (req: Request, res: Response) => {
     });
 
     if (!secretChat) {
-      res.status(404).json({ error: 'Секретный чат не найден' });
+      res.status(404).json({ error: 'РЎРµРєСЂРµС‚РЅС‹Р№ С‡Р°С‚ РЅРµ РЅР°Р№РґРµРЅ' });
       return;
     }
 
     res.json(secretChat);
   } catch (error) {
     console.error('Get secret chat error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Обновить TTL секретного чата
+// РћР±РЅРѕРІРёС‚СЊ TTL СЃРµРєСЂРµС‚РЅРѕРіРѕ С‡Р°С‚Р°
 router.put('/:id/ttl', async (req: Request, res: Response) => {
   try {
     const secretChatId = parseInt(req.params.id as string, 10);
@@ -194,13 +194,13 @@ router.put('/:id/ttl', async (req: Request, res: Response) => {
     });
 
     if (!secretChat) {
-      res.status(404).json({ error: 'Секретный чат не найден' });
+      res.status(404).json({ error: 'РЎРµРєСЂРµС‚РЅС‹Р№ С‡Р°С‚ РЅРµ РЅР°Р№РґРµРЅ' });
       return;
     }
 
     // Only sender can change TTL
     if (secretChat.senderId !== req.userId) {
-      res.status(403).json({ error: 'Только создатель чата может изменять таймер' });
+      res.status(403).json({ error: 'РўРѕР»СЊРєРѕ СЃРѕР·РґР°С‚РµР»СЊ С‡Р°С‚Р° РјРѕР¶РµС‚ РёР·РјРµРЅСЏС‚СЊ С‚Р°Р№РјРµСЂ' });
       return;
     }
 
@@ -220,11 +220,11 @@ router.put('/:id/ttl', async (req: Request, res: Response) => {
     res.json(updated);
   } catch (error) {
     console.error('Update secret chat TTL error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Удалить секретный чат
+// РЈРґР°Р»РёС‚СЊ СЃРµРєСЂРµС‚РЅС‹Р№ С‡Р°С‚
 router.delete('/:id', async (req: Request, res: Response) => {
   try {
     const secretChatId = parseInt(req.params.id as string, 10);
@@ -240,7 +240,7 @@ router.delete('/:id', async (req: Request, res: Response) => {
     });
 
     if (!secretChat) {
-      res.status(404).json({ error: 'Секретный чат не найден' });
+      res.status(404).json({ error: 'РЎРµРєСЂРµС‚РЅС‹Р№ С‡Р°С‚ РЅРµ РЅР°Р№РґРµРЅ' });
       return;
     }
 
@@ -271,15 +271,15 @@ router.delete('/:id', async (req: Request, res: Response) => {
     res.json({ success: true });
   } catch (error) {
     console.error('Delete secret chat error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
 // ============================================
-// СООБЩЕНИЯ СЕКРЕТНОГО ЧАТА
+// РЎРћРћР‘Р©Р•РќРРЇ РЎР•РљР Р•РўРќРћР“Рћ Р§РђРўРђ
 // ============================================
 
-// Отправить сообщение в секретный чат
+// РћС‚РїСЂР°РІРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РІ СЃРµРєСЂРµС‚РЅС‹Р№ С‡Р°С‚
 router.post('/:id/messages', async (req: Request, res: Response) => {
   try {
     const secretChatId = parseInt(req.params.id as string, 10);
@@ -297,12 +297,12 @@ router.post('/:id/messages', async (req: Request, res: Response) => {
     });
 
     if (!secretChat) {
-      res.status(404).json({ error: 'Секретный чат не найден' });
+      res.status(404).json({ error: 'РЎРµРєСЂРµС‚РЅС‹Р№ С‡Р°С‚ РЅРµ РЅР°Р№РґРµРЅ' });
       return;
     }
 
     if (!content || typeof content !== 'string' || content.length > 10000) {
-      res.status(400).json({ error: 'Содержимое обязательно и не должно превышать 10000 символов' });
+      res.status(400).json({ error: 'РЎРѕРґРµСЂР¶РёРјРѕРµ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ Рё РЅРµ РґРѕР»Р¶РЅРѕ РїСЂРµРІС‹С€Р°С‚СЊ 10000 СЃРёРјРІРѕР»РѕРІ' });
       return;
     }
 
@@ -335,11 +335,11 @@ router.post('/:id/messages', async (req: Request, res: Response) => {
     res.json(message);
   } catch (error) {
     console.error('Send secret message error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Получить сообщения секретного чата
+// РџРѕР»СѓС‡РёС‚СЊ СЃРѕРѕР±С‰РµРЅРёСЏ СЃРµРєСЂРµС‚РЅРѕРіРѕ С‡Р°С‚Р°
 router.get('/:id/messages', async (req: Request, res: Response) => {
   try {
     const secretChatId = parseInt(req.params.id as string, 10);
@@ -356,7 +356,7 @@ router.get('/:id/messages', async (req: Request, res: Response) => {
     });
 
     if (!secretChat) {
-      res.status(404).json({ error: 'Секретный чат не найден' });
+      res.status(404).json({ error: 'РЎРµРєСЂРµС‚РЅС‹Р№ С‡Р°С‚ РЅРµ РЅР°Р№РґРµРЅ' });
       return;
     }
 
@@ -388,7 +388,7 @@ router.get('/:id/messages', async (req: Request, res: Response) => {
       } catch (e) {
         return {
           ...msg,
-          content: '[Ошибка расшифровки]',
+          content: '[РћС€РёР±РєР° СЂР°СЃС€РёС„СЂРѕРІРєРё]',
         };
       }
     });
@@ -396,11 +396,11 @@ router.get('/:id/messages', async (req: Request, res: Response) => {
     res.json(decryptedMessages);
   } catch (error) {
     console.error('Get secret messages error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Прочитать сообщение в секретном чате
+// РџСЂРѕС‡РёС‚Р°С‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РІ СЃРµРєСЂРµС‚РЅРѕРј С‡Р°С‚Рµ
 router.put('/:chatId/messages/:messageId/read', async (req: Request, res: Response) => {
   try {
     const secretChatId = parseInt(req.params.chatId as string, 10);
@@ -418,7 +418,7 @@ router.put('/:chatId/messages/:messageId/read', async (req: Request, res: Respon
     });
 
     if (!secretChat) {
-      res.status(404).json({ error: 'Секретный чат не найден' });
+      res.status(404).json({ error: 'РЎРµРєСЂРµС‚РЅС‹Р№ С‡Р°С‚ РЅРµ РЅР°Р№РґРµРЅ' });
       return;
     }
 
@@ -430,7 +430,7 @@ router.put('/:chatId/messages/:messageId/read', async (req: Request, res: Respon
     res.json({ success: true });
   } catch (error) {
     console.error('Mark secret message as read error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 

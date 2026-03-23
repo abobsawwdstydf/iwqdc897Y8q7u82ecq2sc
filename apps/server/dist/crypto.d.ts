@@ -1,5 +1,5 @@
-/**
- * Nimbus Server-Side Cryptography
+﻿/**
+ * Nexo Server-Side Cryptography
  * Multi-layer encryption for server operations
  */
 export interface EncryptedPayload {
@@ -114,7 +114,7 @@ export interface TripleEncryptedPayload {
 }
 export declare function tripleEncrypt(plaintext: string, rsaPublicKeyPem: string): TripleEncryptedPayload;
 export declare function tripleDecrypt(encrypted: TripleEncryptedPayload, rsaPrivateKeyPem: string): string;
-export declare const NimbusServerCrypto: {
+export declare const NexoServerCrypto: {
     generateAESKey: typeof generateAESKey;
     generateRSAKeyPair: typeof generateRSAKeyPair;
     deriveKeyFromPassword: typeof deriveKeyFromPassword;
@@ -139,4 +139,4 @@ export declare const NimbusServerCrypto: {
     generateRandomBytes: typeof generateRandomBytes;
     constantTimeCompare: typeof constantTimeCompare;
 };
-export default NimbusServerCrypto;
+export default NexoServerCrypto;

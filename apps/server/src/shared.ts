@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
@@ -18,7 +18,7 @@ interface MulterFile {
   size: number;
 }
 
-// ─── Prisma select objects ────────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Prisma select objects в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
 /** Standard user fields to include in API responses (excludes password) */
 export const USER_SELECT = {
@@ -58,7 +58,7 @@ export const MESSAGE_INCLUDE = {
   readBy: { select: { userId: true } },
 } as const;
 
-// ─── File system helpers ──────────────────────────────────────────────
+// в”Ђв”Ђв”Ђ File system helpers в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
 const uploadsRoot = path.join(__dirname, '../uploads');
 
@@ -76,7 +76,7 @@ export function deleteUploadedFile(urlPath: string): void {
     const filename = urlPath.replace(/^\/uploads\//, '');
     const filePath = path.resolve(uploadsRoot, filename);
 
-    // Path containment check — prevent directory traversal
+    // Path containment check вЂ” prevent directory traversal
     if (!filePath.startsWith(uploadsRoot)) {
       console.error('Path traversal attempt blocked:', urlPath);
       return;
@@ -90,7 +90,7 @@ export function deleteUploadedFile(urlPath: string): void {
   }
 }
 
-// ─── Multer configurations ───────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Multer configurations в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
 const avatarsDir = path.join(uploadsRoot, 'avatars');
 ensureDir(avatarsDir);
@@ -116,7 +116,7 @@ export const uploadUserAvatar = multer({
   fileFilter: (_req: Request, file: MulterFile, cb: (error: Error | null, acceptFile?: boolean) => void) => {
     const ext = path.extname(file.originalname).toLowerCase();
     if (file.mimetype.startsWith('image/') && ALLOWED_IMAGE_EXTENSIONS.has(ext)) cb(null, true);
-    else cb(new Error('Только изображения (jpg, png, gif, webp, avif)'));
+    else cb(new Error('РўРѕР»СЊРєРѕ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ (jpg, png, gif, webp, avif)'));
   },
 });
 
@@ -127,7 +127,7 @@ export const uploadGroupAvatar = multer({
   fileFilter: (_req: Request, file: MulterFile, cb: (error: Error | null, acceptFile?: boolean) => void) => {
     const ext = path.extname(file.originalname).toLowerCase();
     if (file.mimetype.startsWith('image/') && ALLOWED_IMAGE_EXTENSIONS.has(ext)) cb(null, true);
-    else cb(new Error('Только изображения (jpg, png, gif, webp, avif)'));
+    else cb(new Error('РўРѕР»СЊРєРѕ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ (jpg, png, gif, webp, avif)'));
   },
 });
 
@@ -188,7 +188,7 @@ export const uploadFile = multer({
 
     // Block dangerous executable extensions
     if (BLOCKED_EXTENSIONS.has(ext)) {
-      cb(new Error('Этот тип файла не разрешён'));
+      cb(new Error('Р­С‚РѕС‚ С‚РёРї С„Р°Р№Р»Р° РЅРµ СЂР°Р·СЂРµС€С‘РЅ'));
       return;
     }
 
@@ -197,7 +197,7 @@ export const uploadFile = multer({
   },
 });
 
-// ─── Post-upload file encryption middleware ───────────────────────────
+// в”Ђв”Ђв”Ђ Post-upload file encryption middleware в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
 /**
  * Express middleware that encrypts an uploaded file in-place after multer
@@ -211,7 +211,7 @@ export function encryptUploadedFile(req: Request, _res: Response, next: NextFunc
     if (req.file) {
       encryptFileInPlace(req.file.path);
     }
-    // Multiple files (req.files) — handle both array and field-keyed forms
+    // Multiple files (req.files) вЂ” handle both array and field-keyed forms
     if (req.files) {
       const files = Array.isArray(req.files)
         ? req.files
@@ -222,7 +222,7 @@ export function encryptUploadedFile(req: Request, _res: Response, next: NextFunc
     }
   } catch (e) {
     console.error('File encryption error:', e);
-    // Don't block the request — file is already saved, just unencrypted
+    // Don't block the request вЂ” file is already saved, just unencrypted
   }
 
   next();

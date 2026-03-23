@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+﻿import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, Eye, Trash2, Plus, ChevronUp } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
@@ -432,21 +432,21 @@ export function CreateStoryModal({ onClose, onCreated }: CreateStoryModalProps) 
         <div className="flex border-b border-white/10 shrink-0">
           <button
             onClick={() => setMode('text')}
-            className={`flex-1 py-2.5 text-sm font-medium transition-colors ${mode === 'text' ? 'text-Nimbus-400 border-b-2 border-Nimbus-400' : 'text-zinc-400'}`}
+            className={`flex-1 py-2.5 text-sm font-medium transition-colors ${mode === 'text' ? 'text-Nexo-400 border-b-2 border-Nexo-400' : 'text-zinc-400'}`}
           >
             {t('textStory')}
           </button>
           <button
             onClick={() => setMode('image')}
-            className={`flex-1 py-2.5 text-sm font-medium transition-colors ${mode === 'image' ? 'text-Nimbus-400 border-b-2 border-Nimbus-400' : 'text-zinc-400'}`}
+            className={`flex-1 py-2.5 text-sm font-medium transition-colors ${mode === 'image' ? 'text-Nexo-400 border-b-2 border-Nexo-400' : 'text-zinc-400'}`}
           >
             {t('imageStory')}
           </button>
           <button
             onClick={() => setMode('video')}
-            className={`flex-1 py-2.5 text-sm font-medium transition-colors ${mode === 'video' ? 'text-Nimbus-400 border-b-2 border-Nimbus-400' : 'text-zinc-400'}`}
+            className={`flex-1 py-2.5 text-sm font-medium transition-colors ${mode === 'video' ? 'text-Nexo-400 border-b-2 border-Nexo-400' : 'text-zinc-400'}`}
           >
-            {t('videoStory') || 'Видео'}
+            {t('videoStory') || 'Р’РёРґРµРѕ'}
           </button>
         </div>
 
@@ -476,7 +476,7 @@ export function CreateStoryModal({ onClose, onCreated }: CreateStoryModalProps) 
                 onChange={e => setText(e.target.value)}
                 placeholder={t('typeYourStory')}
                 maxLength={200}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-zinc-200 resize-none h-20 mb-3 focus:outline-none focus:border-Nimbus-500/50"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-zinc-200 resize-none h-20 mb-3 focus:outline-none focus:border-Nexo-500/50"
               />
 
               {/* Color picker */}

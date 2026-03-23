@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Browser fingerprinting for anti-spam protection
  * Generates a unique identifier based on browser characteristics
  */
@@ -44,9 +44,9 @@ async function getCanvasFingerprint(): Promise<string> {
     ctx.fillStyle = '#f60';
     ctx.fillRect(125, 1, 62, 20);
     ctx.fillStyle = '#069';
-    ctx.fillText('Nimbus Fingerprint', 2, 15);
+    ctx.fillText('Nexo Fingerprint', 2, 15);
     ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
-    ctx.fillText('Nimbus Fingerprint 😊', 4, 17);
+    ctx.fillText('Nexo Fingerprint рџЉ', 4, 17);
     
     return canvas.toDataURL().slice(-50);
   } catch {

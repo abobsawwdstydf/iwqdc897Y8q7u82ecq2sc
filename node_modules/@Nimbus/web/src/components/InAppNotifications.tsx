@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Phone, PhoneOff, Video, MessageCircle, AtSign, Bell } from 'lucide-react';
 
@@ -124,7 +124,7 @@ function InAppNotificationItem({ notification, onDismiss }: { notification: InAp
                   className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-400 transition-colors"
                 >
                   <PhoneOff size={16} />
-                  Отклонить
+                  РћС‚РєР»РѕРЅРёС‚СЊ
                 </button>
               )}
               {notification.onAccept && (
@@ -136,7 +136,7 @@ function InAppNotificationItem({ notification, onDismiss }: { notification: InAp
                   className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 transition-colors"
                 >
                   <Phone size={16} />
-                  Принять
+                  РџСЂРёРЅСЏС‚СЊ
                 </button>
               )}
             </div>

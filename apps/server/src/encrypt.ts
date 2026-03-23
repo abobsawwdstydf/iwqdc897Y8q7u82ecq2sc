@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+﻿import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 
@@ -13,7 +13,7 @@ import path from 'path';
  */
 
 const ALGORITHM = 'aes-256-gcm';
-const IV_LENGTH = 12; // 96 bits — recommended for GCM
+const IV_LENGTH = 12; // 96 bits вЂ” recommended for GCM
 const AUTH_TAG_LENGTH = 16;
 const FILE_HEADER_LENGTH = IV_LENGTH + AUTH_TAG_LENGTH; // 28 bytes
 const PREFIX = 'enc:v1:';
@@ -51,18 +51,18 @@ export function encryptText(plaintext: string): string {
 /** Decrypt an encrypted string. Returns the plain text, or the original string if it's not encrypted. */
 export function decryptText(ciphertext: string): string {
   if (!ciphertext || !ciphertext.startsWith(PREFIX)) {
-    // Not encrypted (legacy data or null) — return as-is
+    // Not encrypted (legacy data or null) вЂ” return as-is
     return ciphertext;
   }
   if (!encryptionKey) {
     console.error('Cannot decrypt: ENCRYPTION_KEY not configured');
-    return '[зашифровано]';
+    return '[Р·Р°С€РёС„СЂРѕРІР°РЅРѕ]';
   }
 
   try {
     const payload = ciphertext.slice(PREFIX.length);
     const [ivHex, tagHex, dataHex] = payload.split(':');
-    if (!ivHex || !tagHex || !dataHex) return '[повреждённые данные]';
+    if (!ivHex || !tagHex || !dataHex) return '[РїРѕРІСЂРµР¶РґС‘РЅРЅС‹Рµ РґР°РЅРЅС‹Рµ]';
 
     const iv = Buffer.from(ivHex, 'hex');
     const authTag = Buffer.from(tagHex, 'hex');
@@ -74,11 +74,11 @@ export function decryptText(ciphertext: string): string {
     return decrypted.toString('utf8');
   } catch (e) {
     console.error('Decryption failed:', e);
-    return '[ошибка расшифровки]';
+    return '[РѕС€РёР±РєР° СЂР°СЃС€РёС„СЂРѕРІРєРё]';
   }
 }
 
-// ─── File encryption ─────────────────────────────────────────────────
+// в”Ђв”Ђв”Ђ File encryption в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
 /**
  * Encrypt a file in-place on disk.
@@ -100,7 +100,7 @@ export function encryptFileInPlace(filePath: string): void {
 
 /**
  * Check if a file appears to be encrypted (has valid header size).
- * This is a heuristic — not 100% reliable on tiny files, but good enough.
+ * This is a heuristic вЂ” not 100% reliable on tiny files, but good enough.
  */
 export function isFileEncrypted(filePath: string): boolean {
   try {
@@ -136,7 +136,7 @@ export function decryptFileToBuffer(filePath: string): Buffer | null {
     const decrypted = Buffer.concat([decipher.update(ciphertext), decipher.final()]);
     return decrypted;
   } catch {
-    // Decryption failed — file is likely not encrypted (legacy)
+    // Decryption failed вЂ” file is likely not encrypted (legacy)
     return null;
   }
 }

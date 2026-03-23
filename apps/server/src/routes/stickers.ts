@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Router, Response } from 'express';
 import { prisma } from '../db';
 import { uploadFile, deleteUploadedFile, encryptUploadedFile } from '../shared';
@@ -9,10 +9,10 @@ import { v4 as uuidv4 } from 'uuid';
 const router = Router();
 
 // ============================================
-// 🎭 СТИКЕРЫ
+// рџЋ­ РЎРўРРљР•Р Р«
 // ============================================
 
-// Получить все паки стикеров
+// РџРѕР»СѓС‡РёС‚СЊ РІСЃРµ РїР°РєРё СЃС‚РёРєРµСЂРѕРІ
 router.get('/packs', async (req: Request, res: Response) => {
   try {
     const packs = await prisma.stickerPack.findMany({
@@ -32,11 +32,11 @@ router.get('/packs', async (req: Request, res: Response) => {
     res.json(packs);
   } catch (error) {
     console.error('Get sticker packs error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Получить паки пользователя (избранные)
+// РџРѕР»СѓС‡РёС‚СЊ РїР°РєРё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ (РёР·Р±СЂР°РЅРЅС‹Рµ)
 router.get('/packs/my', async (req: Request, res: Response) => {
   try {
     const userPacks = await prisma.userStickerPack.findMany({
@@ -59,11 +59,11 @@ router.get('/packs/my', async (req: Request, res: Response) => {
     res.json(userPacks.map(up => up.pack));
   } catch (error) {
     console.error('Get my sticker packs error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Создать свой пак стикеров
+// РЎРѕР·РґР°С‚СЊ СЃРІРѕР№ РїР°Рє СЃС‚РёРєРµСЂРѕРІ
 router.post('/packs', async (req: Request, res: Response) => {
   try {
     const { name, title, description, isAnimated } = req.body as {
@@ -75,18 +75,18 @@ router.post('/packs', async (req: Request, res: Response) => {
 
     // Validate name (unique identifier)
     if (!name || typeof name !== 'string' || name.length < 3 || name.length > 32) {
-      res.status(400).json({ error: 'Название пака должно быть от 3 до 32 символов' });
+      res.status(400).json({ error: 'РќР°Р·РІР°РЅРёРµ РїР°РєР° РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РѕС‚ 3 РґРѕ 32 СЃРёРјРІРѕР»РѕРІ' });
       return;
     }
 
     if (!/^[a-zA-Z0-9_]+$/.test(name)) {
-      res.status(400).json({ error: 'Название пака может содержать только буквы, цифры и подчёркивания' });
+      res.status(400).json({ error: 'РќР°Р·РІР°РЅРёРµ РїР°РєР° РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕР»СЊРєРѕ Р±СѓРєРІС‹, С†РёС„СЂС‹ Рё РїРѕРґС‡С‘СЂРєРёРІР°РЅРёСЏ' });
       return;
     }
 
     // Validate title
     if (!title || typeof title !== 'string' || title.length > 100) {
-      res.status(400).json({ error: 'Заголовок пака должен быть не длиннее 100 символов' });
+      res.status(400).json({ error: 'Р—Р°РіРѕР»РѕРІРѕРє РїР°РєР° РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РЅРµ РґР»РёРЅРЅРµРµ 100 СЃРёРјРІРѕР»РѕРІ' });
       return;
     }
 
@@ -96,7 +96,7 @@ router.post('/packs', async (req: Request, res: Response) => {
     });
 
     if (existing) {
-      res.status(400).json({ error: 'Пак с таким названием уже существует' });
+      res.status(400).json({ error: 'РџР°Рє СЃ С‚Р°РєРёРј РЅР°Р·РІР°РЅРёРµРј СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚' });
       return;
     }
 
@@ -113,11 +113,11 @@ router.post('/packs', async (req: Request, res: Response) => {
     res.json(pack);
   } catch (error) {
     console.error('Create sticker pack error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Получить пак по ID
+// РџРѕР»СѓС‡РёС‚СЊ РїР°Рє РїРѕ ID
 router.get('/packs/:id', async (req: Request, res: Response) => {
   try {
     const packId = parseInt(req.params.id as string, 10);
@@ -138,18 +138,18 @@ router.get('/packs/:id', async (req: Request, res: Response) => {
     });
 
     if (!pack) {
-      res.status(404).json({ error: 'Пак не найден' });
+      res.status(404).json({ error: 'РџР°Рє РЅРµ РЅР°Р№РґРµРЅ' });
       return;
     }
 
     res.json(pack);
   } catch (error) {
     console.error('Get sticker pack error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Добавить стикер в пак
+// Р”РѕР±Р°РІРёС‚СЊ СЃС‚РёРєРµСЂ РІ РїР°Рє
 router.post('/packs/:id/stickers', uploadFile.single('file'), encryptUploadedFile, async (req: Request, res: Response) => {
   try {
     const packId = parseInt(req.params.id as string, 10);
@@ -160,12 +160,12 @@ router.post('/packs/:id/stickers', uploadFile.single('file'), encryptUploadedFil
     });
 
     if (!pack) {
-      res.status(403).json({ error: 'Нет прав для добавления стикеров в этот пак' });
+      res.status(403).json({ error: 'РќРµС‚ РїСЂР°РІ РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ СЃС‚РёРєРµСЂРѕРІ РІ СЌС‚РѕС‚ РїР°Рє' });
       return;
     }
 
     if (!req.file) {
-      res.status(400).json({ error: 'Файл не загружен' });
+      res.status(400).json({ error: 'Р¤Р°Р№Р» РЅРµ Р·Р°РіСЂСѓР¶РµРЅ' });
       return;
     }
 
@@ -188,11 +188,11 @@ router.post('/packs/:id/stickers', uploadFile.single('file'), encryptUploadedFil
     res.json(sticker);
   } catch (error) {
     console.error('Add sticker error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Удалить стикер из пака
+// РЈРґР°Р»РёС‚СЊ СЃС‚РёРєРµСЂ РёР· РїР°РєР°
 router.delete('/packs/:packId/stickers/:stickerId', async (req: Request, res: Response) => {
   try {
     const packId = parseInt(req.params.packId as string, 10);
@@ -203,7 +203,7 @@ router.delete('/packs/:packId/stickers/:stickerId', async (req: Request, res: Re
     });
 
     if (!pack) {
-      res.status(403).json({ error: 'Нет прав для удаления стикеров из этого пака' });
+      res.status(403).json({ error: 'РќРµС‚ РїСЂР°РІ РґР»СЏ СѓРґР°Р»РµРЅРёСЏ СЃС‚РёРєРµСЂРѕРІ РёР· СЌС‚РѕРіРѕ РїР°РєР°' });
       return;
     }
 
@@ -212,7 +212,7 @@ router.delete('/packs/:packId/stickers/:stickerId', async (req: Request, res: Re
     });
 
     if (!sticker || sticker.packId !== packId) {
-      res.status(404).json({ error: 'Стикер не найден' });
+      res.status(404).json({ error: 'РЎС‚РёРєРµСЂ РЅРµ РЅР°Р№РґРµРЅ' });
       return;
     }
 
@@ -226,11 +226,11 @@ router.delete('/packs/:packId/stickers/:stickerId', async (req: Request, res: Re
     res.json({ success: true });
   } catch (error) {
     console.error('Delete sticker error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Удалить пак стикеров
+// РЈРґР°Р»РёС‚СЊ РїР°Рє СЃС‚РёРєРµСЂРѕРІ
 router.delete('/packs/:id', async (req: Request, res: Response) => {
   try {
     const packId = parseInt(req.params.id as string, 10);
@@ -240,7 +240,7 @@ router.delete('/packs/:id', async (req: Request, res: Response) => {
     });
 
     if (!pack) {
-      res.status(403).json({ error: 'Нет прав для удаления этого пака' });
+      res.status(403).json({ error: 'РќРµС‚ РїСЂР°РІ РґР»СЏ СѓРґР°Р»РµРЅРёСЏ СЌС‚РѕРіРѕ РїР°РєР°' });
       return;
     }
 
@@ -261,15 +261,15 @@ router.delete('/packs/:id', async (req: Request, res: Response) => {
     res.json({ success: true });
   } catch (error) {
     console.error('Delete sticker pack error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
 // ============================================
-// ИЗБРАННЫЕ ПАКИ
+// РР—Р‘Р РђРќРќР«Р• РџРђРљР
 // ============================================
 
-// Добавить пак в избранные
+// Р”РѕР±Р°РІРёС‚СЊ РїР°Рє РІ РёР·Р±СЂР°РЅРЅС‹Рµ
 router.post('/packs/:id/favorite', async (req: Request, res: Response) => {
   try {
     const packId = parseInt(req.params.id as string, 10);
@@ -279,7 +279,7 @@ router.post('/packs/:id/favorite', async (req: Request, res: Response) => {
     });
 
     if (!pack) {
-      res.status(404).json({ error: 'Пак не найден' });
+      res.status(404).json({ error: 'РџР°Рє РЅРµ РЅР°Р№РґРµРЅ' });
       return;
     }
 
@@ -302,11 +302,11 @@ router.post('/packs/:id/favorite', async (req: Request, res: Response) => {
     res.json({ success: true });
   } catch (error) {
     console.error('Add favorite pack error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Удалить пак из избранных
+// РЈРґР°Р»РёС‚СЊ РїР°Рє РёР· РёР·Р±СЂР°РЅРЅС‹С…
 router.delete('/packs/:id/favorite', async (req: Request, res: Response) => {
   try {
     const packId = parseInt(req.params.id as string, 10);
@@ -318,7 +318,7 @@ router.delete('/packs/:id/favorite', async (req: Request, res: Response) => {
     res.json({ success: true });
   } catch (error) {
     console.error('Remove favorite pack error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 

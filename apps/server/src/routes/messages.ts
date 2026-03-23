@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Router, Response } from 'express';
 import { prisma } from '../db';
 import { Prisma } from '@prisma/client';
@@ -18,7 +18,7 @@ interface MulterFile {
 
 const router = Router();
 
-// Получить сообщения чата
+// РџРѕР»СѓС‡РёС‚СЊ СЃРѕРѕР±С‰РµРЅРёСЏ С‡Р°С‚Р°
 router.get('/chat/:chatId', async (req: Request, res) => {
   try {
     const chatId = parseInt(req.params.chatId as string, 10);
@@ -30,7 +30,7 @@ router.get('/chat/:chatId', async (req: Request, res) => {
     });
 
     if (!member) {
-      res.status(403).json({ error: 'Нет доступа к этому чату' });
+      res.status(403).json({ error: 'РќРµС‚ РґРѕСЃС‚СѓРїР° Рє СЌС‚РѕРјСѓ С‡Р°С‚Сѓ' });
       return;
     }
 
@@ -58,20 +58,20 @@ router.get('/chat/:chatId', async (req: Request, res) => {
     res.json(messages.reverse());
   } catch (error) {
     console.error('Get messages error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Загрузка одного файла
+// Р—Р°РіСЂСѓР·РєР° РѕРґРЅРѕРіРѕ С„Р°Р№Р»Р°
 router.post('/upload', uploadFile.single('file'), encryptUploadedFile, async (req: Request, res) => {
   try {
     if (!req.file) {
-      res.status(400).json({ error: 'Файл не загружен' });
+      res.status(400).json({ error: 'Р¤Р°Р№Р» РЅРµ Р·Р°РіСЂСѓР¶РµРЅ' });
       return;
     }
 
     const fileUrl = `/uploads/${req.file.filename}`;
-    // multer decodes multipart filenames as latin1 — re-decode as UTF-8
+    // multer decodes multipart filenames as latin1 вЂ” re-decode as UTF-8
     const originalName = Buffer.from(req.file.originalname, 'latin1').toString('utf8');
 
     res.json({
@@ -82,15 +82,15 @@ router.post('/upload', uploadFile.single('file'), encryptUploadedFile, async (re
     });
   } catch (error) {
     console.error('Upload error:', error);
-    res.status(500).json({ error: 'Ошибка загрузки' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё' });
   }
 });
 
-// Загрузка нескольких файлов
+// Р—Р°РіСЂСѓР·РєР° РЅРµСЃРєРѕР»СЊРєРёС… С„Р°Р№Р»РѕРІ
 router.post('/upload-multiple', uploadFile.array('files', 20), encryptUploadedFile, async (req: Request, res: Response) => {
   try {
     if (!(req as any).files || !Array.isArray((req as any).files) || (req as any).files.length === 0) {
-      res.status(400).json({ error: 'Файлы не загружены' });
+      res.status(400).json({ error: 'Р¤Р°Р№Р»С‹ РЅРµ Р·Р°РіСЂСѓР¶РµРЅС‹' });
       return;
     }
 
@@ -108,24 +108,24 @@ router.post('/upload-multiple', uploadFile.array('files', 20), encryptUploadedFi
     res.json({ files: results });
   } catch (error) {
     console.error('Upload multiple error:', error);
-    res.status(500).json({ error: 'Ошибка загрузки' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё' });
   }
 });
 
-// Редактировать сообщение
+// Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ
 router.put('/:id', async (req: Request, res: Response) => {
   try {
     const { content } = req.body as { content?: string };
     const id = parseInt((req.params as { id?: string }).id as string, 10);
 
     if (!content || typeof content !== 'string' || content.length > 10000) {
-      res.status(400).json({ error: 'Содержимое обязательно и не должно превышать 10000 символов' });
+      res.status(400).json({ error: 'РЎРѕРґРµСЂР¶РёРјРѕРµ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ Рё РЅРµ РґРѕР»Р¶РЅРѕ РїСЂРµРІС‹С€Р°С‚СЊ 10000 СЃРёРјРІРѕР»РѕРІ' });
       return;
     }
 
     const message = await prisma.message.findUnique({ where: { id } });
     if (!message || message.senderId !== req.userId) {
-      res.status(403).json({ error: 'Нет прав для редактирования' });
+      res.status(403).json({ error: 'РќРµС‚ РїСЂР°РІ РґР»СЏ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ' });
       return;
     }
 
@@ -137,11 +137,11 @@ router.put('/:id', async (req: Request, res: Response) => {
 
     res.json(updated);
   } catch (error) {
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Удалить сообщение
+// РЈРґР°Р»РёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ
 router.delete('/:id', async (req: Request, res: Response) => {
   try {
     const id = parseInt((req.params as { id?: string }).id as string, 10);
@@ -151,7 +151,7 @@ router.delete('/:id', async (req: Request, res: Response) => {
       include: { media: true },
     });
     if (!message || message.senderId !== req.userId) {
-      res.status(403).json({ error: 'Нет прав для удаления' });
+      res.status(403).json({ error: 'РќРµС‚ РїСЂР°РІ РґР»СЏ СѓРґР°Р»РµРЅРёСЏ' });
       return;
     }
 
@@ -170,11 +170,11 @@ router.delete('/:id', async (req: Request, res: Response) => {
 
     res.json({ success: true });
   } catch (error) {
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Получить общие медиа/файлы/ссылки чата
+// РџРѕР»СѓС‡РёС‚СЊ РѕР±С‰РёРµ РјРµРґРёР°/С„Р°Р№Р»С‹/СЃСЃС‹Р»РєРё С‡Р°С‚Р°
 router.get('/chat/:chatId/shared', async (req: Request, res: Response) => {
   try {
     const chatId = parseInt((req.params as { chatId?: string }).chatId as string, 10);
@@ -185,7 +185,7 @@ router.get('/chat/:chatId/shared', async (req: Request, res: Response) => {
       where: { chatId_userId: { chatId, userId: req.userId! } },
     });
     if (!member) {
-      res.status(403).json({ error: 'Нет доступа' });
+      res.status(403).json({ error: 'РќРµС‚ РґРѕСЃС‚СѓРїР°' });
       return;
     }
 
@@ -252,7 +252,7 @@ router.get('/chat/:chatId/shared', async (req: Request, res: Response) => {
     }
   } catch (error) {
     console.error('Shared media error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 

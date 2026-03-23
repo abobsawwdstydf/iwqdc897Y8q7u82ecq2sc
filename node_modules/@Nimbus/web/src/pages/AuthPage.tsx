@@ -1,4 +1,4 @@
-import { useState, FormEvent, useEffect } from 'react';
+﻿import { useState, FormEvent, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '../stores/authStore';
 import { useLang } from '../lib/i18n';
@@ -36,7 +36,7 @@ export default function AuthPage() {
         await login(username, password);
       } else {
         if (requireCaptcha && !captchaPassed) {
-          setError('Пройдите капчу');
+          setError('РџСЂРѕР№РґРёС‚Рµ РєР°РїС‡Сѓ');
           setIsSubmitting(false);
           return;
         }
@@ -46,9 +46,9 @@ export default function AuthPage() {
       const error = err as Error & { requireCaptcha?: boolean };
       if (error.requireCaptcha) {
         setRequireCaptcha(true);
-        setError('Требуется подтверждение');
+        setError('РўСЂРµР±СѓРµС‚СЃСЏ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ');
       } else {
-        setError(err instanceof Error ? err.message : 'Ошибка');
+        setError(err instanceof Error ? err.message : 'РћС€РёР±РєР°');
       }
     } finally {
       setIsSubmitting(false);
@@ -62,24 +62,24 @@ export default function AuthPage() {
       exit={{ opacity: 0 }}
       className="h-full flex items-center justify-center relative overflow-hidden bg-surface"
     >
-      {/* Анимированный фон */}
+      {/* РђРЅРёРјРёСЂРѕРІР°РЅРЅС‹Р№ С„РѕРЅ */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] opacity-20">
-          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-Nimbus-600/30 to-purple-600/30 blur-[120px] animate-pulse" />
+          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-Nexo-600/30 to-purple-600/30 blur-[120px] animate-pulse" />
         </div>
-        <div className="absolute top-20 left-20 w-72 h-72 bg-Nimbus-500/10 rounded-full blur-[100px]" />
+        <div className="absolute top-20 left-20 w-72 h-72 bg-Nexo-500/10 rounded-full blur-[100px]" />
         <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/10 rounded-full blur-[100px]" />
       </div>
 
-      {/* Карточка авторизации */}
+      {/* РљР°СЂС‚РѕС‡РєР° Р°РІС‚РѕСЂРёР·Р°С†РёРё */}
       <motion.div
         initial={{ scale: 0.95, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
         className="relative z-10 w-full max-w-md mx-4"
       >
-        <div className="glass-strong rounded-3xl p-8 shadow-2xl shadow-Nimbus-500/5">
-          {/* Логотип */}
+        <div className="glass-strong rounded-3xl p-8 shadow-2xl shadow-Nexo-500/5">
+          {/* Р›РѕРіРѕС‚РёРї */}
           <div className="flex flex-col items-center mb-8 no-select">
             <motion.div
               initial={{ rotate: -180, scale: 0 }}
@@ -88,21 +88,21 @@ export default function AuthPage() {
             >
               <img
                 src="/logo.png"
-                alt="Nimbus"
-                className="w-20 h-20 rounded-2xl shadow-lg shadow-Nimbus-500/30 object-cover"
+                alt="Nexo"
+                className="w-20 h-20 rounded-2xl shadow-lg shadow-Nexo-500/30 object-cover"
               />
             </motion.div>
-            <h1 className="text-2xl font-bold gradient-text mt-4">Nimbus</h1>
+            <h1 className="text-2xl font-bold gradient-text mt-4">Nexo</h1>
             <p className="text-zinc-500 text-sm mt-1">{t('modernMessengerShort')}</p>
           </div>
 
-          {/* Переключатель Вход/Регистрация */}
+          {/* РџРµСЂРµРєР»СЋС‡Р°С‚РµР»СЊ Р’С…РѕРґ/Р РµРіРёСЃС‚СЂР°С†РёСЏ */}
           <div className="flex rounded-xl bg-white/5 p-1 mb-6">
             <button
               onClick={() => { setIsLogin(true); setError(''); setPassword(''); }}
               className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
                 isLogin
-                  ? 'bg-gradient-to-r from-Nimbus-500 to-purple-600 text-white shadow-lg shadow-Nimbus-500/25'
+                  ? 'bg-gradient-to-r from-Nexo-500 to-purple-600 text-white shadow-lg shadow-Nexo-500/25'
                   : 'text-zinc-400 hover:text-zinc-200'
               }`}
               aria-pressed={isLogin}
@@ -114,7 +114,7 @@ export default function AuthPage() {
               onClick={() => { setIsLogin(false); setError(''); setPassword(''); }}
               className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
                 !isLogin
-                  ? 'bg-gradient-to-r from-Nimbus-500 to-purple-600 text-white shadow-lg shadow-Nimbus-500/25'
+                  ? 'bg-gradient-to-r from-Nexo-500 to-purple-600 text-white shadow-lg shadow-Nexo-500/25'
                   : 'text-zinc-400 hover:text-zinc-200'
               }`}
               aria-pressed={!isLogin}
@@ -124,7 +124,7 @@ export default function AuthPage() {
             </button>
           </div>
 
-          {/* Ошибка */}
+          {/* РћС€РёР±РєР° */}
           <AnimatePresence>
             {error && (
               <motion.div
@@ -139,7 +139,7 @@ export default function AuthPage() {
             )}
           </AnimatePresence>
 
-          {/* Форма */}
+          {/* Р¤РѕСЂРјР° */}
           <form onSubmit={handleSubmit} className="space-y-4" autoComplete="off">
             <div>
               <label className="block text-sm font-medium text-zinc-400 mb-1.5">
@@ -150,7 +150,7 @@ export default function AuthPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))}
                 placeholder="username"
-                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-zinc-600 focus:border-Nimbus-500/50 focus:ring-1 focus:ring-Nimbus-500/25 transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-zinc-600 focus:border-Nexo-500/50 focus:ring-1 focus:ring-Nexo-500/25 transition-all"
                 required
                 autoFocus
                 autoComplete="off"
@@ -173,7 +173,7 @@ export default function AuthPage() {
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
                     placeholder={t('displayNamePlaceholder')}
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-zinc-600 focus:border-Nimbus-500/50 focus:ring-1 focus:ring-Nimbus-500/25 transition-all"
+                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-zinc-600 focus:border-Nexo-500/50 focus:ring-1 focus:ring-Nexo-500/25 transition-all"
                   />
                 </motion.div>
               )}
@@ -187,7 +187,7 @@ export default function AuthPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder={t('passwordPlaceholder')}
-                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-zinc-600 focus:border-Nimbus-500/50 focus:ring-1 focus:ring-Nimbus-500/25 transition-all pr-12"
+                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-zinc-600 focus:border-Nexo-500/50 focus:ring-1 focus:ring-Nexo-500/25 transition-all pr-12"
                   required
                   autoComplete={isLogin ? 'current-password' : 'new-password'}
                   minLength={6}
@@ -216,7 +216,7 @@ export default function AuthPage() {
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}
                     placeholder={t('bioPlaceholder')}
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-zinc-600 focus:border-Nimbus-500/50 focus:ring-1 focus:ring-Nimbus-500/25 transition-all"
+                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-zinc-600 focus:border-Nexo-500/50 focus:ring-1 focus:ring-Nexo-500/25 transition-all"
                   />
                 </motion.div>
               )}
@@ -244,7 +244,7 @@ export default function AuthPage() {
               whileTap={{ scale: 0.99 }}
               disabled={isSubmitting}
               type="submit"
-              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-Nimbus-500 to-purple-600 text-white font-medium shadow-lg shadow-Nimbus-500/25 hover:shadow-Nimbus-500/40 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-Nexo-500 to-purple-600 text-white font-medium shadow-lg shadow-Nexo-500/25 hover:shadow-Nexo-500/40 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

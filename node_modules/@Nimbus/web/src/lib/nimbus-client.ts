@@ -1,9 +1,9 @@
-/**
- * Nimbus Client - Advanced Encryption Library
- * Многоуровневое шифрование для максимальной безопасности
+﻿/**
+ * Nexo Client - Advanced Encryption Library
+ * РњРЅРѕРіРѕСѓСЂРѕРІРЅРµРІРѕРµ С€РёС„СЂРѕРІР°РЅРёРµ РґР»СЏ РјР°РєСЃРёРјР°Р»СЊРЅРѕР№ Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё
  */
 
-export interface NimbusConfig {
+export interface NexoConfig {
     serverUrl: string;
     storageUrl?: string;
 }
@@ -16,19 +16,19 @@ export interface EncryptedData {
     timestamp: number;
 }
 
-export class NimbusCrypto {
+export class NexoCrypto {
     private encryptionKey: CryptoKey | null = null;
     private keyDerivation: 'PBKDF2' | 'Argon2' = 'PBKDF2';
     private iterations: number = 100000;
 
     /**
-     * Генерация ключа шифрования из пароля
-     * @param password - Пароль пользователя
-     * @param salt - Соль (опционально)
+     * Р“РµРЅРµСЂР°С†РёСЏ РєР»СЋС‡Р° С€РёС„СЂРѕРІР°РЅРёСЏ РёР· РїР°СЂРѕР»СЏ
+     * @param password - РџР°СЂРѕР»СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+     * @param salt - РЎРѕР»СЊ (РѕРїС†РёРѕРЅР°Р»СЊРЅРѕ)
      */
     async generateKey(password: string, salt?: string): Promise<void> {
         const encoder = new TextEncoder();
-        const saltBytes = encoder.encode(salt || 'nimbus-salt-2026-haker_one');
+        const saltBytes = encoder.encode(salt || 'Nexo-salt-2026-haker_one');
         
         const keyMaterial = await crypto.subtle.importKey(
             'raw',
@@ -43,7 +43,7 @@ export class NimbusCrypto {
                 name: 'PBKDF2',
                 salt: saltBytes,
                 iterations: this.iterations,
-                hash: 'SHA-512' // Улучшено с SHA-256
+                hash: 'SHA-512' // РЈР»СѓС‡С€РµРЅРѕ СЃ SHA-256
             },
             keyMaterial,
             { name: 'AES-GCM', length: 256 },
@@ -53,7 +53,7 @@ export class NimbusCrypto {
     }
 
     /**
-     * Шифрование сообщения с выбором метода
+     * РЁРёС„СЂРѕРІР°РЅРёРµ СЃРѕРѕР±С‰РµРЅРёСЏ СЃ РІС‹Р±РѕСЂРѕРј РјРµС‚РѕРґР°
      */
     async encryptMessage(content: string, method: 'AES-GCM' | 'AES-CTR' | 'AES-CBC' = 'AES-GCM'): Promise<EncryptedData> {
         if (!this.encryptionKey) {
@@ -73,7 +73,7 @@ export class NimbusCrypto {
                 encoder.encode(content)
             );
             
-            // Для GCM извлекаем authTag из последних 16 байт
+            // Р”Р»СЏ GCM РёР·РІР»РµРєР°РµРј authTag РёР· РїРѕСЃР»РµРґРЅРёС… 16 Р±Р°Р№С‚
             if (method === 'AES-GCM') {
                 const encBytes = new Uint8Array(encrypted);
                 authTag = this.arrayBufferToHex(encBytes.slice(-16));
@@ -93,7 +93,7 @@ export class NimbusCrypto {
     }
 
     /**
-     * Расшифровка сообщения
+     * Р Р°СЃС€РёС„СЂРѕРІРєР° СЃРѕРѕР±С‰РµРЅРёСЏ
      */
     async decryptMessage(data: EncryptedData): Promise<string> {
         if (!this.encryptionKey) {
@@ -103,7 +103,7 @@ export class NimbusCrypto {
         const iv = this.hexToArrayBuffer(data.iv);
         let encrypted = this.hexToArrayBuffer(data.encrypted);
 
-        // Для GCM добавляем authTag обратно
+        // Р”Р»СЏ GCM РґРѕР±Р°РІР»СЏРµРј authTag РѕР±СЂР°С‚РЅРѕ
         if (data.authTag && data.method === 'AES-GCM') {
             const encBytes = new Uint8Array(encrypted);
             const tagBytes = this.hexToArrayBuffer(data.authTag);
@@ -128,13 +128,13 @@ export class NimbusCrypto {
     }
 
     /**
-     * Двухфакторное шифрование (для повышенной безопасности)
+     * Р”РІСѓС…С„Р°РєС‚РѕСЂРЅРѕРµ С€РёС„СЂРѕРІР°РЅРёРµ (РґР»СЏ РїРѕРІС‹С€РµРЅРЅРѕР№ Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё)
      */
     async doubleEncrypt(content: string, secondPassword: string): Promise<EncryptedData> {
-        // Первый уровень
+        // РџРµСЂРІС‹Р№ СѓСЂРѕРІРµРЅСЊ
         const first = await this.encryptMessage(content);
         
-        // Второй уровень с другим паролем
+        // Р’С‚РѕСЂРѕР№ СѓСЂРѕРІРµРЅСЊ СЃ РґСЂСѓРіРёРј РїР°СЂРѕР»РµРј
         await this.generateKey(secondPassword);
         const second = await this.encryptMessage(first.encrypted);
         
@@ -145,7 +145,7 @@ export class NimbusCrypto {
     }
 
     /**
-     * Хэширование пароля (для хранения)
+     * РҐСЌС€РёСЂРѕРІР°РЅРёРµ РїР°СЂРѕР»СЏ (РґР»СЏ С…СЂР°РЅРµРЅРёСЏ)
      */
     async hashPassword(password: string): Promise<string> {
         const encoder = new TextEncoder();
@@ -155,7 +155,7 @@ export class NimbusCrypto {
     }
 
     /**
-     * Генерация случайного ключа
+     * Р“РµРЅРµСЂР°С†РёСЏ СЃР»СѓС‡Р°Р№РЅРѕРіРѕ РєР»СЋС‡Р°
      */
     generateRandomKey(length: number = 32): string {
         const array = new Uint8Array(length);
@@ -164,7 +164,7 @@ export class NimbusCrypto {
     }
 
     /**
-     * Проверка целостности данных (HMAC)
+     * РџСЂРѕРІРµСЂРєР° С†РµР»РѕСЃС‚РЅРѕСЃС‚Рё РґР°РЅРЅС‹С… (HMAC)
      */
     async generateHMAC(data: string, key: string): Promise<string> {
         const encoder = new TextEncoder();
@@ -188,7 +188,7 @@ export class NimbusCrypto {
     }
 
     /**
-     * Проверка HMAC
+     * РџСЂРѕРІРµСЂРєР° HMAC
      */
     async verifyHMAC(data: string, signature: string, key: string): Promise<boolean> {
         const expected = await this.generateHMAC(data, key);
@@ -211,7 +211,7 @@ export class NimbusCrypto {
     }
 
     /**
-     * Установка параметров шифрования
+     * РЈСЃС‚Р°РЅРѕРІРєР° РїР°СЂР°РјРµС‚СЂРѕРІ С€РёС„СЂРѕРІР°РЅРёСЏ
      */
     setSecurityLevel(level: 'low' | 'medium' | 'high' | 'maximum'): void {
         switch (level) {
@@ -236,32 +236,32 @@ export class NimbusCrypto {
 }
 
 /**
- * Nimbus Client с улучшенным шифрованием
+ * Nexo Client СЃ СѓР»СѓС‡С€РµРЅРЅС‹Рј С€РёС„СЂРѕРІР°РЅРёРµРј
  */
-export class NimbusClient {
-    private config: NimbusConfig;
-    private crypto: NimbusCrypto;
+export class NexoClient {
+    private config: NexoConfig;
+    private crypto: NexoCrypto;
 
-    constructor(config: NimbusConfig) {
+    constructor(config: NexoConfig) {
         this.config = config;
-        this.crypto = new NimbusCrypto();
+        this.crypto = new NexoCrypto();
     }
 
     /**
-     * Инициализация шифрования
+     * РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ С€РёС„СЂРѕРІР°РЅРёСЏ
      */
     async initEncryption(password: string): Promise<void> {
         await this.crypto.generateKey(password);
     }
 
     /**
-     * Отправка зашифрованного сообщения
+     * РћС‚РїСЂР°РІРєР° Р·Р°С€РёС„СЂРѕРІР°РЅРЅРѕРіРѕ СЃРѕРѕР±С‰РµРЅРёСЏ
      */
     async sendMessage(chatId: number, content: string, password?: string): Promise<any> {
         let encrypted: EncryptedData;
         
         if (password) {
-            // Двухфакторное шифрование
+            // Р”РІСѓС…С„Р°РєС‚РѕСЂРЅРѕРµ С€РёС„СЂРѕРІР°РЅРёРµ
             encrypted = await this.crypto.doubleEncrypt(content, password);
         } else {
             encrypted = await this.crypto.encryptMessage(content);
@@ -283,14 +283,14 @@ export class NimbusClient {
     }
 
     /**
-     * Получение и расшифровка сообщения
+     * РџРѕР»СѓС‡РµРЅРёРµ Рё СЂР°СЃС€РёС„СЂРѕРІРєР° СЃРѕРѕР±С‰РµРЅРёСЏ
      */
     async receiveMessage(encryptedData: EncryptedData): Promise<string> {
         return await this.crypto.decryptMessage(encryptedData);
     }
 
     /**
-     * Загрузка файла с шифрованием
+     * Р—Р°РіСЂСѓР·РєР° С„Р°Р№Р»Р° СЃ С€РёС„СЂРѕРІР°РЅРёРµРј
      */
     async uploadFile(file: File, encrypt: boolean = true): Promise<{ fileId: string; fileName: string; size: number }> {
         let fileToUpload: File | Blob = file;
@@ -317,7 +317,7 @@ export class NimbusClient {
     }
 
     /**
-     * Скачивание и расшифровка файла
+     * РЎРєР°С‡РёРІР°РЅРёРµ Рё СЂР°СЃС€РёС„СЂРѕРІРєР° С„Р°Р№Р»Р°
      */
     async downloadFile(fileId: string, fileName: string, encrypted: boolean = false): Promise<Blob> {
         const response = await fetch(`${this.config.storageUrl || this.config.serverUrl}/api/storage/download/${fileId}`);
@@ -338,7 +338,7 @@ export class NimbusClient {
     }
 
     /**
-     * Проверка соединения
+     * РџСЂРѕРІРµСЂРєР° СЃРѕРµРґРёРЅРµРЅРёСЏ
      */
     async checkConnection(): Promise<{ status: string; server: string; latency: number }> {
         const start = Date.now();
@@ -356,7 +356,7 @@ export class NimbusClient {
     }
 
     /**
-     * Генерация отчёта о безопасности
+     * Р“РµРЅРµСЂР°С†РёСЏ РѕС‚С‡С‘С‚Р° Рѕ Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё
      */
     generateSecurityReport(): {
         keySet: boolean;
@@ -367,10 +367,10 @@ export class NimbusClient {
         const iterations = this.crypto['iterations'];
         let crackTime = '';
         
-        if (iterations >= 500000) crackTime = '> 1000 лет';
-        else if (iterations >= 100000) crackTime = '~ 100 лет';
-        else if (iterations >= 50000) crackTime = '~ 10 лет';
-        else crackTime = '< 1 года';
+        if (iterations >= 500000) crackTime = '> 1000 Р»РµС‚';
+        else if (iterations >= 100000) crackTime = '~ 100 Р»РµС‚';
+        else if (iterations >= 50000) crackTime = '~ 10 Р»РµС‚';
+        else crackTime = '< 1 РіРѕРґР°';
 
         return {
             keySet: this.crypto['encryptionKey'] !== null,
@@ -382,17 +382,17 @@ export class NimbusClient {
 }
 
 /**
- * Создание клиента
+ * РЎРѕР·РґР°РЅРёРµ РєР»РёРµРЅС‚Р°
  */
-export function createNimbusClient(serverUrl: string, storageUrl?: string): NimbusClient {
-    return new NimbusClient({ serverUrl, storageUrl });
+export function createNexoClient(serverUrl: string, storageUrl?: string): NexoClient {
+    return new NexoClient({ serverUrl, storageUrl });
 }
 
 /**
- * Глобальная конфигурация
+ * Р“Р»РѕР±Р°Р»СЊРЅР°СЏ РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ
  */
-export const NIMBUS_CONFIG = {
-    SERVER_URL: import.meta.env.VITE_API_URL || 'https://nimbus-msg.onrender.com',
+export const Nexo_CONFIG = {
+    SERVER_URL: import.meta.env.VITE_API_URL || 'https://Nexo-msg.onrender.com',
     STORAGE_URL: import.meta.env.VITE_STORAGE_URL || undefined,
     PROTOCOL_VERSION: '3.0.0',
     AUTHOR: 'Dark Heavens',

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+﻿import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Phone, PhoneOff, Video, VideoOff, Mic, MicOff, Monitor, MonitorOff, Minimize2, Volume2, ShieldCheck, ShieldOff, ChevronUp } from 'lucide-react';
 import { getSocket } from '../lib/socket';
@@ -55,7 +55,7 @@ async function getIceServers(): Promise<RTCConfiguration> {
 export default function GroupCallModal({ isOpen, onClose, chatId, chatName, callType: initialCallType }: GroupCallModalProps) {
   const { t } = useLang();
   const [isMuted, setIsMuted] = useState(false);
-  const [isVideoOff, setIsVideoOff] = useState(initialCallType === 'voice'); // false для видео (камера включена), true для аудио
+  const [isVideoOff, setIsVideoOff] = useState(initialCallType === 'voice'); // false РґР»СЏ РІРёРґРµРѕ (РєР°РјРµСЂР° РІРєР»СЋС‡РµРЅР°), true РґР»СЏ Р°СѓРґРёРѕ
   const [isScreenSharing, setIsScreenSharing] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [duration, setDuration] = useState(0);
@@ -188,7 +188,7 @@ export default function GroupCallModal({ isOpen, onClose, chatId, chatName, call
     // Check if already in a call
     const { isInCall, setInCall } = useCallStore.getState();
     if (isInCall) {
-      alert('Вы уже находитесь в звонке. Завершите текущий звонок перед началом нового.');
+      alert('Р’С‹ СѓР¶Рµ РЅР°С…РѕРґРёС‚РµСЃСЊ РІ Р·РІРѕРЅРєРµ. Р—Р°РІРµСЂС€РёС‚Рµ С‚РµРєСѓС‰РёР№ Р·РІРѕРЅРѕРє РїРµСЂРµРґ РЅР°С‡Р°Р»РѕРј РЅРѕРІРѕРіРѕ.');
       return;
     }
     setInCall(true, 'group', chatId);
@@ -215,7 +215,7 @@ export default function GroupCallModal({ isOpen, onClose, chatId, chatName, call
 
       localStreamRef.current = stream;
       
-      // Для видео звонков - если камера успешно получена, включаем видео
+      // Р”Р»СЏ РІРёРґРµРѕ Р·РІРѕРЅРєРѕРІ - РµСЃР»Рё РєР°РјРµСЂР° СѓСЃРїРµС€РЅРѕ РїРѕР»СѓС‡РµРЅР°, РІРєР»СЋС‡Р°РµРј РІРёРґРµРѕ
       if (initialCallType === 'video' && stream.getVideoTracks().length > 0) {
         setIsVideoOff(false);
       } else {
@@ -234,13 +234,13 @@ export default function GroupCallModal({ isOpen, onClose, chatId, chatName, call
     } catch (err: any) {
       console.error('Error joining group call:', err);
       
-      let errorMsg = 'Не удалось подключиться к звонку';
+      let errorMsg = 'РќРµ СѓРґР°Р»РѕСЃСЊ РїРѕРґРєР»СЋС‡РёС‚СЊСЃСЏ Рє Р·РІРѕРЅРєСѓ';
       if (err?.name === 'NotAllowedError') {
-        errorMsg = 'Разрешите доступ к микрофону в настройках браузера';
+        errorMsg = 'Р Р°Р·СЂРµС€РёС‚Рµ РґРѕСЃС‚СѓРї Рє РјРёРєСЂРѕС„РѕРЅСѓ РІ РЅР°СЃС‚СЂРѕР№РєР°С… Р±СЂР°СѓР·РµСЂР°';
       } else if (err?.name === 'NotFoundError') {
-        errorMsg = 'Микрофон не найден. Подключите микрофон и попробуйте снова';
+        errorMsg = 'РњРёРєСЂРѕС„РѕРЅ РЅРµ РЅР°Р№РґРµРЅ. РџРѕРґРєР»СЋС‡РёС‚Рµ РјРёРєСЂРѕС„РѕРЅ Рё РїРѕРїСЂРѕР±СѓР№С‚Рµ СЃРЅРѕРІР°';
       } else if (err?.message?.includes('HTTPS') || err?.message?.includes('secure')) {
-        errorMsg = 'Звонки работают только через HTTPS. Используйте localhost или настройте HTTPS';
+        errorMsg = 'Р—РІРѕРЅРєРё СЂР°Р±РѕС‚Р°СЋС‚ С‚РѕР»СЊРєРѕ С‡РµСЂРµР· HTTPS. РСЃРїРѕР»СЊР·СѓР№С‚Рµ localhost РёР»Рё РЅР°СЃС‚СЂРѕР№С‚Рµ HTTPS';
       }
       
       alert(errorMsg);
@@ -393,12 +393,12 @@ export default function GroupCallModal({ isOpen, onClose, chatId, chatName, call
       gainNode.gain.value = 0;
       const dest = ctx.createMediaStreamDestination();
 
-      // Signal path: source → delay → gain → output (full quality, just gated)
+      // Signal path: source в†’ delay в†’ gain в†’ output (full quality, just gated)
       source.connect(delayNode);
       delayNode.connect(gainNode);
       gainNode.connect(dest);
 
-      // Analysis path (no delay): source → bandpass → analyser
+      // Analysis path (no delay): source в†’ bandpass в†’ analyser
       source.connect(analysisHP);
       analysisHP.connect(analysisLP);
       analysisLP.connect(analyser);
@@ -576,7 +576,7 @@ export default function GroupCallModal({ isOpen, onClose, chatId, chatName, call
       });
       // Play join sound
       playUserJoinSound();
-      // The new joiner will send us an offer — we wait for it
+      // The new joiner will send us an offer вЂ” we wait for it
     };
 
     const onUserLeft = (data: { chatId: string; userId: string }) => {
@@ -763,7 +763,7 @@ export default function GroupCallModal({ isOpen, onClose, chatId, chatName, call
         >
           <div className="absolute inset-0 pointer-events-none opacity-40">
             <div className="absolute top-[10%] left-[20%] w-[50vh] h-[50vh] bg-emerald-500/30 rounded-full blur-[120px] animate-float" />
-            <div className="absolute bottom-[10%] right-[20%] w-[50vh] h-[50vh] bg-Nimbus-500/20 rounded-full blur-[120px] animate-float-delayed" />
+            <div className="absolute bottom-[10%] right-[20%] w-[50vh] h-[50vh] bg-Nexo-500/20 rounded-full blur-[120px] animate-float-delayed" />
           </div>
 
           <motion.div
@@ -787,7 +787,7 @@ export default function GroupCallModal({ isOpen, onClose, chatId, chatName, call
                       step="0.05"
                       value={remoteVolume}
                       onChange={e => handleVolumeChange(parseFloat(e.target.value))}
-                      className="w-full h-1.5 rounded-full appearance-none bg-zinc-600 accent-Nimbus-500 cursor-pointer"
+                      className="w-full h-1.5 rounded-full appearance-none bg-zinc-600 accent-Nexo-500 cursor-pointer"
                     />
                     <span className="text-xs text-zinc-300 w-8 text-right">{Math.round(remoteVolume * 100)}%</span>
                   </div>
@@ -805,7 +805,7 @@ export default function GroupCallModal({ isOpen, onClose, chatId, chatName, call
                       key={mic.deviceId}
                       onClick={() => switchMicrophone(mic.deviceId)}
                       className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${activeMicId === mic.deviceId
-                          ? 'text-Nimbus-400 bg-Nimbus-500/20 font-medium'
+                          ? 'text-Nexo-400 bg-Nexo-500/20 font-medium'
                           : 'text-zinc-200 hover:bg-zinc-700'
                         }`}
                     >
@@ -820,7 +820,7 @@ export default function GroupCallModal({ isOpen, onClose, chatId, chatName, call
             <div className="flex items-center justify-between px-8 py-4 border-b border-white/5">
               <div>
                 <h3 className="text-lg font-bold text-white">{chatName}</h3>
-                <p className="text-xs text-zinc-400">{participantList.length + 1} {t('participants') || 'участников'} · {formatDuration(duration)}</p>
+                <p className="text-xs text-zinc-400">{participantList.length + 1} {t('participants') || 'СѓС‡Р°СЃС‚РЅРёРєРѕРІ'} В· {formatDuration(duration)}</p>
               </div>
               <button
                 onClick={() => setIsMinimized(true)}
@@ -843,14 +843,14 @@ export default function GroupCallModal({ isOpen, onClose, chatId, chatName, call
                     <video ref={localVideoRef} autoPlay playsInline muted className="w-full h-full object-contain" />
                   ) : (
                     <div className="flex flex-col items-center">
-                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-Nimbus-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl mb-2">
-                        {t('you')?.charAt(0).toUpperCase() || 'Я'}
+                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-Nexo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl mb-2">
+                        {t('you')?.charAt(0).toUpperCase() || 'РЇ'}
                       </div>
                       {isMuted && <MicOff size={14} className="text-red-400" />}
                     </div>
                   )}
                   <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded-full bg-black/60 text-xs text-white">
-                    {t('you')} {isMuted ? '🔇' : ''}
+                    {t('you')} {isMuted ? 'рџ”‡' : ''}
                   </div>
                 </div>
 
@@ -879,7 +879,7 @@ export default function GroupCallModal({ isOpen, onClose, chatId, chatName, call
                           {p.avatar ? (
                             <img src={p.avatar} alt="" className="w-16 h-16 rounded-full object-cover mb-2" />
                           ) : (
-                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-Nimbus-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl mb-2">
+                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-Nexo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl mb-2">
                               {initials}
                             </div>
                           )}
@@ -905,7 +905,7 @@ export default function GroupCallModal({ isOpen, onClose, chatId, chatName, call
                 >
                   {isMuted ? <MicOff size={18} /> : <Mic size={18} />}
                 </button>
-                {/* Microphone selector — hidden on mobile */}
+                {/* Microphone selector вЂ” hidden on mobile */}
                 <div className="hidden sm:block">
                   <button
                     onClick={async (e) => { e.stopPropagation(); await refreshMicrophones(); setShowMicMenu(!showMicMenu); setShowVolumeSlider(false); }}
@@ -915,7 +915,7 @@ export default function GroupCallModal({ isOpen, onClose, chatId, chatName, call
                   </button>
                 </div>
               </div>
-              {/* Camera — only for video calls */}
+              {/* Camera вЂ” only for video calls */}
               {initialCallType === 'video' && (
                 <button
                   onClick={toggleVideo}
@@ -926,7 +926,7 @@ export default function GroupCallModal({ isOpen, onClose, chatId, chatName, call
               )}
               <button
                 onClick={toggleScreenShare}
-                className={`w-11 h-11 rounded-full flex items-center justify-center transition-colors ${isScreenSharing ? 'bg-Nimbus-500/30 text-Nimbus-400' : 'bg-white/10 text-white hover:bg-white/20'}`}
+                className={`w-11 h-11 rounded-full flex items-center justify-center transition-colors ${isScreenSharing ? 'bg-Nexo-500/30 text-Nexo-400' : 'bg-white/10 text-white hover:bg-white/20'}`}
                 title={isScreenSharing ? t('stopScreenShare') : t('screenShare')}
               >
                 {isScreenSharing ? <MonitorOff size={18} /> : <Monitor size={18} />}

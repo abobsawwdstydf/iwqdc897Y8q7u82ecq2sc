@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Router, Response, NextFunction, Request } from 'express';
 import { prisma } from '../db';
 const router = Router();
@@ -113,10 +113,10 @@ router.post('/wipe-all', async (req: Request, res: Response) => {
 });
 
 // ============================================
-// ✅ ВЕРЕФИКАЦИЯ ПОЛЬЗОВАТЕЛЕЙ
+// вњ… Р’Р•Р Р•Р¤РРљРђР¦РРЇ РџРћР›Р¬Р—РћР’РђРўР•Р›Р•Р™
 // ============================================
 
-// Выдать/забрать верификацию
+// Р’С‹РґР°С‚СЊ/Р·Р°Р±СЂР°С‚СЊ РІРµСЂРёС„РёРєР°С†РёСЋ
 router.post('/users/:id/verify', async (req: Request, res: Response) => {
     try {
         const { id } = req.params as { id: string };

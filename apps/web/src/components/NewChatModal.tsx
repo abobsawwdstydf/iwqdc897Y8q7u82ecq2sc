@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Search, Users, Check, ArrowLeft, ArrowRight, Megaphone, MessageSquare } from 'lucide-react';
 import { api } from '../lib/api';
@@ -58,9 +58,9 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
   useEffect(() => {
     if (channelUsername) {
       if (channelUsername.length < 3) {
-        setUsernameError('Минимум 3 символа');
+        setUsernameError('РњРёРЅРёРјСѓРј 3 СЃРёРјРІРѕР»Р°');
       } else if (!/^[a-zA-Z0-9_]+$/.test(channelUsername)) {
-        setUsernameError('Только буквы, цифры и _');
+        setUsernameError('РўРѕР»СЊРєРѕ Р±СѓРєРІС‹, С†РёС„СЂС‹ Рё _');
       } else {
         setUsernameError('');
       }
@@ -146,7 +146,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
         onClick={(e) => e.target === e.currentTarget && onClose()}
       >
         <div className="w-full max-w-md max-h-[90vh] rounded-2xl glass-strong shadow-2xl overflow-hidden flex flex-col" role="dialog" aria-modal="true" aria-label={t('newChat')}>
-          {/* Шапка */}
+          {/* РЁР°РїРєР° */}
           <div className="flex items-center justify-between p-4 border-b border-border shrink-0">
             <div className="flex items-center gap-2">
               {mode !== 'menu' && (
@@ -176,15 +176,15 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
             </button>
           </div>
 
-          {/* Главное меню */}
+          {/* Р“Р»Р°РІРЅРѕРµ РјРµРЅСЋ */}
           {mode === 'menu' && (
             <div className="p-4 space-y-3 overflow-y-auto flex-1 min-h-0">
               <button
                 onClick={() => setMode('group-select')}
                 className="w-full flex items-center gap-3 px-3 py-3 rounded-xl bg-surface-tertiary hover:bg-surface-hover transition-colors border border-border"
               >
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-Nimbus-500/20 to-purple-500/20 flex items-center justify-center ring-1 ring-Nimbus-400/30">
-                  <Users size={20} className="text-Nimbus-400" />
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-Nexo-500/20 to-purple-500/20 flex items-center justify-center ring-1 ring-Nexo-400/30">
+                  <Users size={20} className="text-Nexo-400" />
                 </div>
                 <div className="text-left flex-1">
                   <p className="text-sm font-medium text-white">{t('createGroup')}</p>
@@ -207,7 +207,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
             </div>
           )}
 
-          {/* Создание канала */}
+          {/* РЎРѕР·РґР°РЅРёРµ РєР°РЅР°Р»Р° */}
           {mode === 'channel' && (
             <div className="p-4 space-y-4 overflow-y-auto flex-1 min-h-0">
               <div>
@@ -239,9 +239,9 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
               </div>
 
               <div>
-                <label className="text-xs text-zinc-400 mb-1 block">Описание канала</label>
+                <label className="text-xs text-zinc-400 mb-1 block">РћРїРёСЃР°РЅРёРµ РєР°РЅР°Р»Р°</label>
                 <textarea
-                  placeholder="Расскажите, о чем будет ваш канал..."
+                  placeholder="Р Р°СЃСЃРєР°Р¶РёС‚Рµ, Рѕ С‡РµРј Р±СѓРґРµС‚ РІР°С€ РєР°РЅР°Р»..."
                   value={channelDescription}
                   onChange={(e) => setChannelDescription(e.target.value.slice(0, 255))}
                   className="w-full px-4 py-2.5 rounded-xl bg-surface-tertiary text-sm text-white placeholder-zinc-500 border border-border focus:border-accent transition-colors resize-none"
@@ -258,7 +258,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
                       <button
                         key={u.id}
                         onClick={() => setSelectedUsers((prev) => prev.filter((p) => p.id !== u.id))}
-                        className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-Nimbus-500/20 border border-Nimbus-500/30 text-xs text-white hover:bg-Nimbus-500/30 transition-colors"
+                        className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-Nexo-500/20 border border-Nexo-500/30 text-xs text-white hover:bg-Nexo-500/30 transition-colors"
                       >
                         {u.displayName || u.username}
                         <X size={11} />
@@ -268,7 +268,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
                 )}
                 <button
                   onClick={() => setMode('group-select')}
-                  className="text-xs text-Nimbus-400 hover:text-Nimbus-300 transition-colors"
+                  className="text-xs text-Nexo-400 hover:text-Nexo-300 transition-colors"
                 >
                   + {t('selectMembers')}
                 </button>
@@ -291,7 +291,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
             </div>
           )}
 
-          {/* Создание группы - шаг 2 */}
+          {/* РЎРѕР·РґР°РЅРёРµ РіСЂСѓРїРїС‹ - С€Р°Рі 2 */}
           {mode === 'group-name' && (
             <div className="p-4 space-y-4 overflow-y-auto flex-1 min-h-0">
               <input
@@ -310,12 +310,12 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
                   {selectedUsers.map((u) => (
                     <div
                       key={u.id}
-                      className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-Nimbus-500/20 border border-Nimbus-500/30"
+                      className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-Nexo-500/20 border border-Nexo-500/30"
                     >
                       {u.avatar ? (
                         <img src={u.avatar} alt="" className="w-5 h-5 rounded-full object-cover" />
                       ) : (
-                        <div className="w-5 h-5 rounded-full bg-gradient-to-br from-Nimbus-500 to-purple-600 flex items-center justify-center text-white text-[9px] font-semibold">
+                        <div className="w-5 h-5 rounded-full bg-gradient-to-br from-Nexo-500 to-purple-600 flex items-center justify-center text-white text-[9px] font-semibold">
                           {(u.displayName || u.username)?.[0]?.toUpperCase()}
                         </div>
                       )}
@@ -347,10 +347,10 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
             </div>
           )}
 
-          {/* Выбор участников */}
+          {/* Р’С‹Р±РѕСЂ СѓС‡Р°СЃС‚РЅРёРєРѕРІ */}
           {mode === 'group-select' && (
             <>
-              {/* Поиск */}
+              {/* РџРѕРёСЃРє */}
               <div className="p-4 space-y-3 overflow-y-auto flex-1 min-h-0">
                 {mode === 'group-select' && selectedUsers.length > 0 && (
                   <div className="flex items-center gap-2 flex-wrap">
@@ -358,7 +358,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
                       <button
                         key={u.id}
                         onClick={() => setSelectedUsers((prev) => prev.filter((p) => p.id !== u.id))}
-                        className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-Nimbus-500/20 border border-Nimbus-500/30 text-xs text-white hover:bg-Nimbus-500/30 transition-colors"
+                        className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-Nexo-500/20 border border-Nexo-500/30 text-xs text-white hover:bg-Nexo-500/30 transition-colors"
                       >
                         {(u.displayName || u.username)}
                         <X size={11} />
@@ -380,11 +380,11 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
                 </div>
               </div>
 
-              {/* Результаты */}
+              {/* Р РµР·СѓР»СЊС‚Р°С‚С‹ */}
               <div className="max-h-72 overflow-y-auto px-2 pb-4">
                 {isLoading ? (
                   <div className="flex justify-center py-8">
-                    <div className="w-5 h-5 border-2 border-Nimbus-500 border-t-transparent rounded-full animate-spin" />
+                    <div className="w-5 h-5 border-2 border-Nexo-500 border-t-transparent rounded-full animate-spin" />
                   </div>
                 ) : query.trim().length >= 3 && users.length > 0 ? (
                   users.map((u) => (
@@ -393,7 +393,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
                       onClick={() => handleSelectUser(u)}
                       className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${
                         isSelected(u.id)
-                          ? 'bg-Nimbus-500/15 border border-Nimbus-500/30'
+                          ? 'bg-Nexo-500/15 border border-Nexo-500/30'
                           : 'hover:bg-surface-hover border border-transparent'
                       }`}
                     >
@@ -401,7 +401,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
                         {u.avatar ? (
                           <img src={u.avatar} alt="" className="w-10 h-10 rounded-full object-cover" />
                         ) : (
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-Nimbus-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-Nexo-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
                             {(u.displayName || u.username)?.[0]?.toUpperCase() || '?'}
                           </div>
                         )}
@@ -418,7 +418,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
                       {mode === 'group-select' && (
                         <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
                           isSelected(u.id)
-                            ? 'bg-Nimbus-500 border-Nimbus-500'
+                            ? 'bg-Nexo-500 border-Nexo-500'
                             : 'border-zinc-600'
                         }`}>
                           {isSelected(u.id) && <Check size={12} className="text-white" />}
@@ -443,7 +443,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
                         onClick={() => handleSelectUser(u)}
                         className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${
                           isSelected(u.id)
-                            ? 'bg-Nimbus-500/15 border border-Nimbus-500/30'
+                            ? 'bg-Nexo-500/15 border border-Nexo-500/30'
                             : 'hover:bg-surface-hover border border-transparent'
                         }`}
                       >
@@ -451,7 +451,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
                           {u.avatar ? (
                             <img src={u.avatar} alt="" className="w-10 h-10 rounded-full object-cover" />
                           ) : (
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-Nimbus-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-Nexo-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
                               {(u.displayName || u.username)?.[0]?.toUpperCase() || '?'}
                             </div>
                           )}
@@ -468,7 +468,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
                         {mode === 'group-select' && (
                           <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
                             isSelected(u.id)
-                              ? 'bg-Nimbus-500 border-Nimbus-500'
+                              ? 'bg-Nexo-500 border-Nexo-500'
                               : 'border-zinc-600'
                           }`}>
                             {isSelected(u.id) && <Check size={12} className="text-white" />}
@@ -485,7 +485,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
                 )}
               </div>
 
-              {/* Кнопка "Далее" для группы */}
+              {/* РљРЅРѕРїРєР° "Р”Р°Р»РµРµ" РґР»СЏ РіСЂСѓРїРїС‹ */}
               {mode === 'group-select' && selectedUsers.length > 0 && (
                 <div className="p-4 border-t border-border">
                   <button

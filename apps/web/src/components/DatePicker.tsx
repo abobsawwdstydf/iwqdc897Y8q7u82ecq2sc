@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+﻿import { useState, useRef, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
@@ -137,7 +137,7 @@ export default function DatePicker({ value, onChange }: DatePickerProps) {
     ? `${months[viewMonth]} ${viewYear}`
     : view === 'months'
       ? `${viewYear}`
-      : `${yearRangeStart} — ${yearRangeStart + 23}`;
+      : `${yearRangeStart} вЂ” ${yearRangeStart + 23}`;
 
   const handlePrev = () => {
     if (view === 'days') prevMonth();
@@ -160,7 +160,7 @@ export default function DatePicker({ value, onChange }: DatePickerProps) {
       >
         <Calendar size={14} className="text-zinc-500 flex-shrink-0" />
         <span className={displayValue ? 'text-white' : 'text-zinc-500'}>
-          {displayValue || (lang === 'ru' ? 'дд.мм.гггг' : 'mm/dd/yyyy')}
+          {displayValue || (lang === 'ru' ? 'РґРґ.РјРј.РіРіРіРі' : 'mm/dd/yyyy')}
         </span>
       </button>
 
@@ -224,7 +224,7 @@ export default function DatePicker({ value, onChange }: DatePickerProps) {
                               isSelected(day)
                                 ? 'bg-accent text-white font-semibold shadow-lg shadow-accent/30'
                                 : isToday(day)
-                                  ? 'text-Nimbus-400 font-semibold ring-1 ring-Nimbus-500/50'
+                                  ? 'text-Nexo-400 font-semibold ring-1 ring-Nexo-500/50'
                                   : 'text-zinc-300 hover:bg-surface-hover'
                             }`}
                           >
@@ -261,7 +261,7 @@ export default function DatePicker({ value, onChange }: DatePickerProps) {
                           isSelectedMonth
                             ? 'bg-accent text-white shadow-lg shadow-accent/30'
                             : isCurrentMonth
-                              ? 'text-Nimbus-400 ring-1 ring-Nimbus-500/50'
+                              ? 'text-Nexo-400 ring-1 ring-Nexo-500/50'
                               : 'text-zinc-300 hover:bg-surface-hover'
                         }`}
                       >
@@ -294,7 +294,7 @@ export default function DatePicker({ value, onChange }: DatePickerProps) {
                           isSelectedYear
                             ? 'bg-accent text-white shadow-lg shadow-accent/30'
                             : isCurrentYear
-                              ? 'text-Nimbus-400 ring-1 ring-Nimbus-500/50'
+                              ? 'text-Nexo-400 ring-1 ring-Nexo-500/50'
                               : 'text-zinc-300 hover:bg-surface-hover'
                         }`}
                       >
@@ -323,7 +323,7 @@ export default function DatePicker({ value, onChange }: DatePickerProps) {
                   onChange(`${today.getFullYear()}-${m}-${d}`);
                   setOpen(false);
                 }}
-                className="text-xs text-Nimbus-400 hover:text-Nimbus-300 transition-colors"
+                className="text-xs text-Nexo-400 hover:text-Nexo-300 transition-colors"
               >
                 {t('today')}
               </button>

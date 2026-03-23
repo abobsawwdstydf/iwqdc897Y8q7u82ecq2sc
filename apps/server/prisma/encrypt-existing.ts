@@ -1,10 +1,10 @@
-/**
+﻿/**
  * Migrate existing plain-text messages to encrypted form.
  *
  * Run once after enabling ENCRYPTION_KEY:
  *   npx ts-node prisma/encrypt-existing.ts
  *
- * Safe to re-run — skips already-encrypted messages ("enc:v1:" prefix).
+ * Safe to re-run вЂ” skips already-encrypted messages ("enc:v1:" prefix).
  */
 import '../src/config'; // loads .env & initialises encryption
 import { PrismaClient } from '@prisma/client';
@@ -15,11 +15,11 @@ const rawPrisma = new PrismaClient();
 
 async function main() {
   if (!isEncryptionEnabled()) {
-    console.error('❌ ENCRYPTION_KEY не задан в .env — сначала укажите ключ шифрования.');
+    console.error('вќЊ ENCRYPTION_KEY РЅРµ Р·Р°РґР°РЅ РІ .env вЂ” СЃРЅР°С‡Р°Р»Р° СѓРєР°Р¶РёС‚Рµ РєР»СЋС‡ С€РёС„СЂРѕРІР°РЅРёСЏ.');
     process.exit(1);
   }
 
-  console.log('🔒 Начало шифрования существующих сообщений…\n');
+  console.log('рџ”’ РќР°С‡Р°Р»Рѕ С€РёС„СЂРѕРІР°РЅРёСЏ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёС… СЃРѕРѕР±С‰РµРЅРёР№вЂ¦\n');
 
   // We bypass the Prisma middleware by using $queryRawUnsafe for the SELECT,
   // then use raw UPDATE to avoid double-encryption via middleware.
@@ -30,7 +30,7 @@ async function main() {
          OR (quote IS NOT NULL AND quote != '' AND quote NOT LIKE 'enc:v1:%')
     `;
 
-  console.log(`📝 Найдено ${messages.length} незашифрованных сообщений`);
+  console.log(`рџ“ќ РќР°Р№РґРµРЅРѕ ${messages.length} РЅРµР·Р°С€РёС„СЂРѕРІР°РЅРЅС‹С… СЃРѕРѕР±С‰РµРЅРёР№`);
 
   let encrypted = 0;
   const BATCH_SIZE = 500;
@@ -53,15 +53,15 @@ async function main() {
       })
     );
     encrypted += batch.length;
-    process.stdout.write(`  ✔ ${encrypted}/${messages.length}\r`);
+    process.stdout.write(`  вњ” ${encrypted}/${messages.length}\r`);
   }
 
-  console.log(`\n\n✅ Готово! Зашифровано ${encrypted} сообщений.`);
-  console.log('⚠  СОХРАНИТЕ КЛЮЧ ENCRYPTION_KEY В НАДЁЖНОМ МЕСТЕ — без него данные не восстановить!');
+  console.log(`\n\nвњ… Р“РѕС‚РѕРІРѕ! Р—Р°С€РёС„СЂРѕРІР°РЅРѕ ${encrypted} СЃРѕРѕР±С‰РµРЅРёР№.`);
+  console.log('вљ   РЎРћРҐР РђРќРРўР• РљР›Р®Р§ ENCRYPTION_KEY Р’ РќРђР”РЃР–РќРћРњ РњР•РЎРўР• вЂ” Р±РµР· РЅРµРіРѕ РґР°РЅРЅС‹Рµ РЅРµ РІРѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ!');
   await rawPrisma.$disconnect();
 }
 
 main().catch((e) => {
-  console.error('Ошибка миграции:', e);
+  console.error('РћС€РёР±РєР° РјРёРіСЂР°С†РёРё:', e);
   process.exit(1);
 });

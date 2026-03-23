@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Calendar, AtSign, Edit3, Check, Loader2, Image as ImageIcon, FileText, Link as LinkIcon, Download, ExternalLink, Play, UserPlus, UserMinus, UserCheck, Clock, Share2, Copy, Phone, Video, MessageCircle } from 'lucide-react';
 import { api } from '../lib/api';
@@ -219,11 +219,11 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
         transition={{ type: 'spring', damping: 25, stiffness: 300, mass: 0.8 }}
         className="fixed right-3 top-3 bottom-3 w-[360px] max-w-[calc(100%-24px)] bg-surface-secondary/80 backdrop-blur-2xl shadow-[0_0_120px_rgba(0,0,0,0.6)] border border-white/5 rounded-[2rem] z-50 flex flex-col overflow-hidden"
       >
-        {/* Шапка */}
+        {/* РЁР°РїРєР° */}
         <div className="flex items-center justify-between p-5 border-b border-white/5 bg-white/5 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-Nimbus-500/20 to-purple-500/10 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-r from-Nexo-500/20 to-purple-500/10 pointer-events-none" />
           <h2 className="text-xl font-bold tracking-tight text-white drop-shadow-sm relative z-10">
-            {channelId ? 'Профиль канала' : isSelf ? t('myProfile') : t('profileTitle')}
+            {channelId ? 'РџСЂРѕС„РёР»СЊ РєР°РЅР°Р»Р°' : isSelf ? t('myProfile') : t('profileTitle')}
           </h2>
           <button
             onClick={onClose}
@@ -235,14 +235,14 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
 
         {isLoading ? (
           <div className="flex-1 flex items-center justify-center">
-            <div className="w-8 h-8 border-2 border-Nimbus-500 border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-Nexo-500 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : channel ? (
-          /* Профиль канала */
+          /* РџСЂРѕС„РёР»СЊ РєР°РЅР°Р»Р° */
           <div className="flex-1 overflow-y-auto">
-            {/* Аватар канала */}
+            {/* РђРІР°С‚Р°СЂ РєР°РЅР°Р»Р° */}
             <div className="flex flex-col items-center pt-8 pb-4 px-6 relative overflow-visible">
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] h-[240px] bg-Nimbus-500/10 rounded-full blur-[80px] pointer-events-none" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] h-[240px] bg-Nexo-500/10 rounded-full blur-[80px] pointer-events-none" />
 
               <div className="relative group">
                 <div className="absolute -inset-1 bg-gradient-to-r from-accent via-purple-500 to-accent rounded-full opacity-50 blur group-hover:opacity-75 transition duration-500 animate-[spin_4s_linear_infinite]" />
@@ -265,17 +265,17 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                 </div>
               </div>
 
-              {/* Название канала */}
+              {/* РќР°Р·РІР°РЅРёРµ РєР°РЅР°Р»Р° */}
               <h3 className="mt-5 text-[28px] font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/70 tracking-tight text-center px-4">
                 {channel.name || channel.username}
               </h3>
 
-              {/* Username канала */}
+              {/* Username РєР°РЅР°Р»Р° */}
               {channel.username && (
-                <div className="flex items-center justify-between gap-2 mt-2.5 bg-Nimbus-500/10 hover:bg-Nimbus-500/20 transition-colors px-4 py-2 rounded-full border border-Nimbus-500/20 backdrop-blur-sm">
+                <div className="flex items-center justify-between gap-2 mt-2.5 bg-Nexo-500/10 hover:bg-Nexo-500/20 transition-colors px-4 py-2 rounded-full border border-Nexo-500/20 backdrop-blur-sm">
                   <div className="flex items-center gap-1.5">
-                    <AtSign size={14} className="text-Nimbus-400" />
-                    <span className="text-sm font-semibold text-Nimbus-100">{channel.username}</span>
+                    <AtSign size={14} className="text-Nexo-400" />
+                    <span className="text-sm font-semibold text-Nexo-100">{channel.username}</span>
                   </div>
                   <button
                     onClick={() => {
@@ -284,15 +284,15 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                       setCopied(true);
                       setTimeout(() => setCopied(false), 2000);
                     }}
-                    className="p-1.5 rounded-full hover:bg-Nimbus-500/30 transition-colors text-Nimbus-400"
-                    title="Копировать ссылку"
+                    className="p-1.5 rounded-full hover:bg-Nexo-500/30 transition-colors text-Nexo-400"
+                    title="РљРѕРїРёСЂРѕРІР°С‚СЊ СЃСЃС‹Р»РєСѓ"
                   >
                     {copied ? <Check size={14} /> : <Copy size={14} />}
                   </button>
                 </div>
               )}
 
-              {/* Описание канала */}
+              {/* РћРїРёСЃР°РЅРёРµ РєР°РЅР°Р»Р° */}
               {channel.description && (
                 <div className="mt-4 bg-black/20 backdrop-blur-xl border border-white/5 rounded-2xl p-4 transition-all hover:bg-black/30 hover:border-white/10 group max-w-full">
                   <p className="text-sm text-zinc-200 leading-relaxed pl-1 text-center">
@@ -301,23 +301,23 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                 </div>
               )}
 
-              {/* Количество участников */}
+              {/* РљРѕР»РёС‡РµСЃС‚РІРѕ СѓС‡Р°СЃС‚РЅРёРєРѕРІ */}
               <div className="mt-4 flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full border border-white/5">
                 <UserPlus size={16} className="text-zinc-400" />
-                <span className="text-sm text-zinc-300">{channel.members?.length || 0} подписчиков</span>
+                <span className="text-sm text-zinc-300">{channel.members?.length || 0} РїРѕРґРїРёСЃС‡РёРєРѕРІ</span>
               </div>
             </div>
 
-            {/* Информация о канале */}
+            {/* РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РєР°РЅР°Р»Рµ */}
             <div className="px-5 space-y-3 pb-8 relative z-10">
-              {/* Дата создания */}
+              {/* Р”Р°С‚Р° СЃРѕР·РґР°РЅРёСЏ */}
               <div className="bg-black/20 backdrop-blur-xl border border-white/5 rounded-2xl p-4 transition-all hover:bg-black/30 hover:border-white/10 group">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30">
                     <Check size={12} className="text-emerald-400" />
                   </div>
                   <label className="text-xs font-semibold text-emerald-200/50 uppercase tracking-widest">
-                    Создан
+                    РЎРѕР·РґР°РЅ
                   </label>
                 </div>
                 <p className="text-sm text-zinc-200 pl-1">
@@ -330,7 +330,7 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
               </div>
             </div>
 
-            {/* Медиа / Файлы / Ссылки */}
+            {/* РњРµРґРёР° / Р¤Р°Р№Р»С‹ / РЎСЃС‹Р»РєРё */}
             <div className="border-t border-white/5 bg-black/10 mt-2 backdrop-blur-md">
               <div className="flex px-2 pt-2 gap-1 overflow-x-auto no-scrollbar">
                 {tabs.map((tab) => (
@@ -343,13 +343,13 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                         : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/5'
                     }`}
                   >
-                    <tab.icon size={14} className={activeTab === tab.key ? 'text-Nimbus-400' : 'opacity-70'} />
+                    <tab.icon size={14} className={activeTab === tab.key ? 'text-Nexo-400' : 'opacity-70'} />
                     {tab.label}
                   </button>
                 ))}
               </div>
               <div className="min-h-[160px] bg-white/[0.02] border-t border-white/5 relative">
-                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-Nimbus-500/50 to-transparent" />
+                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-Nexo-500/50 to-transparent" />
                 {tabLoading ? (
                   <div className="flex items-center justify-center py-8">
                     <Loader2 size={20} className="animate-spin text-zinc-500" />
@@ -395,14 +395,14 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                             download={m.filename || 'file'}
                             className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors group/file"
                           >
-                            <div className="w-10 h-10 rounded-xl bg-Nimbus-500/20 flex items-center justify-center flex-shrink-0 border border-Nimbus-500/30 group-hover/file:scale-105 transition-transform">
-                              <FileText size={18} className="text-Nimbus-400" />
+                            <div className="w-10 h-10 rounded-xl bg-Nexo-500/20 flex items-center justify-center flex-shrink-0 border border-Nexo-500/30 group-hover/file:scale-105 transition-transform">
+                              <FileText size={18} className="text-Nexo-400" />
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className="text-sm text-white truncate">{m.filename || 'file'}</p>
                               <p className="text-xs text-zinc-500">
                                 {m.size ? `${(m.size / 1024).toFixed(1)} KB` : ''}
-                                {msg.sender ? ` · ${msg.sender.displayName || msg.sender.username}` : ''}
+                                {msg.sender ? ` В· ${msg.sender.displayName || msg.sender.username}` : ''}
                               </p>
                             </div>
                             <Download size={16} className="text-zinc-500 flex-shrink-0" />
@@ -421,7 +421,7 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                       {sharedLinks.map((msg) => (
                         <div key={msg.id} className="px-4 py-3 hover:bg-white/5 transition-colors">
                           <p className="text-xs text-zinc-500 mb-1.5 font-medium">
-                            {msg.sender?.displayName || msg.sender?.username} · {new Date(msg.createdAt).toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-US')}
+                            {msg.sender?.displayName || msg.sender?.username} В· {new Date(msg.createdAt).toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-US')}
                           </p>
                           {(msg.links || []).map((link: string, i: number) => (
                             <a
@@ -429,7 +429,7 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                               href={link}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center gap-2 text-sm text-Nimbus-400 hover:text-Nimbus-300 transition-colors truncate"
+                              className="flex items-center gap-2 text-sm text-Nexo-400 hover:text-Nexo-300 transition-colors truncate"
                             >
                               <ExternalLink size={14} className="flex-shrink-0" />
                               <span className="truncate">{link}</span>
@@ -451,11 +451,11 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
             </div>
           </div>
         ) : profile ? (
-          /* Профиль пользователя */
+          /* РџСЂРѕС„РёР»СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ */
           <div className="flex-1 overflow-y-auto">
-            {/* Аватар */}
+            {/* РђРІР°С‚Р°СЂ */}
             <div className="flex flex-col items-center pt-8 pb-4 px-6 relative overflow-visible">
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] h-[240px] bg-Nimbus-500/10 rounded-full blur-[80px] pointer-events-none" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] h-[240px] bg-Nexo-500/10 rounded-full blur-[80px] pointer-events-none" />
 
               <div className="relative group">
                 <div className="absolute -inset-1 bg-gradient-to-r from-accent via-purple-500 to-accent rounded-full opacity-50 blur group-hover:opacity-75 transition duration-500 animate-[spin_4s_linear_infinite]" />
@@ -479,17 +479,17 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                 )}
               </div>
 
-              {/* Имя */}
+              {/* РРјСЏ */}
               <h3 className="mt-5 text-[28px] font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/70 tracking-tight text-center px-4">
                 {profile.displayName || profile.username}
               </h3>
 
               {/* Username */}
               {profile.username && (
-                <div className="flex items-center justify-between gap-2 mt-2.5 bg-Nimbus-500/10 hover:bg-Nimbus-500/20 transition-colors px-4 py-2 rounded-full border border-Nimbus-500/20 backdrop-blur-sm">
+                <div className="flex items-center justify-between gap-2 mt-2.5 bg-Nexo-500/10 hover:bg-Nexo-500/20 transition-colors px-4 py-2 rounded-full border border-Nexo-500/20 backdrop-blur-sm">
                   <div className="flex items-center gap-1.5">
-                    <AtSign size={14} className="text-Nimbus-400" />
-                    <span className="text-sm font-semibold text-Nimbus-100">{profile.username}</span>
+                    <AtSign size={14} className="text-Nexo-400" />
+                    <span className="text-sm font-semibold text-Nexo-100">{profile.username}</span>
                   </div>
                   <button
                     onClick={() => {
@@ -498,15 +498,15 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                       setCopied(true);
                       setTimeout(() => setCopied(false), 2000);
                     }}
-                    className="p-1.5 rounded-full hover:bg-Nimbus-500/30 transition-colors text-Nimbus-400"
-                    title="Копировать ссылку"
+                    className="p-1.5 rounded-full hover:bg-Nexo-500/30 transition-colors text-Nexo-400"
+                    title="РљРѕРїРёСЂРѕРІР°С‚СЊ СЃСЃС‹Р»РєСѓ"
                   >
                     {copied ? <Check size={14} /> : <Copy size={14} />}
                   </button>
                 </div>
               )}
 
-              {/* Онлайн статус */}
+              {/* РћРЅР»Р°Р№РЅ СЃС‚Р°С‚СѓСЃ */}
               <p className="text-xs font-semibold uppercase tracking-widest mt-4">
                 {profile.isOnline ? (
                   <span className="text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.8)] flex items-center gap-1.5">
@@ -521,12 +521,12 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                 )}
               </p>
 
-              {/* Кнопки действий (звонок, чат) */}
+              {/* РљРЅРѕРїРєРё РґРµР№СЃС‚РІРёР№ (Р·РІРѕРЅРѕРє, С‡Р°С‚) */}
               {!isSelf && userId && (
                 <div className="mt-4 flex items-center justify-center gap-3">
                   <button
                     onClick={() => onOpenChat?.(userId)}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-Nimbus-500/20 border border-Nimbus-500/30 text-Nimbus-300 hover:bg-Nimbus-500/30 transition-all text-sm font-medium"
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-Nexo-500/20 border border-Nexo-500/30 text-Nexo-300 hover:bg-Nexo-500/30 transition-all text-sm font-medium"
                   >
                     <MessageCircle size={16} />
                     {t('chat')}
@@ -553,7 +553,7 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                     <button
                       onClick={handleSendFriendRequest}
                       disabled={friendLoading}
-                      className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-Nimbus-500/20 border border-Nimbus-500/30 text-Nimbus-300 hover:bg-Nimbus-500/30 transition-all text-sm font-medium"
+                      className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-Nexo-500/20 border border-Nexo-500/30 text-Nexo-300 hover:bg-Nexo-500/30 transition-all text-sm font-medium"
                     >
                       {friendLoading ? <Loader2 size={16} className="animate-spin" /> : <UserPlus size={16} />}
                       {t('addFriend')}
@@ -598,15 +598,15 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
               )}
             </div>
 
-            {/* Информация */}
+            {/* РРЅС„РѕСЂРјР°С†РёСЏ */}
             <div className="px-5 space-y-3 pb-8 relative z-10">
-              {/* О себе */}
+              {/* Рћ СЃРµР±Рµ */}
               <div className="bg-black/20 backdrop-blur-xl border border-white/5 rounded-2xl p-4 transition-all hover:bg-black/30 hover:border-white/10 group">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-6 h-6 rounded-full bg-Nimbus-500/20 flex items-center justify-center border border-Nimbus-500/30">
-                    <Edit3 size={12} className="text-Nimbus-400" />
+                  <div className="w-6 h-6 rounded-full bg-Nexo-500/20 flex items-center justify-center border border-Nexo-500/30">
+                    <Edit3 size={12} className="text-Nexo-400" />
                   </div>
-                  <label className="text-xs font-semibold text-Nimbus-200/50 uppercase tracking-widest">
+                  <label className="text-xs font-semibold text-Nexo-200/50 uppercase tracking-widest">
                     {t('aboutMe')}
                   </label>
                 </div>
@@ -615,7 +615,7 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                 </p>
               </div>
 
-              {/* Дата рождения */}
+              {/* Р”Р°С‚Р° СЂРѕР¶РґРµРЅРёСЏ */}
               {profile.birthday && (
                 <div className="bg-black/20 backdrop-blur-xl border border-white/5 rounded-2xl p-4 transition-all hover:bg-black/30 hover:border-white/10 group">
                   <div className="flex items-center gap-2 mb-2">
@@ -636,14 +636,14 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                 </div>
               )}
 
-              {/* Дата регистрации */}
+              {/* Р”Р°С‚Р° СЂРµРіРёСЃС‚СЂР°С†РёРё */}
               <div className="bg-black/20 backdrop-blur-xl border border-white/5 rounded-2xl p-4 transition-all hover:bg-black/30 hover:border-white/10 group">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30">
                     <Check size={12} className="text-emerald-400" />
                   </div>
                   <label className="text-xs font-semibold text-emerald-200/50 uppercase tracking-widest">
-                    {t('onNimbusSince')}
+                    {t('onNexoSince')}
                   </label>
                 </div>
                 <p className="text-sm text-zinc-200 pl-1">
@@ -656,7 +656,7 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
               </div>
             </div>
 
-            {/* Медиа / Файлы / Ссылки */}
+            {/* РњРµРґРёР° / Р¤Р°Р№Р»С‹ / РЎСЃС‹Р»РєРё */}
             <div className="border-t border-white/5 bg-black/10 mt-2 backdrop-blur-md">
               <div className="flex px-2 pt-2 gap-1 overflow-x-auto no-scrollbar">
                 {tabs.map((tab) => (
@@ -669,13 +669,13 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                         : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/5'
                     }`}
                   >
-                    <tab.icon size={14} className={activeTab === tab.key ? 'text-Nimbus-400' : 'opacity-70'} />
+                    <tab.icon size={14} className={activeTab === tab.key ? 'text-Nexo-400' : 'opacity-70'} />
                     {tab.label}
                   </button>
                 ))}
               </div>
               <div className="min-h-[160px] bg-white/[0.02] border-t border-white/5 relative">
-                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-Nimbus-500/50 to-transparent" />
+                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-Nexo-500/50 to-transparent" />
                 {tabLoading ? (
                   <div className="flex items-center justify-center py-8">
                     <Loader2 size={20} className="animate-spin text-zinc-500" />
@@ -721,14 +721,14 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                             download={m.filename || 'file'}
                             className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors group/file"
                           >
-                            <div className="w-10 h-10 rounded-xl bg-Nimbus-500/20 flex items-center justify-center flex-shrink-0 border border-Nimbus-500/30 group-hover/file:scale-105 transition-transform">
-                              <FileText size={18} className="text-Nimbus-400" />
+                            <div className="w-10 h-10 rounded-xl bg-Nexo-500/20 flex items-center justify-center flex-shrink-0 border border-Nexo-500/30 group-hover/file:scale-105 transition-transform">
+                              <FileText size={18} className="text-Nexo-400" />
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className="text-sm text-white truncate">{m.filename || 'file'}</p>
                               <p className="text-xs text-zinc-500">
                                 {m.size ? `${(m.size / 1024).toFixed(1)} KB` : ''}
-                                {msg.sender ? ` · ${msg.sender.displayName || msg.sender.username}` : ''}
+                                {msg.sender ? ` В· ${msg.sender.displayName || msg.sender.username}` : ''}
                               </p>
                             </div>
                             <Download size={16} className="text-zinc-500 flex-shrink-0" />
@@ -747,7 +747,7 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                       {sharedLinks.map((msg) => (
                         <div key={msg.id} className="px-4 py-3 hover:bg-white/5 transition-colors">
                           <p className="text-xs text-zinc-500 mb-1.5 font-medium">
-                            {msg.sender?.displayName || msg.sender?.username} · {new Date(msg.createdAt).toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-US')}
+                            {msg.sender?.displayName || msg.sender?.username} В· {new Date(msg.createdAt).toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-US')}
                           </p>
                           {(msg.links || []).map((link: string, i: number) => (
                             <a
@@ -755,7 +755,7 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                               href={link}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center gap-2 text-sm text-Nimbus-400 hover:text-Nimbus-300 transition-colors truncate"
+                              className="flex items-center gap-2 text-sm text-Nexo-400 hover:text-Nexo-300 transition-colors truncate"
                             >
                               <ExternalLink size={14} className="flex-shrink-0" />
                               <span className="truncate">{link}</span>

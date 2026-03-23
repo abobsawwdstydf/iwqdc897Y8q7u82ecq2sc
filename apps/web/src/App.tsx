@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+﻿import { useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { useAuthStore } from './stores/authStore';
 import { useChatStore } from './stores/chatStore';
@@ -46,8 +46,8 @@ export default function App() {
     return (
       <div className="h-full flex items-center justify-center bg-surface">
         <div className="flex flex-col items-center gap-4">
-          <NimbusLoader />
-          <p className="text-zinc-500 text-sm">Загрузка...</p>
+          <NexoLoader />
+          <p className="text-zinc-500 text-sm">Р—Р°РіСЂСѓР·РєР°...</p>
         </div>
       </div>
     );
@@ -64,16 +64,16 @@ export default function App() {
   );
 }
 
-function NimbusLoader() {
+function NexoLoader() {
   return (
     <div className="relative w-12 h-12">
-      <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-Nimbus-500 animate-spin" />
+      <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-Nexo-500 animate-spin" />
       <div
-        className="absolute inset-1 rounded-full border-2 border-transparent border-t-Nimbus-400 animate-spin"
+        className="absolute inset-1 rounded-full border-2 border-transparent border-t-Nexo-400 animate-spin"
         style={{ animationDuration: '0.8s', animationDirection: 'reverse' }}
       />
       <div
-        className="absolute inset-2 rounded-full border-2 border-transparent border-t-Nimbus-300 animate-spin"
+        className="absolute inset-2 rounded-full border-2 border-transparent border-t-Nexo-300 animate-spin"
         style={{ animationDuration: '0.6s' }}
       />
     </div>

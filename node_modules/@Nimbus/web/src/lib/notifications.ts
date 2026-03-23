@@ -1,4 +1,4 @@
-// Web Notifications API utility
+﻿// Web Notifications API utility
 
 let notificationPermission: NotificationPermission = 'default';
 

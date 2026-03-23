@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+﻿import { create } from 'zustand';
 import { api } from '../lib/api';
 import { useAuthStore } from './authStore';
 import type { Chat, ChatMember, Message, TypingUser } from '../lib/types';
@@ -55,7 +55,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   isLoadingChats: false,
   isLoadingMessages: false,
   searchQuery: '',
-  drafts: JSON.parse(localStorage.getItem('Nimbus_drafts') || '{}'),
+  drafts: JSON.parse(localStorage.getItem('Nexo_drafts') || '{}'),
 
   setActiveChat: (chatId) => set((state) => ({
     activeChat: chatId,
@@ -75,7 +75,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       } else {
         delete drafts[chatId];
       }
-      localStorage.setItem('Nimbus_drafts', JSON.stringify(drafts));
+      localStorage.setItem('Nexo_drafts', JSON.stringify(drafts));
       return { drafts };
     });
   },

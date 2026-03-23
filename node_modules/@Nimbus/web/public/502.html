@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>502 - Сервер недоступен | Nimbus</title>
+    <title>502 - РЎРµСЂРІРµСЂ РЅРµРґРѕСЃС‚СѓРїРµРЅ | Nexo</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -66,21 +66,21 @@
 </head>
 <body>
     <div class="container">
-        <div class="icon">📡</div>
+        <div class="icon">рџ“Ў</div>
         <h1>502</h1>
-        <h2>Сервер недоступен</h2>
-        <p>Сервер временно недоступен. Мы уже работаем над этим</p>
-        <a href="/" class="btn">Попробовать снова</a>
+        <h2>РЎРµСЂРІРµСЂ РЅРµРґРѕСЃС‚СѓРїРµРЅ</h2>
+        <p>РЎРµСЂРІРµСЂ РІСЂРµРјРµРЅРЅРѕ РЅРµРґРѕСЃС‚СѓРїРµРЅ. РњС‹ СѓР¶Рµ СЂР°Р±РѕС‚Р°РµРј РЅР°Рґ СЌС‚РёРј</p>
+        <a href="/" class="btn">РџРѕРїСЂРѕР±РѕРІР°С‚СЊ СЃРЅРѕРІР°</a>
         <div class="status">
-            <p style="margin:0; font-size: 14px;">Статус: <span id="status">Проверка...</span></p>
+            <p style="margin:0; font-size: 14px;">РЎС‚Р°С‚СѓСЃ: <span id="status">РџСЂРѕРІРµСЂРєР°...</span></p>
         </div>
         <div class="author">by haker_one</div>
     </div>
     <script>
         fetch('/api/health')
             .then(r => r.json())
-            .then(d => document.getElementById('status').textContent = 'Сервер работает!')
-            .catch(() => document.getElementById('status').textContent = 'Сервер недоступен');
+            .then(d => document.getElementById('status').textContent = 'РЎРµСЂРІРµСЂ СЂР°Р±РѕС‚Р°РµС‚!')
+            .catch(() => document.getElementById('status').textContent = 'РЎРµСЂРІРµСЂ РЅРµРґРѕСЃС‚СѓРїРµРЅ');
     </script>
 </body>
 </html>

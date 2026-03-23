@@ -1,7 +1,7 @@
-services:
+﻿services:
   # Backend + Frontend service
   - type: web
-    name: nimbus-messenger
+    name: Nexo-messenger
     env: node
     region: frankfurt
     plan: free
@@ -16,7 +16,7 @@ services:
       - key: JWT_SECRET
         value: 36427af4278b7198dc850c7235c4c85feda7275d89fe3d360c79a1af94579765
       - key: DATABASE_URL
-        value: postgresql://nimbus:VMEWWc3q2eUrIIVjbgkBRnDlZv9RRBrg@dpg-d70231p5pdvs738vfg0g-a.frankfurt-postgres.render.com/nimbus_wnbp
+        value: postgresql://Nexo:VMEWWc3q2eUrIIVjbgkBRnDlZv9RRBrg@dpg-d70231p5pdvs738vfg0g-a.frankfurt-postgres.render.com/Nexo_wnbp
       - key: CORS_ORIGINS
         value: "*"
       - key: ENCRYPTION_KEY

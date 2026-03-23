@@ -1,13 +1,13 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Router, Response } from 'express';
 import { prisma } from '../db';
 const router = Router();
 
 // ============================================
-// 📁 ПАПКИ ЧАТОВ
+// рџ“Ѓ РџРђРџРљР Р§РђРўРћР’
 // ============================================
 
-// Получить все папки пользователя
+// РџРѕР»СѓС‡РёС‚СЊ РІСЃРµ РїР°РїРєРё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 router.get('/', async (req: Request, res: Response) => {
   try {
     const folders = await prisma.chatFolder.findMany({
@@ -28,11 +28,11 @@ router.get('/', async (req: Request, res: Response) => {
     res.json(folders);
   } catch (error) {
     console.error('Get folders error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Создать папку
+// РЎРѕР·РґР°С‚СЊ РїР°РїРєСѓ
 router.post('/', async (req: Request, res: Response) => {
   try {
     const { name, color, icon, chatIds } = req.body as {
@@ -43,7 +43,7 @@ router.post('/', async (req: Request, res: Response) => {
     };
 
     if (!name || typeof name !== 'string' || name.trim().length === 0 || name.length > 50) {
-      res.status(400).json({ error: 'Название папки должно быть от 1 до 50 символов' });
+      res.status(400).json({ error: 'РќР°Р·РІР°РЅРёРµ РїР°РїРєРё РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РѕС‚ 1 РґРѕ 50 СЃРёРјРІРѕР»РѕРІ' });
       return;
     }
 
@@ -53,7 +53,7 @@ router.post('/', async (req: Request, res: Response) => {
     });
 
     if (existing) {
-      res.status(400).json({ error: 'Папка с таким названием уже существует' });
+      res.status(400).json({ error: 'РџР°РїРєР° СЃ С‚Р°РєРёРј РЅР°Р·РІР°РЅРёРµРј СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚' });
       return;
     }
 
@@ -92,11 +92,11 @@ router.post('/', async (req: Request, res: Response) => {
     res.json(folder);
   } catch (error) {
     console.error('Create folder error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Обновить папку
+// РћР±РЅРѕРІРёС‚СЊ РїР°РїРєСѓ
 router.put('/:id', async (req: Request, res: Response) => {
   try {
     const folderId = parseInt(req.params.id as string, 10);
@@ -111,7 +111,7 @@ router.put('/:id', async (req: Request, res: Response) => {
     });
 
     if (!folder) {
-      res.status(404).json({ error: 'Папка не найдена' });
+      res.status(404).json({ error: 'РџР°РїРєР° РЅРµ РЅР°Р№РґРµРЅР°' });
       return;
     }
 
@@ -122,7 +122,7 @@ router.put('/:id', async (req: Request, res: Response) => {
       });
 
       if (existing && existing.id !== folderId) {
-        res.status(400).json({ error: 'Папка с таким названием уже существует' });
+        res.status(400).json({ error: 'РџР°РїРєР° СЃ С‚Р°РєРёРј РЅР°Р·РІР°РЅРёРµРј СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚' });
         return;
       }
     }
@@ -149,11 +149,11 @@ router.put('/:id', async (req: Request, res: Response) => {
     res.json(updated);
   } catch (error) {
     console.error('Update folder error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Удалить папку
+// РЈРґР°Р»РёС‚СЊ РїР°РїРєСѓ
 router.delete('/:id', async (req: Request, res: Response) => {
   try {
     const folderId = parseInt(req.params.id as string, 10);
@@ -163,7 +163,7 @@ router.delete('/:id', async (req: Request, res: Response) => {
     });
 
     if (!folder) {
-      res.status(404).json({ error: 'Папка не найдена' });
+      res.status(404).json({ error: 'РџР°РїРєР° РЅРµ РЅР°Р№РґРµРЅР°' });
       return;
     }
 
@@ -174,18 +174,18 @@ router.delete('/:id', async (req: Request, res: Response) => {
     res.json({ success: true });
   } catch (error) {
     console.error('Delete folder error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Добавить чат в папку
+// Р”РѕР±Р°РІРёС‚СЊ С‡Р°С‚ РІ РїР°РїРєСѓ
 router.post('/:id/chats', async (req: Request, res: Response) => {
   try {
     const folderId = parseInt(req.params.id as string, 10);
     const { chatIds } = req.body as { chatIds?: number[] };
 
     if (!chatIds || !Array.isArray(chatIds) || chatIds.length === 0) {
-      res.status(400).json({ error: 'Необходимо указать чаты' });
+      res.status(400).json({ error: 'РќРµРѕР±С…РѕРґРёРјРѕ СѓРєР°Р·Р°С‚СЊ С‡Р°С‚С‹' });
       return;
     }
 
@@ -194,7 +194,7 @@ router.post('/:id/chats', async (req: Request, res: Response) => {
     });
 
     if (!folder) {
-      res.status(404).json({ error: 'Папка не найдена' });
+      res.status(404).json({ error: 'РџР°РїРєР° РЅРµ РЅР°Р№РґРµРЅР°' });
       return;
     }
 
@@ -236,11 +236,11 @@ router.post('/:id/chats', async (req: Request, res: Response) => {
     res.json(updated);
   } catch (error) {
     console.error('Add chats to folder error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Удалить чат из папки
+// РЈРґР°Р»РёС‚СЊ С‡Р°С‚ РёР· РїР°РїРєРё
 router.delete('/:folderId/chats/:chatId', async (req: Request, res: Response) => {
   try {
     const folderId = parseInt(req.params.folderId as string, 10);
@@ -251,7 +251,7 @@ router.delete('/:folderId/chats/:chatId', async (req: Request, res: Response) =>
     });
 
     if (!folder) {
-      res.status(404).json({ error: 'Папка не найдена' });
+      res.status(404).json({ error: 'РџР°РїРєР° РЅРµ РЅР°Р№РґРµРЅР°' });
       return;
     }
 
@@ -262,18 +262,18 @@ router.delete('/:folderId/chats/:chatId', async (req: Request, res: Response) =>
     res.json({ success: true });
   } catch (error) {
     console.error('Remove chat from folder error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Обновить порядок чатов в папке
+// РћР±РЅРѕРІРёС‚СЊ РїРѕСЂСЏРґРѕРє С‡Р°С‚РѕРІ РІ РїР°РїРєРµ
 router.put('/:id/chats/reorder', async (req: Request, res: Response) => {
   try {
     const folderId = parseInt(req.params.id as string, 10);
     const { chatIds } = req.body as { chatIds?: number[] };
 
     if (!chatIds || !Array.isArray(chatIds)) {
-      res.status(400).json({ error: 'Необходимо указать чаты' });
+      res.status(400).json({ error: 'РќРµРѕР±С…РѕРґРёРјРѕ СѓРєР°Р·Р°С‚СЊ С‡Р°С‚С‹' });
       return;
     }
 
@@ -282,7 +282,7 @@ router.put('/:id/chats/reorder', async (req: Request, res: Response) => {
     });
 
     if (!folder) {
-      res.status(404).json({ error: 'Папка не найдена' });
+      res.status(404).json({ error: 'РџР°РїРєР° РЅРµ РЅР°Р№РґРµРЅР°' });
       return;
     }
 
@@ -298,7 +298,7 @@ router.put('/:id/chats/reorder', async (req: Request, res: Response) => {
     res.json({ success: true });
   } catch (error) {
     console.error('Reorder folder chats error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 

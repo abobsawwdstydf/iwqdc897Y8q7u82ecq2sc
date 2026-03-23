@@ -1,4 +1,4 @@
-import { memo } from 'react';
+﻿import { memo } from 'react';
 import { getInitials, generateAvatarColor } from '../lib/utils';
 
 interface AvatarProps {

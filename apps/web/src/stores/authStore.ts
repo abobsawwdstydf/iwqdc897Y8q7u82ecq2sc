@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+﻿import { create } from 'zustand';
 import { api } from '../lib/api';
 import { connectSocket, disconnectSocket } from '../lib/socket';
 import type { User } from '../lib/types';
@@ -16,7 +16,7 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
-  token: localStorage.getItem('Nimbus_token'),
+  token: localStorage.getItem('Nexo_token'),
   user: null,
   isLoading: true,
   error: null,
@@ -25,7 +25,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       set({ error: null, isLoading: true });
       const { token, user } = await api.login(username, password);
-      localStorage.setItem('Nimbus_token', token);
+      localStorage.setItem('Nexo_token', token);
       api.setToken(token);
       connectSocket(token);
       set({ token, user, isLoading: false });
@@ -40,7 +40,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       set({ error: null, isLoading: true });
       const { token, user } = await api.register(username, displayName, password, bio, fingerprint);
-      localStorage.setItem('Nimbus_token', token);
+      localStorage.setItem('Nexo_token', token);
       api.setToken(token);
       connectSocket(token);
       set({ token, user, isLoading: false });
@@ -52,7 +52,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   logout: () => {
-    localStorage.removeItem('Nimbus_token');
+    localStorage.removeItem('Nexo_token');
     api.setToken(null);
     disconnectSocket();
     set({ token: null, user: null });
@@ -80,7 +80,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         console.warn(`checkAuth attempt ${attempt + 1} failed:`, msg);
         
         // Only retry on network/server errors, not on auth errors (401/403)
-        if (msg.includes('Требуется авторизация') || msg.includes('Недействительный токен')) {
+        if (msg.includes('РўСЂРµР±СѓРµС‚СЃСЏ Р°РІС‚РѕСЂРёР·Р°С†РёСЏ') || msg.includes('РќРµРґРµР№СЃС‚РІРёС‚РµР»СЊРЅС‹Р№ С‚РѕРєРµРЅ')) {
           break;
         }
         if (attempt < 2) {
@@ -89,7 +89,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       }
     }
     console.error('checkAuth failed after all attempts:', lastError);
-    localStorage.removeItem('Nimbus_token');
+    localStorage.removeItem('Nexo_token');
     set({ token: null, user: null, isLoading: false });
   },
 

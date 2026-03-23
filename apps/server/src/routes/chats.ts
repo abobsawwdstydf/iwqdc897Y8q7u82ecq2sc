@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Router, Response } from 'express';
 import { Prisma } from '@prisma/client';
 import { prisma } from '../db';
@@ -31,7 +31,7 @@ const CHAT_USER_SELECT = {
   lastSeen: true,
 };
 
-// Получить все чаты пользователя
+// РџРѕР»СѓС‡РёС‚СЊ РІСЃРµ С‡Р°С‚С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 router.get('/', async (req: Request, res: Response) => {
   try {
     const chats = await prisma.chat.findMany({
@@ -118,16 +118,16 @@ router.get('/', async (req: Request, res: Response) => {
     res.json(chatsWithUnread);
   } catch (error) {
     console.error('Get chats error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Создать личный чат
+// РЎРѕР·РґР°С‚СЊ Р»РёС‡РЅС‹Р№ С‡Р°С‚
 router.post('/personal', async (req: Request, res) => {
   try {
     const { userId } = req.body as { userId?: number };
     if (!userId) {
-      res.status(400).json({ error: 'ID пользователя обязателен' });
+      res.status(400).json({ error: 'ID РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РѕР±СЏР·Р°С‚РµР»РµРЅ' });
       return;
     }
 
@@ -173,11 +173,11 @@ router.post('/personal', async (req: Request, res) => {
     res.json({ ...chat, unreadCount: 0 });
   } catch (error) {
     console.error('Create chat error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Создать или получить чат "Избранное" (saved messages)
+// РЎРѕР·РґР°С‚СЊ РёР»Рё РїРѕР»СѓС‡РёС‚СЊ С‡Р°С‚ "РР·Р±СЂР°РЅРЅРѕРµ" (saved messages)
 router.post('/favorites', async (req: Request, res) => {
   try {
     const userId = req.userId!;
@@ -223,28 +223,28 @@ router.post('/favorites', async (req: Request, res) => {
     res.json({ ...chat, unreadCount: 0 });
   } catch (error) {
     console.error('Create favorites chat error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Создать групповой чат
+// РЎРѕР·РґР°С‚СЊ РіСЂСѓРїРїРѕРІРѕР№ С‡Р°С‚
 router.post('/group', async (req: Request, res) => {
   try {
     const { name, memberIds } = req.body as { name?: string; memberIds?: number[] };
     if (!name || !memberIds || !Array.isArray(memberIds)) {
-      res.status(400).json({ error: 'Название и участники обязательны' });
+      res.status(400).json({ error: 'РќР°Р·РІР°РЅРёРµ Рё СѓС‡Р°СЃС‚РЅРёРєРё РѕР±СЏР·Р°С‚РµР»СЊРЅС‹' });
       return;
     }
 
     // Validate group name length
     if (typeof name !== 'string' || name.trim().length === 0 || name.length > 100) {
-      res.status(400).json({ error: 'Название группы должно быть от 1 до 100 символов' });
+      res.status(400).json({ error: 'РќР°Р·РІР°РЅРёРµ РіСЂСѓРїРїС‹ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РѕС‚ 1 РґРѕ 100 СЃРёРјРІРѕР»РѕРІ' });
       return;
     }
 
     // Limit max members
     if (memberIds.length > 256) {
-      res.status(400).json({ error: 'Максимум 256 участников в группе' });
+      res.status(400).json({ error: 'РњР°РєСЃРёРјСѓРј 256 СѓС‡Р°СЃС‚РЅРёРєРѕРІ РІ РіСЂСѓРїРїРµ' });
       return;
     }
 
@@ -270,36 +270,36 @@ router.post('/group', async (req: Request, res) => {
     res.json({ ...chat, unreadCount: 0 });
   } catch (error) {
     console.error('Create group error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Создать канал
+// РЎРѕР·РґР°С‚СЊ РєР°РЅР°Р»
 router.post('/channel', async (req: Request, res: Response) => {
   try {
     const { name, username, description, memberIds } = req.body as { name?: string; username?: string; description?: string; memberIds?: number[] };
 
     // Validate name
     if (!name || typeof name !== 'string' || name.trim().length === 0 || name.length > 100) {
-      res.status(400).json({ error: 'Название канала должно быть от 1 до 100 символов' });
+      res.status(400).json({ error: 'РќР°Р·РІР°РЅРёРµ РєР°РЅР°Р»Р° РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РѕС‚ 1 РґРѕ 100 СЃРёРјРІРѕР»РѕРІ' });
       return;
     }
 
     // Validate username (required for channels)
     if (!username || typeof username !== 'string' || username.length < 3 || username.length > 32) {
-      res.status(400).json({ error: 'Юзернейм канала должен быть от 3 до 32 символов' });
+      res.status(400).json({ error: 'Р®Р·РµСЂРЅРµР№Рј РєР°РЅР°Р»Р° РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РѕС‚ 3 РґРѕ 32 СЃРёРјРІРѕР»РѕРІ' });
       return;
     }
 
     // Validate username format (alphanumeric + underscore)
     if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-      res.status(400).json({ error: 'Юзернейм может содержать только буквы, цифры и подчёркивания' });
+      res.status(400).json({ error: 'Р®Р·РµСЂРЅРµР№Рј РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕР»СЊРєРѕ Р±СѓРєРІС‹, С†РёС„СЂС‹ Рё РїРѕРґС‡С‘СЂРєРёРІР°РЅРёСЏ' });
       return;
     }
 
     // Validate optional description
     if (description !== undefined && (typeof description !== 'string' || description.length > 255)) {
-      res.status(400).json({ error: 'Описание канала должно быть не длиннее 255 символов' });
+      res.status(400).json({ error: 'РћРїРёСЃР°РЅРёРµ РєР°РЅР°Р»Р° РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РЅРµ РґР»РёРЅРЅРµРµ 255 СЃРёРјРІРѕР»РѕРІ' });
       return;
     }
 
@@ -308,7 +308,7 @@ router.post('/channel', async (req: Request, res: Response) => {
       where: { username },
     });
     if (existingChannel) {
-      res.status(400).json({ error: 'Этот юзернейм уже занят' });
+      res.status(400).json({ error: 'Р­С‚РѕС‚ СЋР·РµСЂРЅРµР№Рј СѓР¶Рµ Р·Р°РЅСЏС‚' });
       return;
     }
 
@@ -316,7 +316,7 @@ router.post('/channel', async (req: Request, res: Response) => {
     let members = [];
     if (memberIds && Array.isArray(memberIds) && memberIds.length > 0) {
       if (memberIds.length > 1000) {
-        res.status(400).json({ error: 'Максимум 1000 участников при создании' });
+        res.status(400).json({ error: 'РњР°РєСЃРёРјСѓРј 1000 СѓС‡Р°СЃС‚РЅРёРєРѕРІ РїСЂРё СЃРѕР·РґР°РЅРёРё' });
         return;
       }
       const allMemberIds = [...new Set([req.userId!, ...memberIds])];
@@ -348,11 +348,11 @@ router.post('/channel', async (req: Request, res: Response) => {
     res.json({ ...chat, unreadCount: 0 });
   } catch (error) {
     console.error('Create channel error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Получить чат по ID
+// РџРѕР»СѓС‡РёС‚СЊ С‡Р°С‚ РїРѕ ID
 router.get('/:id', async (req: Request, res) => {
   try {
     const chatId = parseInt(req.params.id as string, 10);
@@ -367,17 +367,17 @@ router.get('/:id', async (req: Request, res) => {
     });
 
     if (!chat) {
-      res.status(404).json({ error: 'Чат не найден' });
+      res.status(404).json({ error: 'Р§Р°С‚ РЅРµ РЅР°Р№РґРµРЅ' });
       return;
     }
 
     res.json(chat);
   } catch (error) {
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Обновить группу (только админ)
+// РћР±РЅРѕРІРёС‚СЊ РіСЂСѓРїРїСѓ (С‚РѕР»СЊРєРѕ Р°РґРјРёРЅ)
 router.put('/:id', async (req: Request, res: Response) => {
   try {
     const chatId = parseInt((req.params as { id?: string }).id as string, 10);
@@ -388,7 +388,7 @@ router.put('/:id', async (req: Request, res: Response) => {
     });
 
     if (!member || member.role !== 'admin') {
-      res.status(403).json({ error: 'Только администратор может редактировать группу' });
+      res.status(403).json({ error: 'РўРѕР»СЊРєРѕ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ РјРѕР¶РµС‚ СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РіСЂСѓРїРїСѓ' });
       return;
     }
 
@@ -411,11 +411,11 @@ router.put('/:id', async (req: Request, res: Response) => {
     res.json(chat);
   } catch (error) {
     console.error('Update group error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Загрузить аватар группы (только админ)
+// Р—Р°РіСЂСѓР·РёС‚СЊ Р°РІР°С‚Р°СЂ РіСЂСѓРїРїС‹ (С‚РѕР»СЊРєРѕ Р°РґРјРёРЅ)
 router.post('/:id/avatar', uploadGroupAvatar.single('avatar'), encryptUploadedFile, async (req: Request, res) => {
   try {
     const chatId = parseInt(req.params.id as string, 10);
@@ -425,12 +425,12 @@ router.post('/:id/avatar', uploadGroupAvatar.single('avatar'), encryptUploadedFi
     });
 
     if (!member || member.role !== 'admin') {
-      res.status(403).json({ error: 'Только администратор может менять аватар группы' });
+      res.status(403).json({ error: 'РўРѕР»СЊРєРѕ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ РјРѕР¶РµС‚ РјРµРЅСЏС‚СЊ Р°РІР°С‚Р°СЂ РіСЂСѓРїРїС‹' });
       return;
     }
 
     if (!req.file) {
-      res.status(400).json({ error: 'Файл не загружен' });
+      res.status(400).json({ error: 'Р¤Р°Р№Р» РЅРµ Р·Р°РіСЂСѓР¶РµРЅ' });
       return;
     }
 
@@ -459,11 +459,11 @@ router.post('/:id/avatar', uploadGroupAvatar.single('avatar'), encryptUploadedFi
     res.json(chat);
   } catch (error) {
     console.error('Upload group avatar error:', error);
-    res.status(500).json({ error: 'Ошибка загрузки аватара' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё Р°РІР°С‚Р°СЂР°' });
   }
 });
 
-// Удалить аватар группы (только админ)
+// РЈРґР°Р»РёС‚СЊ Р°РІР°С‚Р°СЂ РіСЂСѓРїРїС‹ (С‚РѕР»СЊРєРѕ Р°РґРјРёРЅ)
 router.delete('/:id/avatar', async (req: Request, res) => {
   try {
     const chatId = parseInt(req.params.id as string, 10);
@@ -473,7 +473,7 @@ router.delete('/:id/avatar', async (req: Request, res) => {
     });
 
     if (!member || member.role !== 'admin') {
-      res.status(403).json({ error: 'Только администратор может менять аватар группы' });
+      res.status(403).json({ error: 'РўРѕР»СЊРєРѕ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ РјРѕР¶РµС‚ РјРµРЅСЏС‚СЊ Р°РІР°С‚Р°СЂ РіСЂСѓРїРїС‹' });
       return;
     }
 
@@ -499,11 +499,11 @@ router.delete('/:id/avatar', async (req: Request, res) => {
 
     res.json(chat);
   } catch (error) {
-    res.status(500).json({ error: 'Ошибка удаления аватара' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ Р°РІР°С‚Р°СЂР°' });
   }
 });
 
-// ─── Multiple Avatars Management (for channels/groups) ─────────────────
+// в”Ђв”Ђв”Ђ Multiple Avatars Management (for channels/groups) в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
 const uploadMultipleAvatars = multer({
   storage: multer.diskStorage({
@@ -519,12 +519,12 @@ const uploadMultipleAvatars = multer({
     if (file.mimetype.startsWith('image/') && ALLOWED_IMAGE_EXTENSIONS.has(ext)) {
       cb(null, true);
     } else {
-      cb(new Error('Только изображения (jpg, png, gif, webp, avif)'));
+      cb(new Error('РўРѕР»СЊРєРѕ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ (jpg, png, gif, webp, avif)'));
     }
   },
 });
 
-// Загрузить несколько аватаров (до 100)
+// Р—Р°РіСЂСѓР·РёС‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ Р°РІР°С‚Р°СЂРѕРІ (РґРѕ 100)
 router.post('/:id/avatars', uploadMultipleAvatars.array('avatars', 100), encryptUploadedFile, async (req: Request, res) => {
   try {
     const chatId = parseInt(req.params.id as string, 10);
@@ -533,12 +533,12 @@ router.post('/:id/avatars', uploadMultipleAvatars.array('avatars', 100), encrypt
     });
 
     if (!member || !['owner', 'co-owner', 'admin'].includes(member.role)) {
-      res.status(403).json({ error: 'Только владелец, совладелец или администратор может управлять аватарами' });
+      res.status(403).json({ error: 'РўРѕР»СЊРєРѕ РІР»Р°РґРµР»РµС†, СЃРѕРІР»Р°РґРµР»РµС† РёР»Рё Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ РјРѕР¶РµС‚ СѓРїСЂР°РІР»СЏС‚СЊ Р°РІР°С‚Р°СЂР°РјРё' });
       return;
     }
 
     if (!req.files || (req.files as Express.Multer.File[]).length === 0) {
-      res.status(400).json({ error: 'Файлы не загружены' });
+      res.status(400).json({ error: 'Р¤Р°Р№Р»С‹ РЅРµ Р·Р°РіСЂСѓР¶РµРЅС‹' });
       return;
     }
 
@@ -577,11 +577,11 @@ router.post('/:id/avatars', uploadMultipleAvatars.array('avatars', 100), encrypt
     res.json(avatars);
   } catch (error) {
     console.error('Upload multiple avatars error:', error);
-    res.status(500).json({ error: 'Ошибка загрузки аватаров' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё Р°РІР°С‚Р°СЂРѕРІ' });
   }
 });
 
-// Получить все аватары чата
+// РџРѕР»СѓС‡РёС‚СЊ РІСЃРµ Р°РІР°С‚Р°СЂС‹ С‡Р°С‚Р°
 router.get('/:id/avatars', async (req: Request, res) => {
   try {
     const chatId = parseInt(req.params.id as string, 10);
@@ -591,7 +591,7 @@ router.get('/:id/avatars', async (req: Request, res) => {
     });
 
     if (!member) {
-      res.status(403).json({ error: 'Нет доступа' });
+      res.status(403).json({ error: 'РќРµС‚ РґРѕСЃС‚СѓРїР°' });
       return;
     }
 
@@ -603,18 +603,18 @@ router.get('/:id/avatars', async (req: Request, res) => {
     res.json(avatars);
   } catch (error) {
     console.error('Get avatars error:', error);
-    res.status(500).json({ error: 'Ошибка получения аватаров' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ Р°РІР°С‚Р°СЂРѕРІ' });
   }
 });
 
-// Обновить порядок аватаров
+// РћР±РЅРѕРІРёС‚СЊ РїРѕСЂСЏРґРѕРє Р°РІР°С‚Р°СЂРѕРІ
 router.put('/:id/avatars/reorder', async (req: Request, res: Response) => {
   try {
     const chatId = parseInt((req.params as { id?: string }).id as string, 10);
     const { avatarIds } = req.body as { avatarIds?: number[] };
 
     if (!avatarIds || !Array.isArray(avatarIds)) {
-      res.status(400).json({ error: 'Необходимо указать массив ID' });
+      res.status(400).json({ error: 'РќРµРѕР±С…РѕРґРёРјРѕ СѓРєР°Р·Р°С‚СЊ РјР°СЃСЃРёРІ ID' });
       return;
     }
 
@@ -623,7 +623,7 @@ router.put('/:id/avatars/reorder', async (req: Request, res: Response) => {
     });
 
     if (!member || !['owner', 'co-owner', 'admin'].includes(member.role)) {
-      res.status(403).json({ error: 'Только владелец, совладелец или администратор может управлять аватарами' });
+      res.status(403).json({ error: 'РўРѕР»СЊРєРѕ РІР»Р°РґРµР»РµС†, СЃРѕРІР»Р°РґРµР»РµС† РёР»Рё Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ РјРѕР¶РµС‚ СѓРїСЂР°РІР»СЏС‚СЊ Р°РІР°С‚Р°СЂР°РјРё' });
       return;
     }
 
@@ -640,11 +640,11 @@ router.put('/:id/avatars/reorder', async (req: Request, res: Response) => {
     res.json({ ok: true });
   } catch (error) {
     console.error('Reorder avatars error:', error);
-    res.status(500).json({ error: 'Ошибка изменения порядка' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° РёР·РјРµРЅРµРЅРёСЏ РїРѕСЂСЏРґРєР°' });
   }
 });
 
-// Установить главный аватар
+// РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РіР»Р°РІРЅС‹Р№ Р°РІР°С‚Р°СЂ
 router.put('/:id/avatars/:avatarId/main', async (req: Request, res: Response) => {
   try {
     const chatId = parseInt((req.params as { id?: string }).id as string, 10);
@@ -655,7 +655,7 @@ router.put('/:id/avatars/:avatarId/main', async (req: Request, res: Response) =>
     });
 
     if (!member || !['owner', 'co-owner', 'admin'].includes(member.role)) {
-      res.status(403).json({ error: 'Только владелец, совладелец или администратор может управлять аватарами' });
+      res.status(403).json({ error: 'РўРѕР»СЊРєРѕ РІР»Р°РґРµР»РµС†, СЃРѕРІР»Р°РґРµР»РµС† РёР»Рё Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ РјРѕР¶РµС‚ СѓРїСЂР°РІР»СЏС‚СЊ Р°РІР°С‚Р°СЂР°РјРё' });
       return;
     }
 
@@ -664,7 +664,7 @@ router.put('/:id/avatars/:avatarId/main', async (req: Request, res: Response) =>
     });
 
     if (!avatar || avatar.chatId !== chatId) {
-      res.status(404).json({ error: 'Аватар не найден' });
+      res.status(404).json({ error: 'РђРІР°С‚Р°СЂ РЅРµ РЅР°Р№РґРµРЅ' });
       return;
     }
 
@@ -689,11 +689,11 @@ router.put('/:id/avatars/:avatarId/main', async (req: Request, res: Response) =>
     res.json({ ok: true });
   } catch (error) {
     console.error('Set main avatar error:', error);
-    res.status(500).json({ error: 'Ошибка установки главного аватара' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СѓСЃС‚Р°РЅРѕРІРєРё РіР»Р°РІРЅРѕРіРѕ Р°РІР°С‚Р°СЂР°' });
   }
 });
 
-// Удалить аватар
+// РЈРґР°Р»РёС‚СЊ Р°РІР°С‚Р°СЂ
 router.delete('/:id/avatars/:avatarId', async (req: Request, res: Response) => {
   try {
     const chatId = parseInt((req.params as { id?: string }).id as string, 10);
@@ -704,7 +704,7 @@ router.delete('/:id/avatars/:avatarId', async (req: Request, res: Response) => {
     });
 
     if (!member || !['owner', 'co-owner', 'admin'].includes(member.role)) {
-      res.status(403).json({ error: 'Только владелец, совладелец или администратор может управлять аватарами' });
+      res.status(403).json({ error: 'РўРѕР»СЊРєРѕ РІР»Р°РґРµР»РµС†, СЃРѕРІР»Р°РґРµР»РµС† РёР»Рё Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ РјРѕР¶РµС‚ СѓРїСЂР°РІР»СЏС‚СЊ Р°РІР°С‚Р°СЂР°РјРё' });
       return;
     }
 
@@ -713,7 +713,7 @@ router.delete('/:id/avatars/:avatarId', async (req: Request, res: Response) => {
     });
 
     if (!avatar || avatar.chatId !== chatId) {
-      res.status(404).json({ error: 'Аватар не найден' });
+      res.status(404).json({ error: 'РђРІР°С‚Р°СЂ РЅРµ РЅР°Р№РґРµРЅ' });
       return;
     }
 
@@ -752,18 +752,18 @@ router.delete('/:id/avatars/:avatarId', async (req: Request, res: Response) => {
     res.json({ ok: true });
   } catch (error) {
     console.error('Delete avatar error:', error);
-    res.status(500).json({ error: 'Ошибка удаления аватара' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ Р°РІР°С‚Р°СЂР°' });
   }
 });
 
-// Добавить участников в группу (только админ)
+// Р”РѕР±Р°РІРёС‚СЊ СѓС‡Р°СЃС‚РЅРёРєРѕРІ РІ РіСЂСѓРїРїСѓ (С‚РѕР»СЊРєРѕ Р°РґРјРёРЅ)
 router.post('/:id/members', async (req: Request, res: Response) => {
   try {
     const chatId = parseInt((req.params as { id?: string }).id as string, 10);
     const { userIds } = req.body as { userIds?: number[] };
 
     if (!userIds || !Array.isArray(userIds) || userIds.length === 0) {
-      res.status(400).json({ error: 'Необходимо указать пользователей' });
+      res.status(400).json({ error: 'РќРµРѕР±С…РѕРґРёРјРѕ СѓРєР°Р·Р°С‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№' });
       return;
     }
 
@@ -772,13 +772,13 @@ router.post('/:id/members', async (req: Request, res: Response) => {
     });
 
     if (!member || member.role !== 'admin') {
-      res.status(403).json({ error: 'Только администратор может добавлять участников' });
+      res.status(403).json({ error: 'РўРѕР»СЊРєРѕ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ РјРѕР¶РµС‚ РґРѕР±Р°РІР»СЏС‚СЊ СѓС‡Р°СЃС‚РЅРёРєРѕРІ' });
       return;
     }
 
     const chat = await prisma.chat.findUnique({ where: { id: chatId } });
     if (!chat || chat.type !== 'group') {
-      res.status(400).json({ error: 'Чат не является группой' });
+      res.status(400).json({ error: 'Р§Р°С‚ РЅРµ СЏРІР»СЏРµС‚СЃСЏ РіСЂСѓРїРїРѕР№' });
       return;
     }
 
@@ -808,11 +808,11 @@ router.post('/:id/members', async (req: Request, res: Response) => {
     res.json(updatedChat);
   } catch (error) {
     console.error('Add members error:', error);
-    res.status(500).json({ error: 'Ошибка добавления участников' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° РґРѕР±Р°РІР»РµРЅРёСЏ СѓС‡Р°СЃС‚РЅРёРєРѕРІ' });
   }
 });
 
-// Удалить участника из группы (только админ)
+// РЈРґР°Р»РёС‚СЊ СѓС‡Р°СЃС‚РЅРёРєР° РёР· РіСЂСѓРїРїС‹ (С‚РѕР»СЊРєРѕ Р°РґРјРёРЅ)
 router.delete('/:id/members/:userId', async (req: Request, res: Response) => {
   try {
     const chatId = parseInt((req.params as { id?: string }).id as string, 10);
@@ -823,12 +823,12 @@ router.delete('/:id/members/:userId', async (req: Request, res: Response) => {
     });
 
     if (!member || member.role !== 'admin') {
-      res.status(403).json({ error: 'Только администратор может удалять участников' });
+      res.status(403).json({ error: 'РўРѕР»СЊРєРѕ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ РјРѕР¶РµС‚ СѓРґР°Р»СЏС‚СЊ СѓС‡Р°СЃС‚РЅРёРєРѕРІ' });
       return;
     }
 
     if (targetUserId === req.userId) {
-      res.status(400).json({ error: 'Нельзя удалить себя из группы' });
+      res.status(400).json({ error: 'РќРµР»СЊР·СЏ СѓРґР°Р»РёС‚СЊ СЃРµР±СЏ РёР· РіСЂСѓРїРїС‹' });
       return;
     }
 
@@ -854,11 +854,11 @@ router.delete('/:id/members/:userId', async (req: Request, res: Response) => {
     res.json(updatedChat);
   } catch (error) {
     console.error('Remove member error:', error);
-    res.status(500).json({ error: 'Ошибка удаления участника' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ СѓС‡Р°СЃС‚РЅРёРєР°' });
   }
 });
 
-// Очистить чат для себя
+// РћС‡РёСЃС‚РёС‚СЊ С‡Р°С‚ РґР»СЏ СЃРµР±СЏ
 router.post('/:id/clear', async (req: Request, res: Response) => {
   try {
     const chatId = parseInt((req.params as { id?: string }).id as string, 10);
@@ -870,13 +870,13 @@ router.post('/:id/clear', async (req: Request, res: Response) => {
     });
 
     if (!chat) {
-      res.status(404).json({ error: 'Чат не найден' });
+      res.status(404).json({ error: 'Р§Р°С‚ РЅРµ РЅР°Р№РґРµРЅ' });
       return;
     }
 
     // Cannot clear favorites chat
     if (chat.type === 'favorites') {
-      res.status(400).json({ error: 'Нельзя очистить чат "Избранное"' });
+      res.status(400).json({ error: 'РќРµР»СЊР·СЏ РѕС‡РёСЃС‚РёС‚СЊ С‡Р°С‚ "РР·Р±СЂР°РЅРЅРѕРµ"' });
       return;
     }
 
@@ -888,7 +888,7 @@ router.post('/:id/clear', async (req: Request, res: Response) => {
       });
 
       if (!member || !['owner', 'co-owner', 'admin'].includes(member.role)) {
-        res.status(403).json({ error: 'Только владелец, совладелец или администратор может очищать канал' });
+        res.status(403).json({ error: 'РўРѕР»СЊРєРѕ РІР»Р°РґРµР»РµС†, СЃРѕРІР»Р°РґРµР»РµС† РёР»Рё Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ РјРѕР¶РµС‚ РѕС‡РёС‰Р°С‚СЊ РєР°РЅР°Р»' });
         return;
       }
     }
@@ -901,11 +901,11 @@ router.post('/:id/clear', async (req: Request, res: Response) => {
     res.json({ success: true });
   } catch (error) {
     console.error('Clear chat error:', error);
-    res.status(500).json({ error: 'Ошибка очистки чата' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° РѕС‡РёСЃС‚РєРё С‡Р°С‚Р°' });
   }
 });
 
-// Удалить чат (для текущего пользователя — выйти из чата)
+// РЈРґР°Р»РёС‚СЊ С‡Р°С‚ (РґР»СЏ С‚РµРєСѓС‰РµРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ вЂ” РІС‹Р№С‚Рё РёР· С‡Р°С‚Р°)
 router.delete('/:id', async (req: Request, res: Response) => {
   try {
     const chatId = parseInt((req.params as { id?: string }).id as string, 10);
@@ -917,20 +917,20 @@ router.delete('/:id', async (req: Request, res: Response) => {
     });
 
     if (!chat) {
-      res.status(404).json({ error: 'Чат не найден' });
+      res.status(404).json({ error: 'Р§Р°С‚ РЅРµ РЅР°Р№РґРµРЅ' });
       return;
     }
 
     // Membership check
     const isMember = chat.members.some(m => m.userId === userId);
     if (!isMember) {
-      res.status(403).json({ error: 'Нет доступа к этому чату' });
+      res.status(403).json({ error: 'РќРµС‚ РґРѕСЃС‚СѓРїР° Рє СЌС‚РѕРјСѓ С‡Р°С‚Сѓ' });
       return;
     }
 
     // Cannot delete favorites chat
     if (chat.type === 'favorites') {
-      res.status(400).json({ error: 'Нельзя удалить чат "Избранное"' });
+      res.status(400).json({ error: 'РќРµР»СЊР·СЏ СѓРґР°Р»РёС‚СЊ С‡Р°С‚ "РР·Р±СЂР°РЅРЅРѕРµ"' });
       return;
     }
 
@@ -945,7 +945,7 @@ router.delete('/:id', async (req: Request, res: Response) => {
         await prisma.chat.delete({ where: { id: chatId } });
       }
     } else if (chat.members.length <= 1) {
-      // Last member — delete the group entirely
+      // Last member вЂ” delete the group entirely
       await prisma.chat.delete({ where: { id: chatId } });
     } else {
       // For groups, just remove the member
@@ -957,11 +957,11 @@ router.delete('/:id', async (req: Request, res: Response) => {
     res.json({ success: true });
   } catch (error) {
     console.error('Delete chat error:', error);
-    res.status(500).json({ error: 'Ошибка удаления чата' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ С‡Р°С‚Р°' });
   }
 });
 
-// Закрепить / открепить чат
+// Р—Р°РєСЂРµРїРёС‚СЊ / РѕС‚РєСЂРµРїРёС‚СЊ С‡Р°С‚
 router.post('/:id/pin', async (req: Request, res: Response) => {
   try {
     const chatId = parseInt((req.params as { id?: string }).id as string, 10);
@@ -972,7 +972,7 @@ router.post('/:id/pin', async (req: Request, res: Response) => {
     });
 
     if (!member) {
-      res.status(404).json({ error: 'Чат не найден' });
+      res.status(404).json({ error: 'Р§Р°С‚ РЅРµ РЅР°Р№РґРµРЅ' });
       return;
     }
 
@@ -984,18 +984,18 @@ router.post('/:id/pin', async (req: Request, res: Response) => {
     res.json({ isPinned: !member.isPinned });
   } catch (error) {
     console.error('Pin chat error:', error);
-    res.status(500).json({ error: 'Ошибка закрепления чата' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° Р·Р°РєСЂРµРїР»РµРЅРёСЏ С‡Р°С‚Р°' });
   }
 });
 
-// Пригласить пользователей в канал (только владелец/админ)
+// РџСЂРёРіР»Р°СЃРёС‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ РІ РєР°РЅР°Р» (С‚РѕР»СЊРєРѕ РІР»Р°РґРµР»РµС†/Р°РґРјРёРЅ)
 router.post('/:id/invite', async (req: Request, res: Response) => {
   try {
     const chatId = parseInt((req.params as { id?: string }).id as string, 10);
     const { userIds } = req.body as { userIds?: number[] };
 
     if (!userIds || !Array.isArray(userIds) || userIds.length === 0) {
-      res.status(400).json({ error: 'Необходимо указать пользователей' });
+      res.status(400).json({ error: 'РќРµРѕР±С…РѕРґРёРјРѕ СѓРєР°Р·Р°С‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№' });
       return;
     }
 
@@ -1004,13 +1004,13 @@ router.post('/:id/invite', async (req: Request, res: Response) => {
     });
 
     if (!inviterMember || !['owner', 'co-owner', 'admin'].includes(inviterMember.role)) {
-      res.status(403).json({ error: 'Только владелец, совладелец или администратор может приглашать участников' });
+      res.status(403).json({ error: 'РўРѕР»СЊРєРѕ РІР»Р°РґРµР»РµС†, СЃРѕРІР»Р°РґРµР»РµС† РёР»Рё Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ РјРѕР¶РµС‚ РїСЂРёРіР»Р°С€Р°С‚СЊ СѓС‡Р°СЃС‚РЅРёРєРѕРІ' });
       return;
     }
 
     const chat = await prisma.chat.findUnique({ where: { id: chatId } });
     if (!chat || chat.type !== 'channel') {
-      res.status(400).json({ error: 'Чат не является каналом' });
+      res.status(400).json({ error: 'Р§Р°С‚ РЅРµ СЏРІР»СЏРµС‚СЃСЏ РєР°РЅР°Р»РѕРј' });
       return;
     }
 
@@ -1045,15 +1045,15 @@ router.post('/:id/invite', async (req: Request, res: Response) => {
     res.json({ ...updatedChat, addedUsers });
   } catch (error) {
     console.error('Invite to channel error:', error);
-    res.status(500).json({ error: 'Ошибка приглашения в канал' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° РїСЂРёРіР»Р°С€РµРЅРёСЏ РІ РєР°РЅР°Р»' });
   }
 });
 
 // ============================================
-// 📢 КАНАЛЫ - Подписка/Отписка
+// рџ“ў РљРђРќРђР›Р« - РџРѕРґРїРёСЃРєР°/РћС‚РїРёСЃРєР°
 // ============================================
 
-// Подписаться на канал
+// РџРѕРґРїРёСЃР°С‚СЊСЃСЏ РЅР° РєР°РЅР°Р»
 router.post('/:id/subscribe', async (req: Request, res: Response) => {
   try {
     const chatId = parseInt((req.params as { id?: string }).id as string, 10);
@@ -1063,7 +1063,7 @@ router.post('/:id/subscribe', async (req: Request, res: Response) => {
     });
 
     if (!chat || chat.type !== 'channel') {
-      res.status(400).json({ error: 'Можно подписаться только на канал' });
+      res.status(400).json({ error: 'РњРѕР¶РЅРѕ РїРѕРґРїРёСЃР°С‚СЊСЃСЏ С‚РѕР»СЊРєРѕ РЅР° РєР°РЅР°Р»' });
       return;
     }
 
@@ -1073,7 +1073,7 @@ router.post('/:id/subscribe', async (req: Request, res: Response) => {
     });
 
     if (existing) {
-      res.status(400).json({ error: 'Вы уже подписаны на этот канал' });
+      res.status(400).json({ error: 'Р’С‹ СѓР¶Рµ РїРѕРґРїРёСЃР°РЅС‹ РЅР° СЌС‚РѕС‚ РєР°РЅР°Р»' });
       return;
     }
 
@@ -1102,11 +1102,11 @@ router.post('/:id/subscribe', async (req: Request, res: Response) => {
     res.json({ success: true });
   } catch (error) {
     console.error('Subscribe to channel error:', error);
-    res.status(500).json({ error: 'Ошибка подписки на канал' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° РїРѕРґРїРёСЃРєРё РЅР° РєР°РЅР°Р»' });
   }
 });
 
-// Отписаться от канала
+// РћС‚РїРёСЃР°С‚СЊСЃСЏ РѕС‚ РєР°РЅР°Р»Р°
 router.delete('/:id/subscribe', async (req: Request, res: Response) => {
   try {
     const chatId = parseInt((req.params as { id?: string }).id as string, 10);
@@ -1123,15 +1123,15 @@ router.delete('/:id/subscribe', async (req: Request, res: Response) => {
     res.json({ success: true });
   } catch (error) {
     console.error('Unsubscribe from channel error:', error);
-    res.status(500).json({ error: 'Ошибка отписки от канала' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° РѕС‚РїРёСЃРєРё РѕС‚ РєР°РЅР°Р»Р°' });
   }
 });
 
 // ============================================
-// 🔗 ССЫЛКИ-ПРИГЛАШЕНИЯ
+// рџ”— РЎРЎР«Р›РљР-РџР РР“Р›РђРЁР•РќРРЇ
 // ============================================
 
-// Сгенерировать ссылку-приглашение
+// РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ СЃСЃС‹Р»РєСѓ-РїСЂРёРіР»Р°С€РµРЅРёРµ
 router.post('/:id/invite-link', async (req: Request, res: Response) => {
   try {
     const chatId = parseInt((req.params as { id?: string }).id as string, 10);
@@ -1142,13 +1142,13 @@ router.post('/:id/invite-link', async (req: Request, res: Response) => {
     });
 
     if (!member || !['owner', 'co-owner', 'admin'].includes(member.role)) {
-      res.status(403).json({ error: 'Только владелец, совладелец или администратор может создавать ссылки' });
+      res.status(403).json({ error: 'РўРѕР»СЊРєРѕ РІР»Р°РґРµР»РµС†, СЃРѕРІР»Р°РґРµР»РµС† РёР»Рё Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ РјРѕР¶РµС‚ СЃРѕР·РґР°РІР°С‚СЊ СЃСЃС‹Р»РєРё' });
       return;
     }
 
     const chat = await prisma.chat.findUnique({ where: { id: chatId } });
     if (!chat) {
-      res.status(404).json({ error: 'Чат не найден' });
+      res.status(404).json({ error: 'Р§Р°С‚ РЅРµ РЅР°Р№РґРµРЅ' });
       return;
     }
 
@@ -1163,11 +1163,11 @@ router.post('/:id/invite-link', async (req: Request, res: Response) => {
     res.json({ inviteLink, chatId: chat.id, chatName: chat.name || chat.username });
   } catch (error) {
     console.error('Generate invite link error:', error);
-    res.status(500).json({ error: 'Ошибка генерации ссылки' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° РіРµРЅРµСЂР°С†РёРё СЃСЃС‹Р»РєРё' });
   }
 });
 
-// Вступить по ссылке-приглашению
+// Р’СЃС‚СѓРїРёС‚СЊ РїРѕ СЃСЃС‹Р»РєРµ-РїСЂРёРіР»Р°С€РµРЅРёСЋ
 router.post('/join/:inviteLink', async (req: Request, res: Response) => {
   try {
     const { inviteLink } = req.params;
@@ -1177,7 +1177,7 @@ router.post('/join/:inviteLink', async (req: Request, res: Response) => {
     });
 
     if (!chat) {
-      res.status(404).json({ error: 'Ссылка не найдена' });
+      res.status(404).json({ error: 'РЎСЃС‹Р»РєР° РЅРµ РЅР°Р№РґРµРЅР°' });
       return;
     }
 
@@ -1187,7 +1187,7 @@ router.post('/join/:inviteLink', async (req: Request, res: Response) => {
     });
 
     if (existingMember) {
-      res.status(400).json({ error: 'Вы уже являетесь участником' });
+      res.status(400).json({ error: 'Р’С‹ СѓР¶Рµ СЏРІР»СЏРµС‚РµСЃСЊ СѓС‡Р°СЃС‚РЅРёРєРѕРј' });
       return;
     }
 
@@ -1213,15 +1213,15 @@ router.post('/join/:inviteLink', async (req: Request, res: Response) => {
     res.json({ success: true, chat: { id: chat.id, name: chat.name, username: chat.username, type: chat.type } });
   } catch (error) {
     console.error('Join by invite link error:', error);
-    res.status(500).json({ error: 'Ошибка вступления по ссылке' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° РІСЃС‚СѓРїР»РµРЅРёСЏ РїРѕ СЃСЃС‹Р»РєРµ' });
   }
 });
 
 // ============================================
-// ⚙️ НАСТРОЙКИ КАНАЛА
+// вљ™пёЏ РќРђРЎРўР РћР™РљР РљРђРќРђР›Рђ
 // ============================================
 
-// Обновить настройки канала (публичный/приватный)
+// РћР±РЅРѕРІРёС‚СЊ РЅР°СЃС‚СЂРѕР№РєРё РєР°РЅР°Р»Р° (РїСѓР±Р»РёС‡РЅС‹Р№/РїСЂРёРІР°С‚РЅС‹Р№)
 router.put('/:id/settings', async (req: Request, res: Response) => {
   try {
     const chatId = parseInt((req.params as { id?: string }).id as string, 10);
@@ -1236,25 +1236,25 @@ router.put('/:id/settings', async (req: Request, res: Response) => {
     });
 
     if (!member || !['owner', 'co-owner', 'admin'].includes(member.role)) {
-      res.status(403).json({ error: 'Только владелец, совладелец или администратор может изменять настройки' });
+      res.status(403).json({ error: 'РўРѕР»СЊРєРѕ РІР»Р°РґРµР»РµС†, СЃРѕРІР»Р°РґРµР»РµС† РёР»Рё Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ РјРѕР¶РµС‚ РёР·РјРµРЅСЏС‚СЊ РЅР°СЃС‚СЂРѕР№РєРё' });
       return;
     }
 
     const chat = await prisma.chat.findUnique({ where: { id: chatId } });
     if (!chat || chat.type !== 'channel') {
-      res.status(400).json({ error: 'Чат не является каналом' });
+      res.status(400).json({ error: 'Р§Р°С‚ РЅРµ СЏРІР»СЏРµС‚СЃСЏ РєР°РЅР°Р»РѕРј' });
       return;
     }
 
     // Validate username if provided
     if (username !== undefined) {
       if (username && (username.length < 3 || username.length > 32)) {
-        res.status(400).json({ error: 'Юзернейм должен быть от 3 до 32 символов' });
+        res.status(400).json({ error: 'Р®Р·РµСЂРЅРµР№Рј РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РѕС‚ 3 РґРѕ 32 СЃРёРјРІРѕР»РѕРІ' });
         return;
       }
 
       if (username && !/^[a-zA-Z0-9_]+$/.test(username)) {
-        res.status(400).json({ error: 'Юзернейм может содержать только буквы, цифры и подчёркивания' });
+        res.status(400).json({ error: 'Р®Р·РµСЂРЅРµР№Рј РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕР»СЊРєРѕ Р±СѓРєРІС‹, С†РёС„СЂС‹ Рё РїРѕРґС‡С‘СЂРєРёРІР°РЅРёСЏ' });
         return;
       }
 
@@ -1268,7 +1268,7 @@ router.put('/:id/settings', async (req: Request, res: Response) => {
         });
 
         if (existing) {
-          res.status(400).json({ error: 'Этот юзернейм уже занят' });
+          res.status(400).json({ error: 'Р­С‚РѕС‚ СЋР·РµСЂРЅРµР№Рј СѓР¶Рµ Р·Р°РЅСЏС‚' });
           return;
         }
       }
@@ -1297,7 +1297,7 @@ router.put('/:id/settings', async (req: Request, res: Response) => {
     res.json(updated);
   } catch (error) {
     console.error('Update channel settings error:', error);
-    res.status(500).json({ error: 'Ошибка обновления настроек канала' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ РЅР°СЃС‚СЂРѕРµРє РєР°РЅР°Р»Р°' });
   }
 });
 

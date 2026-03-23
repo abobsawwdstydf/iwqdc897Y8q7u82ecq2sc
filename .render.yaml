@@ -1,7 +1,7 @@
-services:
+﻿services:
   # Backend service (Server + Database + Frontend)
   - type: web
-    name: nimbus-messenger
+    name: Nexo-messenger
     env: node
     region: frankfurt
     plan: free
@@ -17,7 +17,7 @@ services:
         generateValue: true
       - key: DATABASE_URL
         fromDatabase:
-          name: nimbus-db
+          name: Nexo-db
           property: connectionString
       - key: CORS_ORIGINS
         sync: false
@@ -29,8 +29,8 @@ services:
         value: "3001"
 
 databases:
-  - name: nimbus-db
-    databaseName: nimbus
-    user: nimbus
+  - name: Nexo-db
+    databaseName: Nexo
+    user: Nexo
     plan: free
     region: frankfurt

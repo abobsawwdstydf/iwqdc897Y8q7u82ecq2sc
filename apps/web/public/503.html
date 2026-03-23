@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>503 - Сервис недоступен | Nimbus</title>
+    <title>503 - РЎРµСЂРІРёСЃ РЅРµРґРѕСЃС‚СѓРїРµРЅ | Nexo</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -95,24 +95,24 @@
     </style>
 </head>
 <body>
-    <div class="satellite" style="top: 50%; left: 50%;">🛰️</div>
+    <div class="satellite" style="top: 50%; left: 50%;">рџ›°пёЏ</div>
     <div class="container">
-        <div class="icon">📡</div>
+        <div class="icon">рџ“Ў</div>
         <h1>503</h1>
-        <h2>Сервис недоступен</h2>
-        <p>Мы уже работаем над восстановлением</p>
+        <h2>РЎРµСЂРІРёСЃ РЅРµРґРѕСЃС‚СѓРїРµРЅ</h2>
+        <p>РњС‹ СѓР¶Рµ СЂР°Р±РѕС‚Р°РµРј РЅР°Рґ РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёРµРј</p>
         <div class="status">
-            <p>Статус восстановления</p>
+            <p>РЎС‚Р°С‚СѓСЃ РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ</p>
             <div class="progress">
                 <div class="progress-bar"></div>
             </div>
-            <p id="statusText" style="font-size: 14px; color: #a0aec0;">Подключение...</p>
+            <p id="statusText" style="font-size: 14px; color: #a0aec0;">РџРѕРґРєР»СЋС‡РµРЅРёРµ...</p>
         </div>
-        <a href="/" class="btn" style="margin-top: 20px;">Обновить</a>
+        <a href="/" class="btn" style="margin-top: 20px;">РћР±РЅРѕРІРёС‚СЊ</a>
         <div class="author">by haker_one</div>
     </div>
     <script>
-        const statuses = ['Подключение...', 'Проверка сервера...', 'Восстановление...', 'Почти готово...'];
+        const statuses = ['РџРѕРґРєР»СЋС‡РµРЅРёРµ...', 'РџСЂРѕРІРµСЂРєР° СЃРµСЂРІРµСЂР°...', 'Р’РѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёРµ...', 'РџРѕС‡С‚Рё РіРѕС‚РѕРІРѕ...'];
         let i = 0;
         setInterval(() => {
             document.getElementById('statusText').textContent = statuses[i++ % statuses.length];

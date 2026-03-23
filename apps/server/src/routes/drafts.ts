@@ -1,13 +1,13 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Router, Response } from 'express';
 import { prisma } from '../db';
 const router = Router();
 
 // ============================================
-// 📝 ЧЕРНОВИКИ (автосохранение)
+// рџ“ќ Р§Р•Р РќРћР’РРљР (Р°РІС‚РѕСЃРѕС…СЂР°РЅРµРЅРёРµ)
 // ============================================
 
-// Получить черновик для чата
+// РџРѕР»СѓС‡РёС‚СЊ С‡РµСЂРЅРѕРІРёРє РґР»СЏ С‡Р°С‚Р°
 router.get('/chat/:chatId', async (req: Request, res: Response) => {
   try {
     const chatId = parseInt(req.params.chatId as string, 10);
@@ -22,11 +22,11 @@ router.get('/chat/:chatId', async (req: Request, res: Response) => {
     res.json(draft || { content: '', media: null });
   } catch (error) {
     console.error('Get draft error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Получить все черновики пользователя
+// РџРѕР»СѓС‡РёС‚СЊ РІСЃРµ С‡РµСЂРЅРѕРІРёРєРё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 router.get('/', async (req: Request, res: Response) => {
   try {
     const drafts = await prisma.draft.findMany({
@@ -37,11 +37,11 @@ router.get('/', async (req: Request, res: Response) => {
     res.json(drafts);
   } catch (error) {
     console.error('Get all drafts error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Создать или обновить черновик (автосохранение)
+// РЎРѕР·РґР°С‚СЊ РёР»Рё РѕР±РЅРѕРІРёС‚СЊ С‡РµСЂРЅРѕРІРёРє (Р°РІС‚РѕСЃРѕС…СЂР°РЅРµРЅРёРµ)
 router.post('/', async (req: Request, res: Response) => {
   try {
     const { chatId, content, media } = req.body as {
@@ -80,11 +80,11 @@ router.post('/', async (req: Request, res: Response) => {
     res.json(draft);
   } catch (error) {
     console.error('Save draft error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Удалить черновик
+// РЈРґР°Р»РёС‚СЊ С‡РµСЂРЅРѕРІРёРє
 router.delete('/:id', async (req: Request, res: Response) => {
   try {
     const draftId = parseInt(req.params.id as string, 10);
@@ -94,7 +94,7 @@ router.delete('/:id', async (req: Request, res: Response) => {
     });
 
     if (!draft) {
-      res.status(404).json({ error: 'Черновик не найден' });
+      res.status(404).json({ error: 'Р§РµСЂРЅРѕРІРёРє РЅРµ РЅР°Р№РґРµРЅ' });
       return;
     }
 
@@ -105,11 +105,11 @@ router.delete('/:id', async (req: Request, res: Response) => {
     res.json({ success: true });
   } catch (error) {
     console.error('Delete draft error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Очистить все черновики
+// РћС‡РёСЃС‚РёС‚СЊ РІСЃРµ С‡РµСЂРЅРѕРІРёРєРё
 router.delete('/', async (req: Request, res: Response) => {
   try {
     await prisma.draft.deleteMany({
@@ -119,7 +119,7 @@ router.delete('/', async (req: Request, res: Response) => {
     res.json({ success: true });
   } catch (error) {
     console.error('Clear all drafts error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 

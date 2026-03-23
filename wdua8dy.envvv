@@ -1,28 +1,28 @@
-# ============================================
-# 🚀 NIMBUS - Готовый .env для Render.com
+﻿# ============================================
+# рџљЂ Nexo - Р“РѕС‚РѕРІС‹Р№ .env РґР»СЏ Render.com
 # ============================================
 
-# Режим работы
+# Р РµР¶РёРј СЂР°Р±РѕС‚С‹
 NODE_ENV=production
 
-# Порт сервера
+# РџРѕСЂС‚ СЃРµСЂРІРµСЂР°
 PORT=3001
 
-# PostgreSQL база данных (Render)
-DATABASE_URL=postgresql://nimbus:VMEWWc3q2eUrIIVjbgkBRnDlZv9RRBrg@dpg-d70231p5pdvs738vfg0g-a.frankfurt-postgres.render.com/nimbus_wnbp
+# PostgreSQL Р±Р°Р·Р° РґР°РЅРЅС‹С… (Render)
+DATABASE_URL=postgresql://Nexo:VMEWWc3q2eUrIIVjbgkBRnDlZv9RRBrg@dpg-d70231p5pdvs738vfg0g-a.frankfurt-postgres.render.com/Nexo_wnbp
 
-# JWT секрет (64 символа)
+# JWT СЃРµРєСЂРµС‚ (64 СЃРёРјРІРѕР»Р°)
 JWT_SECRET=36427af4278b7198dc850c7235c4c85feda7275d89fe3d360c79a1af94579765
 
-# Ключ шифрования сообщений (AES-256-GCM, 64 символа)
+# РљР»СЋС‡ С€РёС„СЂРѕРІР°РЅРёСЏ СЃРѕРѕР±С‰РµРЅРёР№ (AES-256-GCM, 64 СЃРёРјРІРѕР»Р°)
 ENCRYPTION_KEY=36427af4278b7198dc850c7235c4c85feda7275d89fe3d360c79a1af94579765
 
-# CORS - разрешённые источники
+# CORS - СЂР°Р·СЂРµС€С‘РЅРЅС‹Рµ РёСЃС‚РѕС‡РЅРёРєРё
 CORS_ORIGINS=*
 
-# Лимит регистраций с одного IP
+# Р›РёРјРёС‚ СЂРµРіРёСЃС‚СЂР°С†РёР№ СЃ РѕРґРЅРѕРіРѕ IP
 MAX_REGISTRATIONS_PER_IP=5
 
 # ============================================
-# ✅ Все переменные готовы для деплоя на Render
+# вњ… Р’СЃРµ РїРµСЂРµРјРµРЅРЅС‹Рµ РіРѕС‚РѕРІС‹ РґР»СЏ РґРµРїР»РѕСЏ РЅР° Render
 # ============================================

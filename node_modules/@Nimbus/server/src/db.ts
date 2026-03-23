@@ -1,9 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+﻿import { PrismaClient } from '@prisma/client';
 import { encryptText, decryptText, isEncryptionEnabled } from './encrypt';
 
 const basePrisma = new PrismaClient();
 
-// ─── Prisma extension: transparent message encryption ───────────────
+// в”Ђв”Ђв”Ђ Prisma extension: transparent message encryption в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 // Encrypts `content` and `quote` before writing to DB,
 // decrypts them after reading. This way the DB never stores plaintext.
 

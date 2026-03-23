@@ -1,11 +1,11 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Router, Response } from 'express';
 import { prisma } from '../db';
 import { USER_SELECT } from '../shared';
 
 const router = Router();
 
-// ─── Get accepted friends list ───────────────────────────────────────
+// в”Ђв”Ђв”Ђ Get accepted friends list в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 router.get('/', async (req: Request, res: Response) => {
   try {
     const userId = req.userId!;
@@ -29,11 +29,11 @@ router.get('/', async (req: Request, res: Response) => {
     res.json(friends);
   } catch (error) {
     console.error('Get friends error:', error);
-    res.status(500).json({ error: 'Ошибка получения друзей' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РґСЂСѓР·РµР№' });
   }
 });
 
-// ─── Get incoming friend requests ────────────────────────────────────
+// в”Ђв”Ђв”Ђ Get incoming friend requests в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 router.get('/requests', async (req: Request, res) => {
   try {
     const userId = req.userId!;
@@ -49,11 +49,11 @@ router.get('/requests', async (req: Request, res) => {
     res.json(requests.map(r => ({ id: r.id, user: r.user, createdAt: r.createdAt })));
   } catch (error) {
     console.error('Get friend requests error:', error);
-    res.status(500).json({ error: 'Ошибка получения заявок' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ Р·Р°СЏРІРѕРє' });
   }
 });
 
-// ─── Get outgoing friend requests ────────────────────────────────────
+// в”Ђв”Ђв”Ђ Get outgoing friend requests в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 router.get('/outgoing', async (req: Request, res) => {
   try {
     const userId = req.userId!;
@@ -69,11 +69,11 @@ router.get('/outgoing', async (req: Request, res) => {
     res.json(requests.map(r => ({ id: r.id, user: r.friend, createdAt: r.createdAt })));
   } catch (error) {
     console.error('Get outgoing requests error:', error);
-    res.status(500).json({ error: 'Ошибка получения заявок' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ Р·Р°СЏРІРѕРє' });
   }
 });
 
-// ─── Get friendship status with a user ───────────────────────────────
+// в”Ђв”Ђв”Ђ Get friendship status with a user в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 router.get('/status/:userId', async (req: Request, res: Response) => {
   try {
     const userId = req.userId!;
@@ -103,30 +103,30 @@ router.get('/status/:userId', async (req: Request, res: Response) => {
     res.json({ status: friendship.status, friendshipId: friendship.id, direction });
   } catch (error) {
     console.error('Get friend status error:', error);
-    res.status(500).json({ error: 'Ошибка получения статуса' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ СЃС‚Р°С‚СѓСЃР°' });
   }
 });
 
-// ─── Send friend request ─────────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Send friend request в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 router.post('/request', async (req: Request, res: Response) => {
   try {
     const userId = req.userId!;
     const { friendId } = req.body as { friendId?: number };
 
     if (!friendId || typeof friendId !== 'number') {
-      res.status(400).json({ error: 'ID пользователя обязателен' });
+      res.status(400).json({ error: 'ID РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РѕР±СЏР·Р°С‚РµР»РµРЅ' });
       return;
     }
 
     if (userId === friendId) {
-      res.status(400).json({ error: 'Нельзя добавить себя в друзья' });
+      res.status(400).json({ error: 'РќРµР»СЊР·СЏ РґРѕР±Р°РІРёС‚СЊ СЃРµР±СЏ РІ РґСЂСѓР·СЊСЏ' });
       return;
     }
 
     // Check if target user exists
     const targetUser = await prisma.user.findUnique({ where: { id: friendId } });
     if (!targetUser) {
-      res.status(404).json({ error: 'Пользователь не найден' });
+      res.status(404).json({ error: 'РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РЅР°Р№РґРµРЅ' });
       return;
     }
 
@@ -142,7 +142,7 @@ router.post('/request', async (req: Request, res: Response) => {
 
     if (existing) {
       if (existing.status === 'accepted') {
-        res.status(400).json({ error: 'Уже в друзьях' });
+        res.status(400).json({ error: 'РЈР¶Рµ РІ РґСЂСѓР·СЊСЏС…' });
         return;
       }
       if (existing.status === 'pending') {
@@ -156,11 +156,11 @@ router.post('/request', async (req: Request, res: Response) => {
           res.json({ status: 'accepted', friendship: updated });
           return;
         }
-        res.status(400).json({ error: 'Заявка уже отправлена' });
+        res.status(400).json({ error: 'Р—Р°СЏРІРєР° СѓР¶Рµ РѕС‚РїСЂР°РІР»РµРЅР°' });
         return;
       }
       if (existing.status === 'declined') {
-        // Allow re-sending if previously declined — keep existing direction to avoid @@unique conflict
+        // Allow re-sending if previously declined вЂ” keep existing direction to avoid @@unique conflict
         const updated = await prisma.friendship.update({
           where: { id: existing.id },
           data: { status: 'pending' },
@@ -178,11 +178,11 @@ router.post('/request', async (req: Request, res: Response) => {
     res.json({ status: 'pending', friendship });
   } catch (error) {
     console.error('Send friend request error:', error);
-    res.status(500).json({ error: 'Ошибка отправки заявки' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° РѕС‚РїСЂР°РІРєРё Р·Р°СЏРІРєРё' });
   }
 });
 
-// ─── Accept friend request ───────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Accept friend request в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 router.post('/:id/accept', async (req: Request, res: Response) => {
   try {
     const userId = req.userId!;
@@ -191,7 +191,7 @@ router.post('/:id/accept', async (req: Request, res: Response) => {
     const friendship = await prisma.friendship.findUnique({ where: { id: friendshipId } });
 
     if (!friendship || friendship.friendId !== userId || friendship.status !== 'pending') {
-      res.status(404).json({ error: 'Заявка не найдена' });
+      res.status(404).json({ error: 'Р—Р°СЏРІРєР° РЅРµ РЅР°Р№РґРµРЅР°' });
       return;
     }
 
@@ -201,7 +201,7 @@ router.post('/:id/accept', async (req: Request, res: Response) => {
       include: { user: { select: USER_SELECT }, friend: { select: USER_SELECT } },
     });
 
-    // Автоматически создать личный чат 1-на-1
+    // РђРІС‚РѕРјР°С‚РёС‡РµСЃРєРё СЃРѕР·РґР°С‚СЊ Р»РёС‡РЅС‹Р№ С‡Р°С‚ 1-РЅР°-1
     const existingChat = await prisma.chat.findFirst({
       where: {
         type: 'personal',
@@ -229,11 +229,11 @@ router.post('/:id/accept', async (req: Request, res: Response) => {
     res.json(updated);
   } catch (error) {
     console.error('Accept friend request error:', error);
-    res.status(500).json({ error: 'Ошибка принятия заявки' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° РїСЂРёРЅСЏС‚РёСЏ Р·Р°СЏРІРєРё' });
   }
 });
 
-// ─── Decline friend request ──────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Decline friend request в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 router.post('/:id/decline', async (req: Request, res: Response) => {
   try {
     const userId = req.userId!;
@@ -242,7 +242,7 @@ router.post('/:id/decline', async (req: Request, res: Response) => {
     const friendship = await prisma.friendship.findUnique({ where: { id: friendshipId } });
 
     if (!friendship || friendship.friendId !== userId || friendship.status !== 'pending') {
-      res.status(404).json({ error: 'Заявка не найдена' });
+      res.status(404).json({ error: 'Р—Р°СЏРІРєР° РЅРµ РЅР°Р№РґРµРЅР°' });
       return;
     }
 
@@ -254,11 +254,11 @@ router.post('/:id/decline', async (req: Request, res: Response) => {
     res.json({ success: true });
   } catch (error) {
     console.error('Decline friend request error:', error);
-    res.status(500).json({ error: 'Ошибка отклонения заявки' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° РѕС‚РєР»РѕРЅРµРЅРёСЏ Р·Р°СЏРІРєРё' });
   }
 });
 
-// ─── Remove friend ───────────────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Remove friend в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 router.delete('/:id', async (req: Request, res: Response) => {
   try {
     const userId = req.userId!;
@@ -267,7 +267,7 @@ router.delete('/:id', async (req: Request, res: Response) => {
     const friendship = await prisma.friendship.findUnique({ where: { id: friendshipId } });
 
     if (!friendship || (friendship.userId !== userId && friendship.friendId !== userId)) {
-      res.status(404).json({ error: 'Дружба не найдена' });
+      res.status(404).json({ error: 'Р”СЂСѓР¶Р±Р° РЅРµ РЅР°Р№РґРµРЅР°' });
       return;
     }
 
@@ -276,7 +276,7 @@ router.delete('/:id', async (req: Request, res: Response) => {
     res.json({ success: true });
   } catch (error) {
     console.error('Remove friend error:', error);
-    res.status(500).json({ error: 'Ошибка удаления друга' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ РґСЂСѓРіР°' });
   }
 });
 

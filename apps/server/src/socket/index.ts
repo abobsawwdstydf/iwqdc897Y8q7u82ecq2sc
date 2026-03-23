@@ -1,4 +1,4 @@
-import { Server, Socket } from 'socket.io';
+﻿import { Server, Socket } from 'socket.io';
 import * as jwt from 'jsonwebtoken';
 import { prisma } from '../db';
 import { config } from '../config';
@@ -10,13 +10,13 @@ interface AuthSocket extends Socket {
 
 const onlineUsers = new Map<number, Set<string>>();
 
-// ─── Active group calls: chatId → Set<userId> ────────────────────────
+// в”Ђв”Ђв”Ђ Active group calls: chatId в†’ Set<userId> в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 const activeGroupCalls = new Map<number, Set<number>>();
 
-// ─── Active live streams: chatId → { ownerId, viewers: Set<userId> } ─
+// в”Ђв”Ђв”Ђ Active live streams: chatId в†’ { ownerId, viewers: Set<userId> } в”Ђ
 const activeStreams = new Map<number, { ownerId: number; viewers: Set<number>; streamType: string }>();
 
-// ─── Socket rate limiting ────────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Socket rate limiting в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 const rateLimitMap = new Map<number, { count: number; resetAt: number }>();
 const RATE_LIMIT_WINDOW = 1000; // 1 second
 const RATE_LIMIT_MAX = 10; // max events per window
@@ -55,20 +55,20 @@ export function setupSocket(io: Server) {
 
   io.use((socket: AuthSocket, next) => {
     const token = socket.handshake.auth.token;
-    if (!token) return next(new Error('Требуется авторизация'));
+    if (!token) return next(new Error('РўСЂРµР±СѓРµС‚СЃСЏ Р°РІС‚РѕСЂРёР·Р°С†РёСЏ'));
 
     try {
       const decoded = jwt.verify(token, config.jwtSecret) as { userId: number };
       socket.userId = decoded.userId;
       next();
     } catch {
-      next(new Error('Недействительный токен'));
+      next(new Error('РќРµРґРµР№СЃС‚РІРёС‚РµР»СЊРЅС‹Р№ С‚РѕРєРµРЅ'));
     }
   });
 
   io.on('connection', async (socket: AuthSocket) => {
     const userId = socket.userId!;
-    console.log(`Пользователь подключился: ${userId}`);
+    console.log(`РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РїРѕРґРєР»СЋС‡РёР»СЃСЏ: ${userId}`);
 
     if (!onlineUsers.has(userId)) {
       onlineUsers.set(userId, new Set());
@@ -122,7 +122,7 @@ export function setupSocket(io: Server) {
       socket.leave(`chat:${chatId}`);
     });
 
-    // Отправка сообщения
+    // РћС‚РїСЂР°РІРєР° СЃРѕРѕР±С‰РµРЅРёСЏ
     socket.on('send_message', async (data: {
       chatId: number;
       content?: string;
@@ -141,20 +141,20 @@ export function setupSocket(io: Server) {
       try {
         // Rate limit
         if (!checkRateLimit(userId)) {
-          socket.emit('error', { message: 'Слишком много сообщений, подождите' });
+          socket.emit('error', { message: 'РЎР»РёС€РєРѕРј РјРЅРѕРіРѕ СЃРѕРѕР±С‰РµРЅРёР№, РїРѕРґРѕР¶РґРёС‚Рµ' });
           return;
         }
 
         // Validate payload
         if (!data.chatId || typeof data.chatId !== 'number') return;
         if (data.content && data.content.length > 10000) {
-          socket.emit('error', { message: 'Сообщение слишком длинное' });
+          socket.emit('error', { message: 'РЎРѕРѕР±С‰РµРЅРёРµ СЃР»РёС€РєРѕРј РґР»РёРЅРЅРѕРµ' });
           return;
         }
 
         // Membership check
         if (!(await isChatMember(data.chatId, userId))) {
-          socket.emit('error', { message: 'Нет доступа к этому чату' });
+          socket.emit('error', { message: 'РќРµС‚ РґРѕСЃС‚СѓРїР° Рє СЌС‚РѕРјСѓ С‡Р°С‚Сѓ' });
           return;
         }
 
@@ -171,7 +171,7 @@ export function setupSocket(io: Server) {
           });
 
           if (!member || !['owner', 'co-owner', 'admin'].includes(member.role)) {
-            socket.emit('error', { message: 'Только владелец, совладелец или администратор может отправлять сообщения в канале' });
+            socket.emit('error', { message: 'РўРѕР»СЊРєРѕ РІР»Р°РґРµР»РµС†, СЃРѕРІР»Р°РґРµР»РµС† РёР»Рё Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ РјРѕР¶РµС‚ РѕС‚РїСЂР°РІР»СЏС‚СЊ СЃРѕРѕР±С‰РµРЅРёСЏ РІ РєР°РЅР°Р»Рµ' });
             return;
           }
         }
@@ -180,41 +180,41 @@ export function setupSocket(io: Server) {
         const VALID_TYPES = ['text', 'image', 'video', 'voice', 'file', 'gif', 'audio'];
         const msgType = data.type || 'text';
         if (!VALID_TYPES.includes(msgType)) {
-          socket.emit('error', { message: 'Недопустимый тип сообщения' });
+          socket.emit('error', { message: 'РќРµРґРѕРїСѓСЃС‚РёРјС‹Р№ С‚РёРї СЃРѕРѕР±С‰РµРЅРёСЏ' });
           return;
         }
 
-        // Validate mediaUrl — only /uploads/ paths or https URLs allowed
+        // Validate mediaUrl вЂ” only /uploads/ paths or https URLs allowed
         if (data.mediaUrl) {
           if (typeof data.mediaUrl !== 'string') {
-            socket.emit('error', { message: 'Некорректный mediaUrl' });
+            socket.emit('error', { message: 'РќРµРєРѕСЂСЂРµРєС‚РЅС‹Р№ mediaUrl' });
             return;
           }
           const isLocalUpload = data.mediaUrl.startsWith('/uploads/');
           const isExternalUrl = data.mediaUrl.startsWith('https://');
           if (!isLocalUpload && !isExternalUrl) {
-            socket.emit('error', { message: 'Недопустимый mediaUrl' });
+            socket.emit('error', { message: 'РќРµРґРѕРїСѓСЃС‚РёРјС‹Р№ mediaUrl' });
             return;
           }
           if (isLocalUpload && data.mediaUrl.includes('..')) {
-            socket.emit('error', { message: 'Недопустимый путь в mediaUrl' });
+            socket.emit('error', { message: 'РќРµРґРѕРїСѓСЃС‚РёРјС‹Р№ РїСѓС‚СЊ РІ mediaUrl' });
             return;
           }
         }
 
         const scheduledAt = data.scheduledAt ? new Date(data.scheduledAt) : null;
 
-        // Validate scheduledAt — must be in the future and within 7 days
+        // Validate scheduledAt вЂ” must be in the future and within 7 days
         if (scheduledAt) {
           const now = Date.now();
           const maxSchedule = now + 7 * 24 * 60 * 60 * 1000;
           if (isNaN(scheduledAt.getTime()) || scheduledAt.getTime() <= now || scheduledAt.getTime() > maxSchedule) {
-            socket.emit('error', { message: 'Некорректная дата отложенного сообщения' });
+            socket.emit('error', { message: 'РќРµРєРѕСЂСЂРµРєС‚РЅР°СЏ РґР°С‚Р° РѕС‚Р»РѕР¶РµРЅРЅРѕРіРѕ СЃРѕРѕР±С‰РµРЅРёСЏ' });
             return;
           }
         }
 
-        // Validate forwardedFromId — must reference an existing user
+        // Validate forwardedFromId вЂ” must reference an existing user
         let validForwardedFromId: number | null = null;
         if (data.forwardedFromId) {
           const forwardUser = await prisma.user.findUnique({ where: { id: data.forwardedFromId }, select: { id: true } });
@@ -351,7 +351,7 @@ export function setupSocket(io: Server) {
                   if (chat.type === 'group') {
                     recipientName = chat.name || 'Group';
                   } else if (chat.type === 'favorites') {
-                    recipientName = 'Избранное';
+                    recipientName = 'РР·Р±СЂР°РЅРЅРѕРµ';
                   } else {
                     const otherMember = chat.members.find(m => m.userId !== userId);
                     recipientName = otherMember?.user.displayName || otherMember?.user.username || '';
@@ -399,11 +399,11 @@ export function setupSocket(io: Server) {
         });
       } catch (error) {
         console.error('Send message error:', error);
-        socket.emit('error', { message: 'Ошибка отправки сообщения' });
+        socket.emit('error', { message: 'РћС€РёР±РєР° РѕС‚РїСЂР°РІРєРё СЃРѕРѕР±С‰РµРЅРёСЏ' });
       }
     });
 
-    // Индикатор набора текста (with membership check)
+    // РРЅРґРёРєР°С‚РѕСЂ РЅР°Р±РѕСЂР° С‚РµРєСЃС‚Р° (with membership check)
     socket.on('typing_start', async (chatId: number) => {
       if (!chatId || typeof chatId !== 'number') return;
       if (!(await isChatMember(chatId, userId))) return;
@@ -416,13 +416,13 @@ export function setupSocket(io: Server) {
       socket.to(`chat:${chatId}`).emit('user_stopped_typing', { chatId, userId });
     });
 
-    // Отметки о прочтении
+    // РћС‚РјРµС‚РєРё Рѕ РїСЂРѕС‡С‚РµРЅРёРё
     socket.on('read_messages', async (data: { chatId: number; messageIds: number[] }) => {
       try {
         if (!data.chatId || !Array.isArray(data.messageIds) || data.messageIds.length === 0) return;
         // Limit array size to prevent abuse
         if (data.messageIds.length > 200) {
-          socket.emit('error', { message: 'Слишком много сообщений за раз (макс. 200)' });
+          socket.emit('error', { message: 'РЎР»РёС€РєРѕРј РјРЅРѕРіРѕ СЃРѕРѕР±С‰РµРЅРёР№ Р·Р° СЂР°Р· (РјР°РєСЃ. 200)' });
           return;
         }
         if (!(await isChatMember(data.chatId, userId))) return;
@@ -447,7 +447,7 @@ export function setupSocket(io: Server) {
       }
     });
 
-    // Редактирование сообщения
+    // Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ СЃРѕРѕР±С‰РµРЅРёСЏ
     socket.on('edit_message', async (data: { messageId: number; content: string; chatId: number }) => {
       try {
         if (!checkRateLimit(userId)) return;
@@ -476,7 +476,7 @@ export function setupSocket(io: Server) {
       }
     });
 
-    // Удаление сообщения
+    // РЈРґР°Р»РµРЅРёРµ СЃРѕРѕР±С‰РµРЅРёСЏ
     socket.on('delete_message', async (data: { messageId: number; chatId: number }) => {
       try {
         if (!checkRateLimit(userId)) return;
@@ -488,7 +488,7 @@ export function setupSocket(io: Server) {
         });
         if (!message) return;
 
-        // Проверяем членство в чате
+        // РџСЂРѕРІРµСЂСЏРµРј С‡Р»РµРЅСЃС‚РІРѕ РІ С‡Р°С‚Рµ
         if (!(await isChatMember(message.chatId, userId))) return;
 
         // Delete media files from disk
@@ -514,18 +514,18 @@ export function setupSocket(io: Server) {
       }
     });
 
-    // Массовое удаление сообщений (с опцией «только у меня» / «у всех»)
+    // РњР°СЃСЃРѕРІРѕРµ СѓРґР°Р»РµРЅРёРµ СЃРѕРѕР±С‰РµРЅРёР№ (СЃ РѕРїС†РёРµР№ В«С‚РѕР»СЊРєРѕ Сѓ РјРµРЅСЏВ» / В«Сѓ РІСЃРµС…В»)
     socket.on('delete_messages', async (data: { messageIds: number[]; chatId: number; deleteForAll: boolean }) => {
       try {
         if (!checkRateLimit(userId)) return;
         if (!data.chatId || !Array.isArray(data.messageIds) || data.messageIds.length === 0) return;
-        if (data.messageIds.length > 100) return; // лимит
+        if (data.messageIds.length > 100) return; // Р»РёРјРёС‚
 
-        // Проверяем членство в чате
+        // РџСЂРѕРІРµСЂСЏРµРј С‡Р»РµРЅСЃС‚РІРѕ РІ С‡Р°С‚Рµ
         if (!(await isChatMember(data.chatId, userId))) return;
 
         if (data.deleteForAll) {
-          // Удалить у всех — любой участник чата может удалить любое сообщение
+          // РЈРґР°Р»РёС‚СЊ Сѓ РІСЃРµС… вЂ” Р»СЋР±РѕР№ СѓС‡Р°СЃС‚РЅРёРє С‡Р°С‚Р° РјРѕР¶РµС‚ СѓРґР°Р»РёС‚СЊ Р»СЋР±РѕРµ СЃРѕРѕР±С‰РµРЅРёРµ
           const messages = await prisma.message.findMany({
             where: {
               id: { in: data.messageIds },
@@ -538,7 +538,7 @@ export function setupSocket(io: Server) {
           const deletedIds: number[] = [];
 
           for (const message of messages) {
-            // Удаляем медиа-файлы с диска
+            // РЈРґР°Р»СЏРµРј РјРµРґРёР°-С„Р°Р№Р»С‹ СЃ РґРёСЃРєР°
             if (message.media && message.media.length > 0) {
               for (const m of message.media) {
                 if (m.url) deleteUploadedFile(m.url);
@@ -561,7 +561,7 @@ export function setupSocket(io: Server) {
             });
           }
         } else {
-          // Удалить только у меня — создаём записи HiddenMessage
+          // РЈРґР°Р»РёС‚СЊ С‚РѕР»СЊРєРѕ Сѓ РјРµРЅСЏ вЂ” СЃРѕР·РґР°С‘Рј Р·Р°РїРёСЃРё HiddenMessage
           const validMessages = await prisma.message.findMany({
             where: {
               id: { in: data.messageIds },
@@ -574,7 +574,7 @@ export function setupSocket(io: Server) {
           const validIds = validMessages.map(m => m.id);
           if (validIds.length === 0) return;
 
-          // Upsert hidden records (пропускаем дубли)
+          // Upsert hidden records (РїСЂРѕРїСѓСЃРєР°РµРј РґСѓР±Р»Рё)
           await prisma.$transaction(
             validIds.map(msgId =>
               prisma.hiddenMessage.upsert({
@@ -585,7 +585,7 @@ export function setupSocket(io: Server) {
             )
           );
 
-          // Отправляем только этому пользователю
+          // РћС‚РїСЂР°РІР»СЏРµРј С‚РѕР»СЊРєРѕ СЌС‚РѕРјСѓ РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ
           socket.emit('messages_hidden', {
             messageIds: validIds,
             chatId: data.chatId,
@@ -596,7 +596,7 @@ export function setupSocket(io: Server) {
       }
     });
 
-    // Реакции
+    // Р РµР°РєС†РёРё
     socket.on('add_reaction', async (data: { messageId: number; emoji: string; chatId: number }) => {
       try {
         if (!checkRateLimit(userId)) return;
@@ -750,7 +750,7 @@ export function setupSocket(io: Server) {
       } else {
         // If chatId provided, verify membership
         if (!(await isChatMember(chatId, userId)) || !(await isChatMember(chatId, data.targetUserId))) {
-          socket.emit('error', { message: 'Нет общего чата для звонка' });
+          socket.emit('error', { message: 'РќРµС‚ РѕР±С‰РµРіРѕ С‡Р°С‚Р° РґР»СЏ Р·РІРѕРЅРєР°' });
           return;
         }
       }
@@ -829,7 +829,7 @@ export function setupSocket(io: Server) {
       }
     });
 
-    // Toggle video during call (audio → video upgrade)
+    // Toggle video during call (audio в†’ video upgrade)
     socket.on('call_video_toggle', (data: { targetUserId: number; videoOn: boolean }) => {
       const targetSockets = onlineUsers.get(data.targetUserId);
       if (targetSockets) {
@@ -876,7 +876,7 @@ export function setupSocket(io: Server) {
     socket.on('group_call_join', async (data: { chatId: number; callType: 'voice' | 'video' }) => {
       if (!data.chatId || typeof data.chatId !== 'number') return;
       if (!(await isChatMember(data.chatId, userId))) {
-        socket.emit('error', { message: 'Нет доступа к этому чату' });
+        socket.emit('error', { message: 'РќРµС‚ РґРѕСЃС‚СѓРїР° Рє СЌС‚РѕРјСѓ С‡Р°С‚Сѓ' });
         return;
       }
       // Verify it's a group chat
@@ -1016,7 +1016,7 @@ export function setupSocket(io: Server) {
         });
 
         if (!member || !['owner', 'co-owner', 'admin'].includes(member.role)) {
-          socket.emit('error', { message: 'Только владелец, совладелец или администратор может начать трансляцию' });
+          socket.emit('error', { message: 'РўРѕР»СЊРєРѕ РІР»Р°РґРµР»РµС†, СЃРѕРІР»Р°РґРµР»РµС† РёР»Рё Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ РјРѕР¶РµС‚ РЅР°С‡Р°С‚СЊ С‚СЂР°РЅСЃР»СЏС†РёСЋ' });
           return;
         }
 
@@ -1045,7 +1045,7 @@ export function setupSocket(io: Server) {
         });
       } catch (error) {
         console.error('Start stream error:', error);
-        socket.emit('error', { message: 'Ошибка запуска трансляции' });
+        socket.emit('error', { message: 'РћС€РёР±РєР° Р·Р°РїСѓСЃРєР° С‚СЂР°РЅСЃР»СЏС†РёРё' });
       }
     });
 
@@ -1193,9 +1193,9 @@ export function setupSocket(io: Server) {
       }
     });
 
-    // Отключение
+    // РћС‚РєР»СЋС‡РµРЅРёРµ
     socket.on('disconnect', async () => {
-      console.log(`Пользователь отключился: ${userId}`);
+      console.log(`РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РѕС‚РєР»СЋС‡РёР»СЃСЏ: ${userId}`);
 
       // Remove from active group calls
       for (const [chatId, participants] of activeGroupCalls) {
@@ -1340,7 +1340,7 @@ async function rescheduleMessages(io: Server) {
     }
 
     if (scheduled.length > 0) {
-      console.log(`  ✔ ${scheduled.length} scheduled message(s) re-armed`);
+      console.log(`  вњ” ${scheduled.length} scheduled message(s) re-armed`);
     }
   } catch (err) {
     console.error('Error rescheduling messages:', err);

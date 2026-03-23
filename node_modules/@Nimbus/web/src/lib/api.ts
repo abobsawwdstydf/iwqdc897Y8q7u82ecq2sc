@@ -1,4 +1,4 @@
-import type { User, UserBasic, UserPresence, Chat, Message, MediaItem, StoryGroup, Story, FriendRequest, FriendWithId, FriendshipStatus, ChatAvatar } from './types';
+﻿import type { User, UserBasic, UserPresence, Chat, Message, MediaItem, StoryGroup, Story, FriendRequest, FriendWithId, FriendshipStatus, ChatAvatar } from './types';
 
 const API_BASE = '/api';
 
@@ -32,7 +32,7 @@ class ApiClient {
     } catch (err) {
       clearTimeout(timer);
       if (err instanceof DOMException && err.name === 'AbortError') {
-        throw new Error('Время ожидания запроса истекло');
+        throw new Error('Р’СЂРµРјСЏ РѕР¶РёРґР°РЅРёСЏ Р·Р°РїСЂРѕСЃР° РёСЃС‚РµРєР»Рѕ');
       }
       console.error(`[API] Network error:`, err);
       throw err;
@@ -40,11 +40,11 @@ class ApiClient {
     clearTimeout(timer);
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ error: 'Ошибка сервера' }));
+      const error = await response.json().catch(() => ({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' }));
       console.error(`[API] Error ${response.status}:`, error);
       console.error(`[API] Failed request: ${fetchOptions.method || 'GET'} ${endpoint}`);
       console.error(`[API] Request body:`, fetchOptions.body);
-      throw new Error(error.error || 'Ошибка запроса');
+      throw new Error(error.error || 'РћС€РёР±РєР° Р·Р°РїСЂРѕСЃР°');
     }
 
     const data = await response.json();
@@ -107,7 +107,7 @@ class ApiClient {
     });
     clearTimeout(timer);
 
-    if (!response.ok) throw new Error('Ошибка загрузки аватара');
+    if (!response.ok) throw new Error('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё Р°РІР°С‚Р°СЂР°');
     return response.json() as Promise<User>;
   }
 
@@ -162,7 +162,7 @@ class ApiClient {
     });
   }
 
-  // ─── Multiple Avatars Management ─────────────────────────────────────
+  // в”Ђв”Ђв”Ђ Multiple Avatars Management в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
   async uploadChatAvatars(chatId: string, files: File[]) {
     const formData = new FormData();
@@ -252,7 +252,7 @@ class ApiClient {
       if (!response.ok) {
         const errorText = await response.text();
         console.error('[API] Upload error response:', errorText);
-        throw new Error('Ошибка загрузки файлов');
+        throw new Error('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё С„Р°Р№Р»РѕРІ');
       }
       
       const data = await response.json();
@@ -326,7 +326,7 @@ class ApiClient {
     return this.request<Message[]>(`/messages/chat/${chatId}/shared?type=${type}`);
   }
 
-  // ICE серверы для WebRTC
+  // ICE СЃРµСЂРІРµСЂС‹ РґР»СЏ WebRTC
   async getIceServers() {
     return this.request<{ iceServers: RTCIceServer[] }>('/ice-servers');
   }

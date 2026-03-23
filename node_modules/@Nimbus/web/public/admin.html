@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Админ-панель | Nimbus</title>
+    <title>РђРґРјРёРЅ-РїР°РЅРµР»СЊ | Nexo</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -191,9 +191,9 @@
     <!-- Login -->
     <div class="login-container" id="loginContainer">
         <div class="login-box">
-            <h1>🔐 Админ-панель</h1>
-            <input type="password" id="passwordInput" placeholder="Введите пароль администратора" />
-            <button onclick="login()">Войти</button>
+            <h1>рџ”ђ РђРґРјРёРЅ-РїР°РЅРµР»СЊ</h1>
+            <input type="password" id="passwordInput" placeholder="Р’РІРµРґРёС‚Рµ РїР°СЂРѕР»СЊ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°" />
+            <button onclick="login()">Р’РѕР№С‚Рё</button>
             <div class="author">by haker_one</div>
         </div>
     </div>
@@ -201,31 +201,31 @@
     <!-- Admin Panel -->
     <div class="admin-panel" id="adminPanel">
         <div class="header">
-            <h1>🛡️ Админ-панель Nimbus</h1>
-            <button onclick="logout()" class="btn" style="background: rgba(255,255,255,0.1); width: auto;">Выйти</button>
+            <h1>рџ›ЎпёЏ РђРґРјРёРЅ-РїР°РЅРµР»СЊ Nexo</h1>
+            <button onclick="logout()" class="btn" style="background: rgba(255,255,255,0.1); width: auto;">Р’С‹Р№С‚Рё</button>
         </div>
 
         <!-- Stats -->
         <div class="stats">
             <div class="stat-card">
-                <h3>Пользователей</h3>
+                <h3>РџРѕР»СЊР·РѕРІР°С‚РµР»РµР№</h3>
                 <div class="value" id="userCount">0</div>
             </div>
             <div class="stat-card">
-                <h3>Сообщений</h3>
+                <h3>РЎРѕРѕР±С‰РµРЅРёР№</h3>
                 <div class="value" id="messageCount">0</div>
             </div>
             <div class="stat-card">
-                <h3>Чатов</h3>
+                <h3>Р§Р°С‚РѕРІ</h3>
                 <div class="value" id="chatCount">0</div>
             </div>
         </div>
 
         <!-- Users Management -->
         <div class="section">
-            <h2>👥 Управление пользователями</h2>
+            <h2>рџ‘Ґ РЈРїСЂР°РІР»РµРЅРёРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРјРё</h2>
             <div class="user-list" id="userList">
-                <p style="text-align: center; color: #a0aec0;">Загрузка...</p>
+                <p style="text-align: center; color: #a0aec0;">Р—Р°РіСЂСѓР·РєР°...</p>
             </div>
         </div>
     </div>
@@ -246,9 +246,9 @@
             if (password === ADMIN_PASSWORD) {
                 localStorage.setItem('adminAuth', 'true');
                 showPanel();
-                showToast('✓ Вход выполнен');
+                showToast('вњ“ Р’С…РѕРґ РІС‹РїРѕР»РЅРµРЅ');
             } else {
-                showToast('✗ Неверный пароль', true);
+                showToast('вњ— РќРµРІРµСЂРЅС‹Р№ РїР°СЂРѕР»СЊ', true);
             }
         }
 
@@ -272,7 +272,7 @@
                 ]);
                 document.getElementById('userCount').textContent = users.length || 0;
                 document.getElementById('messageCount').textContent = messages.count || 0;
-                document.getElementById('chatCount').textContent = '—';
+                document.getElementById('chatCount').textContent = 'вЂ”';
             } catch (e) {
                 console.error('Stats error:', e);
             }
@@ -283,7 +283,7 @@
                 const users = await fetch(`${API_URL}/api/admin/users`).then(r => r.json());
                 const container = document.getElementById('userList');
                 if (users.length === 0) {
-                    container.innerHTML = '<p style="text-align: center; color: #a0aec0;">Нет пользователей</p>';
+                    container.innerHTML = '<p style="text-align: center; color: #a0aec0;">РќРµС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№</p>';
                     return;
                 }
                 container.innerHTML = users.map(u => `
@@ -293,21 +293,21 @@
                             <div>
                                 <div style="font-weight: 600;">
                                     ${u.displayName || u.username || 'Unknown'}
-                                    ${u.isVerified ? '<span class="verified-badge">✓</span>' : ''}
+                                    ${u.isVerified ? '<span class="verified-badge">вњ“</span>' : ''}
                                 </div>
                                 <div style="font-size: 13px; color: #a0aec0;">@${u.username || 'no-username'}</div>
                             </div>
                         </div>
                         <div class="actions">
                             <button class="btn ${u.isVerified ? 'btn-verified' : 'btn-verify'}" onclick="toggleVerify(${u.id}, ${!u.isVerified})">
-                                ${u.isVerified ? '✓ Верифицирован' : 'Верифицировать'}
+                                ${u.isVerified ? 'вњ“ Р’РµСЂРёС„РёС†РёСЂРѕРІР°РЅ' : 'Р’РµСЂРёС„РёС†РёСЂРѕРІР°С‚СЊ'}
                             </button>
-                            <button class="btn btn-delete" onclick="deleteUser(${u.id})">Удалить</button>
+                            <button class="btn btn-delete" onclick="deleteUser(${u.id})">РЈРґР°Р»РёС‚СЊ</button>
                         </div>
                     </div>
                 `).join('');
             } catch (e) {
-                document.getElementById('userList').innerHTML = '<p style="text-align: center; color: #e53e3e;">Ошибка загрузки</p>';
+                document.getElementById('userList').innerHTML = '<p style="text-align: center; color: #e53e3e;">РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё</p>';
             }
         }
 
@@ -318,21 +318,21 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ isVerified })
                 });
-                showToast(`✓ Пользователь ${isVerified ? 'верифицирован' : 'лишён верификации'}`);
+                showToast(`вњ“ РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ ${isVerified ? 'РІРµСЂРёС„РёС†РёСЂРѕРІР°РЅ' : 'Р»РёС€С‘РЅ РІРµСЂРёС„РёРєР°С†РёРё'}`);
                 loadUsers();
             } catch (e) {
-                showToast('✗ Ошибка', true);
+                showToast('вњ— РћС€РёР±РєР°', true);
             }
         }
 
         async function deleteUser(userId) {
-            if (!confirm('Удалить пользователя навсегда?')) return;
+            if (!confirm('РЈРґР°Р»РёС‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР°РІСЃРµРіРґР°?')) return;
             try {
                 await fetch(`${API_URL}/api/admin/users/${userId}`, { method: 'DELETE' });
-                showToast('✓ Пользователь удалён');
+                showToast('вњ“ РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ СѓРґР°Р»С‘РЅ');
                 loadUsers();
             } catch (e) {
-                showToast('✗ Ошибка', true);
+                showToast('вњ— РћС€РёР±РєР°', true);
             }
         }
 

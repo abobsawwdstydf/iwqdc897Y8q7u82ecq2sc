@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Router, Response } from 'express';
 import { prisma } from '../db';
 import crypto from 'crypto';
@@ -6,10 +6,10 @@ import crypto from 'crypto';
 const router = Router();
 
 // ============================================
-// 🤖 БОТЫ (API для разработчиков)
+// рџ¤– Р‘РћРўР« (API РґР»СЏ СЂР°Р·СЂР°Р±РѕС‚С‡РёРєРѕРІ)
 // ============================================
 
-// Получить всех ботов пользователя
+// РџРѕР»СѓС‡РёС‚СЊ РІСЃРµС… Р±РѕС‚РѕРІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 router.get('/my', async (req: Request, res: Response) => {
   try {
     const bots = await prisma.bot.findMany({
@@ -26,11 +26,11 @@ router.get('/my', async (req: Request, res: Response) => {
     res.json(bots);
   } catch (error) {
     console.error('Get my bots error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Создать бота
+// РЎРѕР·РґР°С‚СЊ Р±РѕС‚Р°
 router.post('/', async (req: Request, res: Response) => {
   try {
     const { username, name, description, isPrivate } = req.body as {
@@ -42,18 +42,18 @@ router.post('/', async (req: Request, res: Response) => {
 
     // Validate username
     if (!username || typeof username !== 'string' || username.length < 3 || username.length > 32) {
-      res.status(400).json({ error: 'Юзернейм бота должен быть от 3 до 32 символов' });
+      res.status(400).json({ error: 'Р®Р·РµСЂРЅРµР№Рј Р±РѕС‚Р° РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РѕС‚ 3 РґРѕ 32 СЃРёРјРІРѕР»РѕРІ' });
       return;
     }
 
     if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-      res.status(400).json({ error: 'Юзернейм может содержать только буквы, цифры и подчёркивания' });
+      res.status(400).json({ error: 'Р®Р·РµСЂРЅРµР№Рј РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕР»СЊРєРѕ Р±СѓРєРІС‹, С†РёС„СЂС‹ Рё РїРѕРґС‡С‘СЂРєРёРІР°РЅРёСЏ' });
       return;
     }
 
     // Validate name
     if (!name || typeof name !== 'string' || name.length > 100) {
-      res.status(400).json({ error: 'Имя бота должно быть не длиннее 100 символов' });
+      res.status(400).json({ error: 'РРјСЏ Р±РѕС‚Р° РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РЅРµ РґР»РёРЅРЅРµРµ 100 СЃРёРјРІРѕР»РѕРІ' });
       return;
     }
 
@@ -63,7 +63,7 @@ router.post('/', async (req: Request, res: Response) => {
     });
 
     if (existing) {
-      res.status(400).json({ error: 'Этот юзернейм уже занят' });
+      res.status(400).json({ error: 'Р­С‚РѕС‚ СЋР·РµСЂРЅРµР№Рј СѓР¶Рµ Р·Р°РЅСЏС‚' });
       return;
     }
 
@@ -87,11 +87,11 @@ router.post('/', async (req: Request, res: Response) => {
     res.json(bot);
   } catch (error) {
     console.error('Create bot error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Получить бота по ID
+// РџРѕР»СѓС‡РёС‚СЊ Р±РѕС‚Р° РїРѕ ID
 router.get('/:id', async (req: Request, res: Response) => {
   try {
     const botId = parseInt(req.params.id as string, 10);
@@ -113,18 +113,18 @@ router.get('/:id', async (req: Request, res: Response) => {
     });
 
     if (!bot) {
-      res.status(404).json({ error: 'Бот не найден' });
+      res.status(404).json({ error: 'Р‘РѕС‚ РЅРµ РЅР°Р№РґРµРЅ' });
       return;
     }
 
     res.json(bot);
   } catch (error) {
     console.error('Get bot error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Обновить бота
+// РћР±РЅРѕРІРёС‚СЊ Р±РѕС‚Р°
 router.put('/:id', async (req: Request, res: Response) => {
   try {
     const botId = parseInt(req.params.id as string, 10);
@@ -141,7 +141,7 @@ router.put('/:id', async (req: Request, res: Response) => {
     });
 
     if (!bot) {
-      res.status(403).json({ error: 'Нет прав для редактирования этого бота' });
+      res.status(403).json({ error: 'РќРµС‚ РїСЂР°РІ РґР»СЏ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ СЌС‚РѕРіРѕ Р±РѕС‚Р°' });
       return;
     }
 
@@ -162,11 +162,11 @@ router.put('/:id', async (req: Request, res: Response) => {
     res.json(updated);
   } catch (error) {
     console.error('Update bot error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Удалить бота
+// РЈРґР°Р»РёС‚СЊ Р±РѕС‚Р°
 router.delete('/:id', async (req: Request, res: Response) => {
   try {
     const botId = parseInt(req.params.id as string, 10);
@@ -176,7 +176,7 @@ router.delete('/:id', async (req: Request, res: Response) => {
     });
 
     if (!bot) {
-      res.status(403).json({ error: 'Нет прав для удаления этого бота' });
+      res.status(403).json({ error: 'РќРµС‚ РїСЂР°РІ РґР»СЏ СѓРґР°Р»РµРЅРёСЏ СЌС‚РѕРіРѕ Р±РѕС‚Р°' });
       return;
     }
 
@@ -187,15 +187,15 @@ router.delete('/:id', async (req: Request, res: Response) => {
     res.json({ success: true });
   } catch (error) {
     console.error('Delete bot error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
 // ============================================
-// КОМАНДЫ БОТА
+// РљРћРњРђРќР”Р« Р‘РћРўРђ
 // ============================================
 
-// Добавить команду боту
+// Р”РѕР±Р°РІРёС‚СЊ РєРѕРјР°РЅРґСѓ Р±РѕС‚Сѓ
 router.post('/:id/commands', async (req: Request, res: Response) => {
   try {
     const botId = parseInt(req.params.id as string, 10);
@@ -210,18 +210,18 @@ router.post('/:id/commands', async (req: Request, res: Response) => {
     });
 
     if (!bot) {
-      res.status(403).json({ error: 'Нет прав для управления этим ботом' });
+      res.status(403).json({ error: 'РќРµС‚ РїСЂР°РІ РґР»СЏ СѓРїСЂР°РІР»РµРЅРёСЏ СЌС‚РёРј Р±РѕС‚РѕРј' });
       return;
     }
 
     if (!command || !command.startsWith('/')) {
-      res.status(400).json({ error: 'Команда должна начинаться с /' });
+      res.status(400).json({ error: 'РљРѕРјР°РЅРґР° РґРѕР»Р¶РЅР° РЅР°С‡РёРЅР°С‚СЊСЃСЏ СЃ /' });
       return;
     }
 
     const cmd = command.replace('/', '');
     if (cmd.length > 32) {
-      res.status(400).json({ error: 'Команда должна быть не длиннее 32 символов' });
+      res.status(400).json({ error: 'РљРѕРјР°РЅРґР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РЅРµ РґР»РёРЅРЅРµРµ 32 СЃРёРјРІРѕР»РѕРІ' });
       return;
     }
 
@@ -230,7 +230,7 @@ router.post('/:id/commands', async (req: Request, res: Response) => {
     });
 
     if (existing) {
-      res.status(400).json({ error: 'Такая команда уже существует' });
+      res.status(400).json({ error: 'РўР°РєР°СЏ РєРѕРјР°РЅРґР° СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚' });
       return;
     }
 
@@ -246,11 +246,11 @@ router.post('/:id/commands', async (req: Request, res: Response) => {
     res.json(newCommand);
   } catch (error) {
     console.error('Add bot command error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Удалить команду бота
+// РЈРґР°Р»РёС‚СЊ РєРѕРјР°РЅРґСѓ Р±РѕС‚Р°
 router.delete('/:botId/commands/:command', async (req: Request, res: Response) => {
   try {
     const botId = parseInt(req.params.botId as string, 10);
@@ -261,7 +261,7 @@ router.delete('/:botId/commands/:command', async (req: Request, res: Response) =
     });
 
     if (!bot) {
-      res.status(403).json({ error: 'Нет прав для управления этим ботом' });
+      res.status(403).json({ error: 'РќРµС‚ РїСЂР°РІ РґР»СЏ СѓРїСЂР°РІР»РµРЅРёСЏ СЌС‚РёРј Р±РѕС‚РѕРј' });
       return;
     }
 
@@ -272,15 +272,15 @@ router.delete('/:botId/commands/:command', async (req: Request, res: Response) =
     res.json({ success: true });
   } catch (error) {
     console.error('Delete bot command error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
 // ============================================
-// АВТОРИЗАЦИЯ БОТА
+// РђР’РўРћР РР—РђР¦РРЇ Р‘РћРўРђ
 // ============================================
 
-// Авторизовать бота (получить токен)
+// РђРІС‚РѕСЂРёР·РѕРІР°С‚СЊ Р±РѕС‚Р° (РїРѕР»СѓС‡РёС‚СЊ С‚РѕРєРµРЅ)
 router.post('/:id/auth', async (req: Request, res: Response) => {
   try {
     const botId = parseInt(req.params.id as string, 10);
@@ -291,13 +291,13 @@ router.post('/:id/auth', async (req: Request, res: Response) => {
     });
 
     if (!bot) {
-      res.status(404).json({ error: 'Бот не найден' });
+      res.status(404).json({ error: 'Р‘РѕС‚ РЅРµ РЅР°Р№РґРµРЅ' });
       return;
     }
 
     // Check if bot is private and user is not owner
     if (bot.isPrivate && bot.ownerId !== req.userId) {
-      res.status(403).json({ error: 'Этот бот приватный' });
+      res.status(403).json({ error: 'Р­С‚РѕС‚ Р±РѕС‚ РїСЂРёРІР°С‚РЅС‹Р№' });
       return;
     }
 
@@ -316,17 +316,17 @@ router.post('/:id/auth', async (req: Request, res: Response) => {
     res.json({ token: authToken.token, expiresAt: authToken.expiresAt });
   } catch (error) {
     console.error('Bot auth error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Проверить токен бота (для API запросов)
+// РџСЂРѕРІРµСЂРёС‚СЊ С‚РѕРєРµРЅ Р±РѕС‚Р° (РґР»СЏ API Р·Р°РїСЂРѕСЃРѕРІ)
 router.post('/verify-token', async (req: Request, res: Response) => {
   try {
     const { token } = req.body as { token?: string };
 
     if (!token) {
-      res.status(400).json({ error: 'Токен обязателен' });
+      res.status(400).json({ error: 'РўРѕРєРµРЅ РѕР±СЏР·Р°С‚РµР»РµРЅ' });
       return;
     }
 
@@ -340,13 +340,13 @@ router.post('/verify-token', async (req: Request, res: Response) => {
     });
 
     if (!authToken) {
-      res.status(401).json({ error: 'Неверный токен' });
+      res.status(401).json({ error: 'РќРµРІРµСЂРЅС‹Р№ С‚РѕРєРµРЅ' });
       return;
     }
 
     if (authToken.expiresAt && authToken.expiresAt < new Date()) {
       await prisma.botAuthToken.delete({ where: { id: authToken.id } });
-      res.status(401).json({ error: 'Токен истёк' });
+      res.status(401).json({ error: 'РўРѕРєРµРЅ РёСЃС‚С‘Рє' });
       return;
     }
 
@@ -357,11 +357,11 @@ router.post('/verify-token', async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error('Verify bot token error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
-// Отозвать токен бота
+// РћС‚РѕР·РІР°С‚СЊ С‚РѕРєРµРЅ Р±РѕС‚Р°
 router.delete('/:id/auth/:tokenId', async (req: Request, res: Response) => {
   try {
     const botId = parseInt(req.params.id as string, 10);
@@ -372,7 +372,7 @@ router.delete('/:id/auth/:tokenId', async (req: Request, res: Response) => {
     });
 
     if (!bot) {
-      res.status(403).json({ error: 'Нет прав для управления этим ботом' });
+      res.status(403).json({ error: 'РќРµС‚ РїСЂР°РІ РґР»СЏ СѓРїСЂР°РІР»РµРЅРёСЏ СЌС‚РёРј Р±РѕС‚РѕРј' });
       return;
     }
 
@@ -383,15 +383,15 @@ router.delete('/:id/auth/:tokenId', async (req: Request, res: Response) => {
     res.json({ success: true });
   } catch (error) {
     console.error('Revoke bot token error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 
 // ============================================
-// ЛОГИ БОТА
+// Р›РћР“Р Р‘РћРўРђ
 // ============================================
 
-// Получить логи бота
+// РџРѕР»СѓС‡РёС‚СЊ Р»РѕРіРё Р±РѕС‚Р°
 router.get('/:id/logs', async (req: Request, res: Response) => {
   try {
     const botId = parseInt(req.params.id as string, 10);
@@ -402,7 +402,7 @@ router.get('/:id/logs', async (req: Request, res: Response) => {
     });
 
     if (!bot) {
-      res.status(403).json({ error: 'Нет прав для просмотра логов' });
+      res.status(403).json({ error: 'РќРµС‚ РїСЂР°РІ РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР° Р»РѕРіРѕРІ' });
       return;
     }
 
@@ -418,7 +418,7 @@ router.get('/:id/logs', async (req: Request, res: Response) => {
     res.json(logs);
   } catch (error) {
     console.error('Get bot logs error:', error);
-    res.status(500).json({ error: 'Ошибка сервера' });
+    res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
   }
 });
 

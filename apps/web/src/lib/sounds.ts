@@ -1,4 +1,4 @@
-// Notification sound using Web Audio API — generates a pleasant chime
+﻿// Notification sound using Web Audio API вЂ” generates a pleasant chime
 let audioContext: AudioContext | null = null;
 
 function getAudioContext(): AudioContext {
@@ -17,8 +17,8 @@ export function playNotificationSound() {
     
     const now = ctx.currentTime;
 
-    // Soft, warm notification — lower frequencies, triangle waves, gentle volume
-    // First note — warm mellow tone
+    // Soft, warm notification вЂ” lower frequencies, triangle waves, gentle volume
+    // First note вЂ” warm mellow tone
     const osc1 = ctx.createOscillator();
     const gain1 = ctx.createGain();
     osc1.type = 'triangle';
@@ -30,7 +30,7 @@ export function playNotificationSound() {
     osc1.start(now);
     osc1.stop(now + 0.3);
 
-    // Second note — gentle higher tone
+    // Second note вЂ” gentle higher tone
     const osc2 = ctx.createOscillator();
     const gain2 = ctx.createGain();
     osc2.type = 'triangle';
@@ -43,12 +43,12 @@ export function playNotificationSound() {
     osc2.start(now + 0.08);
     osc2.stop(now + 0.35);
   } catch (e) {
-    // Audio context not supported — silent fail
+    // Audio context not supported вЂ” silent fail
   }
 }
 
 // Muted chats stored in localStorage
-const MUTED_KEY = 'Nimbus_muted_chats';
+const MUTED_KEY = 'Nexo_muted_chats';
 
 export function getMutedChats(): Set<string> {
   try {
@@ -137,7 +137,7 @@ export function playUserLeaveSound() {
   }
 }
 
-// "Абонент недоступен" sound
+// "РђР±РѕРЅРµРЅС‚ РЅРµРґРѕСЃС‚СѓРїРµРЅ" sound
 export function playUnavailableSound(): Promise<void> {
   return new Promise((resolve) => {
     try {
