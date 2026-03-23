@@ -87,6 +87,11 @@
             0% { transform: rotate(0deg) translateX(150px) rotate(0deg); }
             100% { transform: rotate(360deg) translateX(150px) rotate(-360deg); }
         }
+        .author {
+            margin-top: 40px;
+            font-size: 12px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -104,6 +109,7 @@
             <p id="statusText" style="font-size: 14px; color: #a0aec0;">Подключение...</p>
         </div>
         <a href="/" class="btn" style="margin-top: 20px;">Обновить</a>
+        <div class="author">by haker_one</div>
     </div>
     <script>
         const statuses = ['Подключение...', 'Проверка сервера...', 'Восстановление...', 'Почти готово...'];

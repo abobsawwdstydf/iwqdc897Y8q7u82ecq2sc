@@ -57,6 +57,11 @@
             background: rgba(255,255,255,0.1);
             border-radius: 12px;
         }
+        .author {
+            margin-top: 40px;
+            font-size: 12px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -69,6 +74,7 @@
         <div class="status">
             <p style="margin:0; font-size: 14px;">Статус: <span id="status">Проверка...</span></p>
         </div>
+        <div class="author">by haker_one</div>
     </div>
     <script>
         fetch('/api/health')
