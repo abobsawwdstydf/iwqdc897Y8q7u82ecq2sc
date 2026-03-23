@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// @ts-nocheck
 const express_1 = require("express");
 const client_1 = require("@prisma/client");
 const db_1 = require("../db");
@@ -917,6 +918,218 @@ router.post('/:id/invite', async (req, res) => {
     catch (error) {
         console.error('Invite to channel error:', error);
         res.status(500).json({ error: 'Ошибка приглашения в канал' });
+    }
+});
+// ============================================
+// 📢 КАНАЛЫ - Подписка/Отписка
+// ============================================
+// Подписаться на канал
+router.post('/:id/subscribe', async (req, res) => {
+    try {
+        const chatId = parseInt(req.params.id, 10);
+        const chat = await db_1.prisma.chat.findUnique({
+            where: { id: chatId },
+        });
+        if (!chat || chat.type !== 'channel') {
+            res.status(400).json({ error: 'Можно подписаться только на канал' });
+            return;
+        }
+        // Check if already subscribed
+        const existing = await db_1.prisma.channelSubscriber.findUnique({
+            where: { chatId_userId: { chatId, userId: req.userId } },
+        });
+        if (existing) {
+            res.status(400).json({ error: 'Вы уже подписаны на этот канал' });
+            return;
+        }
+        await db_1.prisma.channelSubscriber.create({
+            data: {
+                chatId,
+                userId: req.userId,
+            },
+        });
+        // Also add to chat members if not already
+        const existingMember = await db_1.prisma.chatMember.findUnique({
+            where: { chatId_userId: { chatId, userId: req.userId } },
+        });
+        if (!existingMember) {
+            await db_1.prisma.chatMember.create({
+                data: {
+                    chatId,
+                    userId: req.userId,
+                    role: 'member',
+                },
+            });
+        }
+        res.json({ success: true });
+    }
+    catch (error) {
+        console.error('Subscribe to channel error:', error);
+        res.status(500).json({ error: 'Ошибка подписки на канал' });
+    }
+});
+// Отписаться от канала
+router.delete('/:id/subscribe', async (req, res) => {
+    try {
+        const chatId = parseInt(req.params.id, 10);
+        await db_1.prisma.channelSubscriber.delete({
+            where: { chatId_userId: { chatId, userId: req.userId } },
+        });
+        // Also remove from chat members
+        await db_1.prisma.chatMember.delete({
+            where: { chatId_userId: { chatId, userId: req.userId } },
+        });
+        res.json({ success: true });
+    }
+    catch (error) {
+        console.error('Unsubscribe from channel error:', error);
+        res.status(500).json({ error: 'Ошибка отписки от канала' });
+    }
+});
+// ============================================
+// 🔗 ССЫЛКИ-ПРИГЛАШЕНИЯ
+// ============================================
+// Сгенерировать ссылку-приглашение
+router.post('/:id/invite-link', async (req, res) => {
+    try {
+        const chatId = parseInt(req.params.id, 10);
+        const { name } = req.body;
+        const member = await db_1.prisma.chatMember.findUnique({
+            where: { chatId_userId: { chatId, userId: req.userId } },
+        });
+        if (!member || !['owner', 'co-owner', 'admin'].includes(member.role)) {
+            res.status(403).json({ error: 'Только владелец, совладелец или администратор может создавать ссылки' });
+            return;
+        }
+        const chat = await db_1.prisma.chat.findUnique({ where: { id: chatId } });
+        if (!chat) {
+            res.status(404).json({ error: 'Чат не найден' });
+            return;
+        }
+        // Generate unique invite link
+        const inviteLink = `invite_${chatId}_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+        await db_1.prisma.chat.update({
+            where: { id: chatId },
+            data: { inviteLink },
+        });
+        res.json({ inviteLink, chatId: chat.id, chatName: chat.name || chat.username });
+    }
+    catch (error) {
+        console.error('Generate invite link error:', error);
+        res.status(500).json({ error: 'Ошибка генерации ссылки' });
+    }
+});
+// Вступить по ссылке-приглашению
+router.post('/join/:inviteLink', async (req, res) => {
+    try {
+        const { inviteLink } = req.params;
+        const chat = await db_1.prisma.chat.findFirst({
+            where: { inviteLink },
+        });
+        if (!chat) {
+            res.status(404).json({ error: 'Ссылка не найдена' });
+            return;
+        }
+        // Check if already member
+        const existingMember = await db_1.prisma.chatMember.findUnique({
+            where: { chatId_userId: { chatId: chat.id, userId: req.userId } },
+        });
+        if (existingMember) {
+            res.status(400).json({ error: 'Вы уже являетесь участником' });
+            return;
+        }
+        // Add to chat members
+        await db_1.prisma.chatMember.create({
+            data: {
+                chatId: chat.id,
+                userId: req.userId,
+                role: chat.type === 'channel' ? 'member' : 'member',
+            },
+        });
+        // For channels, also add to subscribers
+        if (chat.type === 'channel') {
+            await db_1.prisma.channelSubscriber.create({
+                data: {
+                    chatId: chat.id,
+                    userId: req.userId,
+                },
+            });
+        }
+        res.json({ success: true, chat: { id: chat.id, name: chat.name, username: chat.username, type: chat.type } });
+    }
+    catch (error) {
+        console.error('Join by invite link error:', error);
+        res.status(500).json({ error: 'Ошибка вступления по ссылке' });
+    }
+});
+// ============================================
+// ⚙️ НАСТРОЙКИ КАНАЛА
+// ============================================
+// Обновить настройки канала (публичный/приватный)
+router.put('/:id/settings', async (req, res) => {
+    try {
+        const chatId = parseInt(req.params.id, 10);
+        const { isPublic, username, description } = req.body;
+        const member = await db_1.prisma.chatMember.findUnique({
+            where: { chatId_userId: { chatId, userId: req.userId } },
+        });
+        if (!member || !['owner', 'co-owner', 'admin'].includes(member.role)) {
+            res.status(403).json({ error: 'Только владелец, совладелец или администратор может изменять настройки' });
+            return;
+        }
+        const chat = await db_1.prisma.chat.findUnique({ where: { id: chatId } });
+        if (!chat || chat.type !== 'channel') {
+            res.status(400).json({ error: 'Чат не является каналом' });
+            return;
+        }
+        // Validate username if provided
+        if (username !== undefined) {
+            if (username && (username.length < 3 || username.length > 32)) {
+                res.status(400).json({ error: 'Юзернейм должен быть от 3 до 32 символов' });
+                return;
+            }
+            if (username && !/^[a-zA-Z0-9_]+$/.test(username)) {
+                res.status(400).json({ error: 'Юзернейм может содержать только буквы, цифры и подчёркивания' });
+                return;
+            }
+            // Check if username is taken by another channel
+            if (username) {
+                const existing = await db_1.prisma.chat.findFirst({
+                    where: {
+                        username: username.toLowerCase(),
+                        NOT: { id: chatId },
+                    },
+                });
+                if (existing) {
+                    res.status(400).json({ error: 'Этот юзернейм уже занят' });
+                    return;
+                }
+            }
+        }
+        const updated = await db_1.prisma.chat.update({
+            where: { id: chatId },
+            data: {
+                isPublic: isPublic !== undefined ? isPublic : undefined,
+                username: username ? username.toLowerCase() : null,
+                description: description !== undefined ? description?.slice(0, 255) : undefined,
+            },
+            include: {
+                members: { include: { user: { select: shared_1.USER_SELECT } } },
+                messages: {
+                    orderBy: { createdAt: 'desc' },
+                    take: 1,
+                    include: {
+                        sender: { select: { id: true, username: true, displayName: true } },
+                        readBy: { select: { userId: true } },
+                    },
+                },
+            },
+        });
+        res.json(updated);
+    }
+    catch (error) {
+        console.error('Update channel settings error:', error);
+        res.status(500).json({ error: 'Ошибка обновления настроек канала' });
     }
 });
 exports.default = router;

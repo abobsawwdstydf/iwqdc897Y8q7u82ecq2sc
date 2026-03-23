@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+// @ts-nocheck
 const express_1 = require("express");
 const db_1 = require("../db");
 const shared_1 = require("../shared");
@@ -150,7 +151,7 @@ router.delete('/:id', async (req, res) => {
 router.get('/chat/:chatId/shared', async (req, res) => {
     try {
         const chatId = parseInt(req.params.chatId, 10);
-        const { type } = req.query; // 'media' | 'files' | 'links'
+        const { type } = req.query;
         // Check membership
         const member = await db_1.prisma.chatMember.findUnique({
             where: { chatId_userId: { chatId, userId: req.userId } },

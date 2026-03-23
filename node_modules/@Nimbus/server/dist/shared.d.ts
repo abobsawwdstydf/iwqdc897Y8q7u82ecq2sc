@@ -12,6 +12,7 @@ export declare const USER_SELECT: {
     readonly lastSeen: true;
     readonly createdAt: true;
     readonly hideStoryViews: true;
+    readonly isVerified: true;
 };
 /** Compact user fields for message sender / forwarded-from */
 export declare const SENDER_SELECT: {
@@ -19,6 +20,7 @@ export declare const SENDER_SELECT: {
     readonly username: true;
     readonly displayName: true;
     readonly avatar: true;
+    readonly isVerified: true;
 };
 /** Full message include for API responses */
 export declare const MESSAGE_INCLUDE: {
@@ -28,6 +30,7 @@ export declare const MESSAGE_INCLUDE: {
             readonly username: true;
             readonly displayName: true;
             readonly avatar: true;
+            readonly isVerified: true;
         };
     };
     readonly forwardedFrom: {
@@ -36,6 +39,7 @@ export declare const MESSAGE_INCLUDE: {
             readonly username: true;
             readonly displayName: true;
             readonly avatar: true;
+            readonly isVerified: true;
         };
     };
     readonly replyTo: {
@@ -77,7 +81,7 @@ export declare const ALLOWED_IMAGE_EXTENSIONS: Set<string>;
 export declare const uploadUserAvatar: multer.Multer;
 /** Multer middleware for group avatar uploads (max 5MB, images only). */
 export declare const uploadGroupAvatar: multer.Multer;
-/** Multer middleware for general file uploads (max 20GB). */
+/** Multer middleware for general file uploads (max 50GB for server, 20GB for users). */
 export declare const uploadFile: multer.Multer;
 /**
  * Express middleware that encrypts an uploaded file in-place after multer

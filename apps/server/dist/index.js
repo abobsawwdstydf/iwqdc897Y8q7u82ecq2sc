@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// @ts-nocheck
 const express_1 = __importDefault(require("express"));
 const http_1 = require("http");
 const socket_io_1 = require("socket.io");
@@ -20,6 +21,13 @@ const chats_1 = __importDefault(require("./routes/chats"));
 const messages_1 = __importDefault(require("./routes/messages"));
 const stories_1 = __importDefault(require("./routes/stories"));
 const friends_1 = __importDefault(require("./routes/friends"));
+const admin_1 = __importDefault(require("./routes/admin"));
+const folders_1 = __importDefault(require("./routes/folders"));
+const drafts_1 = __importDefault(require("./routes/drafts"));
+const bots_1 = __importDefault(require("./routes/bots"));
+const stickers_1 = __importDefault(require("./routes/stickers"));
+const emoji_1 = __importDefault(require("./routes/emoji"));
+const secret_chats_1 = __importDefault(require("./routes/secret-chats"));
 const socket_1 = require("./socket");
 const auth_2 = require("./middleware/auth");
 const encrypt_1 = require("./encrypt");
@@ -41,6 +49,9 @@ const io = new socket_io_1.Server(server, {
             }
             // Check against allowed origins
             if (config_1.config.corsOrigins.includes(origin))
+                return callback(null, true);
+            // In production, allow the render domain
+            if (origin?.includes('onrender.com'))
                 return callback(null, true);
             // In development, allow all
             if (process.env.NODE_ENV !== 'production') {
@@ -114,6 +125,17 @@ app.use('/api/chats', apiLimiter, auth_2.authenticateToken, chats_1.default);
 app.use('/api/messages', apiLimiter, auth_2.authenticateToken, messages_1.default);
 app.use('/api/stories', apiLimiter, auth_2.authenticateToken, stories_1.default);
 app.use('/api/friends', apiLimiter, auth_2.authenticateToken, friends_1.default);
+app.use('/api/folders', apiLimiter, auth_2.authenticateToken, folders_1.default);
+app.use('/api/drafts', apiLimiter, auth_2.authenticateToken, drafts_1.default);
+app.use('/api/bots', apiLimiter, auth_2.authenticateToken, bots_1.default);
+app.use('/api/stickers', apiLimiter, auth_2.authenticateToken, stickers_1.default);
+app.use('/api/emoji', apiLimiter, auth_2.authenticateToken, emoji_1.default);
+app.use('/api/secret-chats', apiLimiter, auth_2.authenticateToken, secret_chats_1.default);
+app.use('/api/admin', admin_1.default);
+// Админ-панель
+app.get('/aaddmmiinnppaanneell', (_req, res) => {
+    res.sendFile(path_1.default.join(__dirname, '../../web/public/admin.html'));
+});
 // Проверка здоровья
 app.get('/api/health', (_req, res) => {
     res.json({ status: 'ok', name: 'Nimbus Server' });
@@ -144,6 +166,15 @@ app.get('/api/ice-servers', auth_2.authenticateToken, (_req, res) => {
 });
 // Socket.io
 (0, socket_1.setupSocket)(io);
+// Раздача фронтенда (продакшен)
+if (process.env.NODE_ENV === 'production') {
+    const webDist = path_1.default.join(__dirname, '../../web/dist');
+    app.use(express_1.default.static(webDist));
+    // Все неизвестные маршруты → index.html (для SPA роутинга)
+    app.get('*', (req, res) => {
+        res.sendFile(path_1.default.join(webDist, 'index.html'));
+    });
+}
 // При старте сервера сбросить всех в offline
 db_1.prisma.user.updateMany({ data: { isOnline: false, lastSeen: new Date() } })
     .then(() => console.log('  ✔ Все пользователи сброшены в offline'))
@@ -173,8 +204,41 @@ async function cleanupExpiredStories() {
 }
 cleanupExpiredStories();
 setInterval(cleanupExpiredStories, 10 * 60 * 1000);
+// Cleanup expired secret messages (every 5 minutes)
+async function cleanupExpiredSecretMessages() {
+    try {
+        const expired = await db_1.prisma.secretMessage.findMany({
+            where: {
+                expiresAt: { lte: new Date() },
+                deletedAt: null,
+            },
+            select: { id: true, chatId: true },
+        });
+        if (expired.length === 0)
+            return;
+        await db_1.prisma.secretMessage.updateMany({
+            where: { id: { in: expired.map(e => e.id) } },
+            data: { deletedAt: new Date() },
+        });
+        console.log(`  🔒 Удалено ${expired.length} истёкших секретных сообщений`);
+    }
+    catch (e) {
+        console.error('Secret message cleanup error:', e);
+    }
+}
+cleanupExpiredSecretMessages();
+setInterval(cleanupExpiredSecretMessages, 5 * 60 * 1000);
 server.listen(config_1.config.port, () => {
     console.log(`\n  ⚡ Nimbus Server запущен на порту ${config_1.config.port}\n`);
+});
+// 404 handler
+app.use((_req, res) => {
+    res.status(404).sendFile(path_1.default.join(__dirname, '../../web/public/404.html'));
+});
+// Error handler
+app.use((err, _req, res, _next) => {
+    console.error('Server error:', err);
+    res.status(500).sendFile(path_1.default.join(__dirname, '../../web/public/500.html'));
 });
 // Graceful shutdown
 const shutdown = async () => {

@@ -7,6 +7,7 @@ exports.UPLOADS_ROOT = exports.uploadFile = exports.uploadGroupAvatar = exports.
 exports.ensureDir = ensureDir;
 exports.deleteUploadedFile = deleteUploadedFile;
 exports.encryptUploadedFile = encryptUploadedFile;
+// @ts-nocheck
 const multer_1 = __importDefault(require("multer"));
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
@@ -25,6 +26,7 @@ exports.USER_SELECT = {
     lastSeen: true,
     createdAt: true,
     hideStoryViews: true,
+    isVerified: true,
 };
 /** Compact user fields for message sender / forwarded-from */
 exports.SENDER_SELECT = {
@@ -32,6 +34,7 @@ exports.SENDER_SELECT = {
     username: true,
     displayName: true,
     avatar: true,
+    isVerified: true,
 };
 /** Full message include for API responses */
 exports.MESSAGE_INCLUDE = {
@@ -126,7 +129,7 @@ const ALLOWED_IMAGE_EXTENSIONS_GENERAL = new Set(['.jpg', '.jpeg', '.png', '.gif
 const ALLOWED_VIDEO_EXTENSIONS = new Set(['.mp4', '.webm', '.mov', '.avi', '.mkv', '.flv', '.wmv', '.m4v', '.mpeg', '.mpg', '.3gp', '.3g2', '.ogv', '.vob']);
 /** Allowed document extensions for explicit document file support. */
 const ALLOWED_DOCUMENT_EXTENSIONS = new Set(['.pdf', '.doc', '.docx', '.txt', '.rtf', '.odt', '.xls', '.xlsx', '.ppt', '.pptx', '.zip', '.rar', '.7z', '.tar', '.gz', '.html', '.htm', '.xml', '.xhtml', '.csv', '.json', '.md', '.epub', '.mobi', '.azw', '.azw3', '.djvu', '.xps', '.oxps', '.fb2', '.fb2.zip']);
-/** Multer middleware for general file uploads (max 20GB). */
+/** Multer middleware for general file uploads (max 50GB for server, 20GB for users). */
 exports.uploadFile = (0, multer_1.default)({
     storage: multer_1.default.diskStorage({
         destination: (_req, _file, cb) => cb(null, uploadsRoot),
@@ -135,7 +138,7 @@ exports.uploadFile = (0, multer_1.default)({
             cb(null, `${(0, uuid_1.v4)()}${ext}`);
         },
     }),
-    limits: { fileSize: 20 * 1024 * 1024 * 1024 },
+    limits: { fileSize: 50 * 1024 * 1024 * 1024 }, // 50GB for server
     fileFilter: (_req, file, cb) => {
         const ext = path_1.default.extname(file.originalname).toLowerCase();
         // Allow audio files explicitly

@@ -331,11 +331,17 @@
                         <div class="user-info">
                             <div class="avatar">${(u.displayName || u.username || '?')[0].toUpperCase()}</div>
                             <div>
-                                <div style="font-weight: 600;">${u.displayName || u.username || 'Unknown'}</div>
+                                <div style="font-weight: 600;">
+                                    ${u.displayName || u.username || 'Unknown'}
+                                    ${u.isVerified ? '<span style="color: #3b82f6; margin-left: 5px;">✓</span>' : ''}
+                                </div>
                                 <div style="font-size: 13px; color: #a0aec0;">@${u.username || 'no-username'}</div>
                             </div>
                         </div>
                         <div class="actions">
+                            <button class="btn ${u.isVerified ? 'btn-unban' : 'btn-ban'}" onclick="toggleVerify(${u.id}, ${!u.isVerified})" style="background: ${u.isVerified ? '#38a169' : '#3b82f6'};">
+                                ${u.isVerified ? '✓ Верифицирован' : 'Верифицировать'}
+                            </button>
                             <button class="btn ${u.banned ? 'btn-unban' : 'btn-ban'}" onclick="toggleBan(${u.id}, ${!u.banned})">
                                 ${u.banned ? 'Разбанить' : 'Забанить'}
                             </button>
@@ -345,6 +351,20 @@
                 `).join('');
             } catch (e) {
                 document.getElementById('userList').innerHTML = '<p style="text-align: center; color: #e53e3e;">Ошибка загрузки</p>';
+            }
+        }
+
+        async function toggleVerify(userId, isVerified) {
+            try {
+                await fetch(`${API_URL}/api/admin/users/${userId}/verify`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ isVerified })
+                });
+                showToast(`✓ Пользователь ${isVerified ? 'верифицирован' : 'лишён верификации'}`);
+                loadUsers();
+            } catch (e) {
+                showToast('✗ Ошибка', true);
             }
         }
 
@@ -415,7 +435,9 @@
 
         function clearCache() {
             localStorage.clear();
+            localStorage.setItem('adminAuth', 'true');
             showToast('✓ Кэш очищен');
+            location.reload();
         }
 
         function restartServer() {

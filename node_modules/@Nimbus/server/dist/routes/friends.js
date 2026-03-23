@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+// @ts-nocheck
 const express_1 = require("express");
 const db_1 = require("../db");
 const shared_1 = require("../shared");
@@ -178,6 +179,29 @@ router.post('/:id/accept', async (req, res) => {
             data: { status: 'accepted' },
             include: { user: { select: shared_1.USER_SELECT }, friend: { select: shared_1.USER_SELECT } },
         });
+        // Автоматически создать личный чат 1-на-1
+        const existingChat = await db_1.prisma.chat.findFirst({
+            where: {
+                type: 'personal',
+                AND: [
+                    { members: { some: { userId: friendship.userId } } },
+                    { members: { some: { userId: friendship.friendId } } },
+                ],
+            },
+        });
+        if (!existingChat) {
+            await db_1.prisma.chat.create({
+                data: {
+                    type: 'personal',
+                    members: {
+                        create: [
+                            { userId: friendship.userId },
+                            { userId: friendship.friendId },
+                        ],
+                    },
+                },
+            });
+        }
         res.json(updated);
     }
     catch (error) {

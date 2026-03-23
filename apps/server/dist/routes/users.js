@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+// @ts-nocheck
 const express_1 = require("express");
 const db_1 = require("../db");
 const shared_1 = require("../shared");
@@ -127,7 +128,7 @@ router.put('/profile', async (req, res) => {
     }
 });
 // Поиск пользователей и каналов (глобальный поиск)
-router.get('/search', async (req, res) => {
+router.get('/search-global', async (req, res) => {
     try {
         const { q } = req.query;
         if (!q || typeof q !== 'string' || q.length < 2) {

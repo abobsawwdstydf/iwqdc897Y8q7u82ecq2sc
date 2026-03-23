@@ -1,5 +1,2 @@
-import { Request, Response, NextFunction } from 'express';
-export interface AuthRequest extends Request {
-    userId?: number;
-}
-export declare function authenticateToken(req: AuthRequest, res: Response, next: NextFunction): void;
+import { Response, NextFunction } from 'express';
+export declare function authenticateToken(req: any, res: Response, next: NextFunction): void;
