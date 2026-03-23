@@ -3,30 +3,23 @@
  * - Создаёт таблицы если их нет
  * - НЕ удаляет данные
  * - Проверяет подключение
+ * - Поддержка нескольких баз
  */
 
-const { execSync } = require('child_process');
-const { Client } = require('pg');
+require('dotenv').config();
+const { dbManager } = require('../lib/db-manager');
 
 async function main() {
-    console.log('🔍 Проверка подключения к базе данных...');
-    
-    // Получаем DATABASE_URL из .env
-    const databaseUrl = process.env.DATABASE_URL;
-    
-    if (!databaseUrl) {
-        console.error('❌ DATABASE_URL не указан в .env');
-        process.exit(1);
-    }
-    
-    const client = new Client({ connectionString: databaseUrl });
+    console.log('🔍 Инициализация баз данных...');
     
     try {
-        await client.connect();
-        console.log('✅ Подключение к базе данных успешно');
+        // Инициализация всех баз
+        await dbManager.initialize();
+        
+        const primary = dbManager.getPrimary();
         
         // Проверяем, существует ли таблица users
-        const result = await client.query(`
+        const result = await primary.query(`
             SELECT EXISTS (
                 SELECT FROM information_schema.tables 
                 WHERE table_name = 'User'
@@ -43,6 +36,7 @@ async function main() {
             console.log('⚠️  Это первый запуск, данных нет');
             
             // Запускаем Prisma для создания таблиц
+            const { execSync } = require('child_process');
             execSync('npx prisma db push', {
                 stdio: 'inherit',
                 cwd: __dirname
@@ -53,6 +47,7 @@ async function main() {
         
         // Генерируем Prisma Client
         console.log('🔧 Генерация Prisma Client...');
+        const { execSync } = require('child_process');
         execSync('npx prisma generate', {
             stdio: 'inherit',
             cwd: __dirname
@@ -60,11 +55,13 @@ async function main() {
         
         console.log('✅ База данных готова к работе');
         
+        // Закрываем подключения
+        await dbManager.close();
+        
     } catch (error) {
         console.error('❌ Ошибка:', error.message);
+        await dbManager.close().catch(() => {});
         process.exit(1);
-    } finally {
-        await client.end();
     }
 }
 
