@@ -1,7 +1,7 @@
 # ⚡ БЫСТРАЯ НАСТРОЙКА RENDER
 
 ## 🎯 Что случилось?
-Сборка падала с ошибкой **134** (out of memory).
+Сборка падала с ошибкой **134** (out of memory), базы не было.
 
 ## ✅ Исправление:
 
@@ -12,8 +12,13 @@ npm install && NODE_OPTIONS="--max-old-space-size=2048" npm run build
 
 ### 2. Start Command (скопируй это!)
 ```bash
-node apps/server/dist/index.js
+npm run prod
 ```
+
+**⚠️ ВАЖНО:** `npm run prod` теперь автоматически:
+- ✅ Проверяет базу данных
+- ✅ Создаёт таблицы если их нет
+- ✅ Запускает сервер
 
 ---
 
