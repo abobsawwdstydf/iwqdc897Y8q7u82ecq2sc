@@ -135,26 +135,50 @@ export const useChatStore = create<ChatState>((set, get) => ({
   addMessage: (message) => {
     const userId = useAuthStore.getState().user?.id;
     
-    // Normalize message data - fix for backend sending wrong types
-    if (!message.media || !Array.isArray(message.media)) {
-      message.media = [];
-    }
-    // Filter media items - ensure each item is valid object with url string
-    message.media = message.media.filter(m => {
-      if (!m || typeof m !== 'object') return false;
-      if (!m.url || typeof m.url !== 'string') return false;
-      return true;
-    });
+    // Deep normalize message data - fix for ALL possible type issues
+    const normalizeMessage = (msg: any) => {
+      // Ensure media is array of valid objects
+      if (!msg.media || !Array.isArray(msg.media)) {
+        msg.media = [];
+      } else {
+        msg.media = msg.media.filter((m: any) => {
+          if (!m || typeof m !== 'object') return false;
+          if (!m.url || typeof m.url !== 'string') return false;
+          // Ensure all string fields are strings
+          if (m.filename !== null && m.filename !== undefined && typeof m.filename !== 'string') {
+            m.filename = String(m.filename);
+          }
+          if (m.thumbnail !== null && m.thumbnail !== undefined && typeof m.thumbnail !== 'string') {
+            m.thumbnail = String(m.thumbnail);
+          }
+          return true;
+        });
+      }
 
-    // Ensure sender has valid avatar
-    if (message.sender && message.sender.avatar !== undefined && typeof message.sender.avatar !== 'string') {
-      message.sender.avatar = null;
-    }
+      // Ensure sender fields are correct types
+      if (msg.sender) {
+        if (msg.sender.avatar !== null && msg.sender.avatar !== undefined && typeof msg.sender.avatar !== 'string') {
+          msg.sender.avatar = null;
+        }
+        if (!msg.sender.id || typeof msg.sender.id !== 'string') msg.sender.id = '0';
+        if (!msg.sender.username || typeof msg.sender.username !== 'string') msg.sender.username = '';
+        if (!msg.sender.displayName || typeof msg.sender.displayName !== 'string') msg.sender.displayName = '';
+      }
 
-    // Ensure content is string or null
-    if (message.content !== null && message.content !== undefined && typeof message.content !== 'string') {
-      message.content = String(message.content);
-    }
+      // Ensure content is string or null
+      if (msg.content !== null && msg.content !== undefined && typeof msg.content !== 'string') {
+        msg.content = String(msg.content);
+      }
+
+      // Ensure chatId and senderId are strings
+      if (!msg.chatId || typeof msg.chatId !== 'string') msg.chatId = '0';
+      if (!msg.senderId || typeof msg.senderId !== 'string') msg.senderId = '0';
+      if (!msg.id || typeof msg.id !== 'string') msg.id = '0';
+
+      return msg;
+    };
+
+    message = normalizeMessage(message);
 
     set((state) => {
       const chatMessages = state.messages[message.chatId] || [];
