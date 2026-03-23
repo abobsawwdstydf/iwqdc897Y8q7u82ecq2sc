@@ -8,8 +8,10 @@
   ],
   "scripts": {
     "dev": "concurrently -k -n server,web -c \"#6366f1\",\"#8b5cf6\" \"npm run dev -w apps/server\" \"npm run dev -w apps/web\"",
+    "dev:full": "concurrently -k -n server,web,storage -c \"#6366f1\",\"#8b5cf6\",\"#10b981\" \"npm run dev -w apps/server\" \"npm run dev -w apps/web\" \"npm run dev:storage -w apps/server\"",
     "build": "npm run build -w apps/server && npm run build -w apps/web",
     "start": "npm run dev",
+    "start:storage": "npm run start:storage -w apps/server",
     "setup": "npm install && npm run build && npm run db:setup",
     "db:setup": "cd apps/server && npx prisma generate && npx prisma db push --accept-data-loss",
     "db:push": "npm run db:push -w apps/server",
