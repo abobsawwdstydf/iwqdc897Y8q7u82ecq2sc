@@ -19,6 +19,23 @@ if (process.env.ENCRYPTION_KEY) {
   console.warn('  ⚠ ENCRYPTION_KEY не задан — сообщения хранятся без шифрования. Для продакшена задайте 64-символьный hex-ключ.');
 }
 
+// Check Telegram API
+const telegramBotTokens = process.env.TELEGRAM_BOT_TOKENS || '';
+const telegramChannelIds = process.env.TELEGRAM_CHANNEL_IDS || '';
+if (!telegramBotTokens && !telegramChannelIds) {
+  console.warn('  ⚠ TELEGRAM_BOT_TOKENS и TELEGRAM_CHANNEL_IDS не заданы — Telegram-интеграция отключена. Данные хранятся локально.');
+} else {
+  console.log('  📱 Telegram-интеграция включена');
+}
+
+// Check Discord API
+const discordWebhookUrls = process.env.DISCORD_WEBHOOK_URLS || '';
+if (!discordWebhookUrls) {
+  console.warn('  ⚠ DISCORD_WEBHOOK_URLS не задан — Discord-интеграция отключена. Данные хранятся локально.');
+} else {
+  console.log('  💬 Discord-интеграция включена');
+}
+
 export const config = {
   port: Number(process.env.PORT) || 3001,
   jwtSecret: process.env.JWT_SECRET || 'Nimbus-dev-fallback-not-for-production',

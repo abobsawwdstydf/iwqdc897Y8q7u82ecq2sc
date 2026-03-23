@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "node ../../node_modules/vite/bin/vite.js build",
+    "preview": "node ../../node_modules/vite/bin/vite.js preview"
   },
   "dependencies": {
     "@emoji-mart/data": "^1.2.1",
