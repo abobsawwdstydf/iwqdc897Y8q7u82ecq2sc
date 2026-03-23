@@ -1,4 +1,4 @@
-﻿import type { User, UserBasic, UserPresence, Chat, Message, MediaItem, StoryGroup, Story, FriendRequest, FriendWithId, FriendshipStatus, ChatAvatar } from './types';
+import type { User, UserBasic, UserPresence, Chat, Message, MediaItem, StoryGroup, Story, FriendRequest, FriendWithId, FriendshipStatus, ChatAvatar } from './types';
 
 const API_BASE = '/api';
 

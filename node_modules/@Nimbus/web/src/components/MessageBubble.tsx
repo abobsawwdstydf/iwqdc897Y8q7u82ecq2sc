@@ -1,4 +1,4 @@
-﻿import { useState, useRef, useEffect, memo, type JSX } from 'react';
+import { useState, useRef, useEffect, memo, type JSX } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {

@@ -1,4 +1,4 @@
-﻿import { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { motion, Reorder } from 'framer-motion';
 import { Upload, X, Star, Trash2, Image as ImageIcon } from 'lucide-react';
 import { api } from '../lib/api';

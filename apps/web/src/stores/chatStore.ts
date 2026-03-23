@@ -1,4 +1,4 @@
-﻿import { create } from 'zustand';
+import { create } from 'zustand';
 import { api } from '../lib/api';
 import { useAuthStore } from './authStore';
 import type { Chat, ChatMember, Message, TypingUser } from '../lib/types';

@@ -1,4 +1,4 @@
-﻿import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Video, Monitor, Square, Mic, MicOff, Settings, Users, Eye, Minimize2, Maximize2 } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';

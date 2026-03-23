@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Browser fingerprinting for anti-spam protection
  * Generates a unique identifier based on browser characteristics
  */

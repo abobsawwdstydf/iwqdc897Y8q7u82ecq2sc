@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Phone, PhoneOff, Video, MessageCircle, AtSign, Bell } from 'lucide-react';
 

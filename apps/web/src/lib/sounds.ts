@@ -1,4 +1,4 @@
-﻿// Notification sound using Web Audio API вЂ” generates a pleasant chime
+// Notification sound using Web Audio API вЂ” generates a pleasant chime
 let audioContext: AudioContext | null = null;
 
 function getAudioContext(): AudioContext {

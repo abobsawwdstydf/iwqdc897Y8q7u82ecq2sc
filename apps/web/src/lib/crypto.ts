@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Nexo Cryptographic System - Simplified for Browser
  * AES-256-GCM + RSA-OAEP + PBKDF2 + SHA-384
  */

@@ -1,4 +1,4 @@
-﻿import { useState, useRef, useEffect, memo } from 'react';
+import { useState, useRef, useEffect, memo } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { ru, enUS } from 'date-fns/locale';
 import { Check, CheckCheck, Image, FileText, Mic, Video, Pin, Trash2, Bookmark } from 'lucide-react';
