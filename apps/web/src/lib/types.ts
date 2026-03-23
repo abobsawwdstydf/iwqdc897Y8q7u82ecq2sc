@@ -1,11 +1,10 @@
-// в”Ђв”Ђв”Ђ User types в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+// ─── User types ────────────────────────────────────────────────────────
 
 export interface UserBasic {
   id: string;
   username: string;
   displayName: string;
   avatar: string | null;
-  isVerified?: boolean;
 }
 
 export interface UserPresence extends UserBasic {
@@ -18,10 +17,9 @@ export interface User extends UserPresence {
   birthday: string | null;
   createdAt: string;
   hideStoryViews?: boolean;
-  isVerified?: boolean;
 }
 
-// в”Ђв”Ђв”Ђ Chat types в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+// ─── Chat types ────────────────────────────────────────────────────────
 
 export interface ChatMember {
   id: string;
@@ -51,8 +49,39 @@ export interface MediaItem {
   thumbnail: string | null;
   size: number | null;
   duration: number | null;
-  width?: number | null;
-  height?: number | null;
+  width: number | null;
+  height: number | null;
+}
+
+// ─── Chat Folders ──────────────────────────────────────────────────────
+
+export interface ChatFolder {
+  id: number;
+  userId: number;
+  name: string;
+  color: string;
+  icon: string;
+  position: number;
+  createdAt: string;
+  chats: ChatFolderChat[];
+}
+
+export interface ChatFolderChat {
+  id: number;
+  folderId: number;
+  chatId: number;
+  position: number;
+  createdAt: string;
+}
+
+// Built-in folder types
+export type BuiltInFolderType = 'all' | 'unread' | 'personal' | 'groups' | 'channels';
+
+export interface BuiltInFolder {
+  type: BuiltInFolderType;
+  name: string;
+  icon: string;
+  color: string;
 }
 
 export interface Reaction {
@@ -113,7 +142,7 @@ export interface Chat {
   }>;
 }
 
-// в”Ђв”Ђв”Ђ Socket event types в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+// ─── Socket event types ────────────────────────────────────────────────
 
 export interface TypingUser {
   chatId: string;
@@ -128,7 +157,7 @@ export interface CallInfo {
   callerInfo?: UserBasic | null;
 }
 
-// в”Ђв”Ђв”Ђ Story types в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+// ─── Story types ───────────────────────────────────────────────────────
 
 export interface Story {
   id: string;
@@ -156,9 +185,9 @@ export interface StoryGroup {
   hasUnviewed: boolean;
 }
 
-// в”Ђв”Ђв”Ђ Utility types в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+// ─── Utility types ─────────────────────────────────────────────────
 
-// в”Ђв”Ђв”Ђ Friend types в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+// ─── Friend types ──────────────────────────────────────────────────
 
 export interface FriendRequest {
   id: string;
@@ -176,7 +205,7 @@ export interface FriendshipStatus {
   direction?: 'incoming' | 'outgoing';
 }
 
-// в”Ђв”Ђв”Ђ Utility types в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+// ─── Utility types ─────────────────────────────────────────────────────
 
 /** Audio file extensions recognized by the app. */
 export const AUDIO_EXTENSIONS = ['.mp3', '.wav', '.ogg', '.m4a', '.aac', '.flac', '.wma'] as const;

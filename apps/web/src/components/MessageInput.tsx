@@ -5,6 +5,7 @@ import {
   Paperclip,
   Smile,
   Mic,
+  Video,
   X,
   Reply,
   Pencil,
@@ -16,6 +17,7 @@ import {
   ChevronRight,
   Calendar,
   Check,
+  RotateCcw,
 } from 'lucide-react';
 import { useChatStore } from '../stores/chatStore';
 import { useAuthStore } from '../stores/authStore';
@@ -110,6 +112,36 @@ export default function MessageInput({ chatId }: MessageInputProps) {
   const recordingTimeRef = useRef<number>(0);
   const streamRef = useRef<MediaStream | null>(null);
   const [liveBars, setLiveBars] = useState<number[]>(() => Array(32).fill(5));
+  // Video round state
+  const [recordingMode, setRecordingMode] = useState<'audio' | 'video'>('audio');
+  const [isRecordingVideo, setIsRecordingVideo] = useState(false);
+  const [frontCamera, setFrontCamera] = useState(true);
+  const [showVideoPreview, setShowVideoPreview] = useState(false);
+  const videoPreviewRef = useRef<HTMLVideoElement>(null);
+  const videoChunksRef = useRef<Blob[]>([]);
+  const videoRecorderRef = useRef<MediaRecorder | null>(null);
+  const videoStreamRef = useRef<MediaStream | null>(null);
+  const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [isLongPress, setIsLongPress] = useState(false);
+  const [swipeDirection, setSwipeDirection] = useState<'left' | 'up' | null>(null);
+  const touchStartYRef = useRef<number>(0);
+  const touchStartXRef = useRef<number>(0);
+  const [isLockedRecording, setIsLockedRecording] = useState(false);
+
+  // Load recording mode from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('Nimbus_recordingMode');
+    if (saved === 'video' || saved === 'audio') {
+      setRecordingMode(saved);
+    }
+  }, []);
+
+  // Save recording mode to localStorage
+  const toggleRecordingMode = () => {
+    const newMode = recordingMode === 'audio' ? 'video' : 'audio';
+    setRecordingMode(newMode);
+    localStorage.setItem('Nimbus_recordingMode', newMode);
+  };
 
   // Cleanup recording resources on unmount
   useEffect(() => {
@@ -121,10 +153,19 @@ export default function MessageInput({ chatId }: MessageInputProps) {
       if (mediaRecorderRef.current?.state === 'recording') {
         mediaRecorderRef.current.stop();
       }
+      // Cleanup video recording
+      if (videoRecorderRef.current?.state === 'recording') {
+        videoRecorderRef.current.stop();
+      }
+      if (videoStreamRef.current) {
+        videoStreamRef.current.getTracks().forEach(t => t.stop());
+        videoStreamRef.current = null;
+      }
+      if (longPressTimerRef.current) clearTimeout(longPressTimerRef.current);
     };
   }, []);
 
-  // РђРІС‚РѕРїРѕРґРіРѕРЅ РІС‹СЃРѕС‚С‹ textarea
+  // Автоподгон высоты textarea
   useEffect(() => {
     const el = inputRef.current;
     if (el) {
@@ -133,7 +174,7 @@ export default function MessageInput({ chatId }: MessageInputProps) {
     }
   }, [text]);
 
-  // РџСЂРё СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРё вЂ” Р·Р°РїРѕР»РЅРёС‚СЊ С‚РµРєСЃС‚
+  // При редактировании — заполнить текст
   useEffect(() => {
     if (editingMessage?.content) {
       setText(editingMessage.content);
@@ -179,7 +220,7 @@ export default function MessageInput({ chatId }: MessageInputProps) {
     const socket = getSocket();
     if (!socket) return;
 
-    // РћСЃС‚Р°РЅРѕРІРёС‚СЊ typing
+    // Остановить typing
     socket.emit('typing_stop', chatId);
     if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
 
@@ -236,8 +277,8 @@ export default function MessageInput({ chatId }: MessageInputProps) {
         setReplyTo(null);
         setAttachments([]);
       } catch (e) {
-        console.error('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё С„Р°Р№Р»РѕРІ:', e);
-        alert('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё С„Р°Р№Р»РѕРІ: ' + (e as Error).message);
+        console.error('Ошибка загрузки файлов:', e);
+        alert('Ошибка загрузки файлов: ' + (e as Error).message);
       } finally {
         setIsSending(false);
       }
@@ -354,7 +395,7 @@ export default function MessageInput({ chatId }: MessageInputProps) {
     e.target.value = '';
   };
 
-  // Р—Р°РїРёСЃСЊ РіРѕР»РѕСЃРѕРІРѕРіРѕ
+  // Запись голосового
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -430,7 +471,7 @@ export default function MessageInput({ chatId }: MessageInputProps) {
             setReplyTo(null);
           }
         } catch (e) {
-          console.error('РћС€РёР±РєР° РѕС‚РїСЂР°РІРєРё РіРѕР»РѕСЃРѕРІРѕРіРѕ:', e);
+          console.error('Ошибка отправки голосового:', e);
         }
       };
 
@@ -443,7 +484,7 @@ export default function MessageInput({ chatId }: MessageInputProps) {
         setRecordingTime((t) => t + 1);
       }, 1000);
     } catch (e) {
-      console.error('РћС€РёР±РєР° Р·Р°РїРёСЃРё:', e);
+      console.error('Ошибка записи:', e);
     }
   };
 
@@ -487,6 +528,206 @@ export default function MessageInput({ chatId }: MessageInputProps) {
     const m = Math.floor(sec / 60);
     const s = sec % 60;
     return `${m}:${s.toString().padStart(2, '0')}`;
+  };
+
+  // ========== Video Round Recording ==========
+  const startVideoRecording = async () => {
+    try {
+      // Request camera with preferred facing mode
+      const constraints: MediaStreamConstraints = {
+        video: {
+          facingMode: frontCamera ? 'user' : 'environment',
+          width: { ideal: 640 },
+          height: { ideal: 640 },
+        },
+        audio: true,
+      };
+
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      videoStreamRef.current = stream;
+
+      // Show preview
+      setShowVideoPreview(true);
+      setTimeout(() => {
+        if (videoPreviewRef.current) {
+          videoPreviewRef.current.srcObject = stream;
+          videoPreviewRef.current.play();
+        }
+      }, 0);
+
+      // Use webm format for better compatibility
+      const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9')
+        ? 'video/webm;codecs=vp9'
+        : MediaRecorder.isTypeSupported('video/webm;codecs=vp8')
+          ? 'video/webm;codecs=vp8'
+          : 'video/webm';
+
+      const recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 500000 });
+      videoRecorderRef.current = recorder;
+      videoChunksRef.current = [];
+
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) videoChunksRef.current.push(e.data);
+      };
+
+      recorder.onstop = async () => {
+        stream.getTracks().forEach((t) => t.stop());
+        videoStreamRef.current = null;
+        setShowVideoPreview(false);
+
+        const blob = new Blob(videoChunksRef.current, { type: mimeType });
+        const file = new File([blob], `videocircle.${mimeType.includes('vp9') ? 'webm' : 'webm'}`, { type: mimeType });
+
+        try {
+          const result = await api.uploadFile(file);
+          const socket = getSocket();
+          if (socket) {
+            socket.emit('send_message', {
+              chatId,
+              content: null,
+              type: 'video',
+              mediaUrl: result.url,
+              mediaType: 'videocircle',
+              fileName: result.filename,
+              fileSize: result.size,
+              duration: recordingTimeRef.current,
+              replyToId: replyTo?.id || null,
+            });
+            setReplyTo(null);
+          }
+        } catch (e) {
+          console.error('Ошибка отправки видео-кружка:', e);
+        }
+      };
+
+      recorder.start();
+      setIsRecordingVideo(true);
+      setIsRecording(true);
+      setRecordingTime(0);
+      recordingTimeRef.current = 0;
+      timerRef.current = setInterval(() => {
+        recordingTimeRef.current += 1;
+        setRecordingTime((t) => t + 1);
+      }, 1000);
+    } catch (e) {
+      console.error('Ошибка записи видео:', e);
+      alert('Не удалось получить доступ к камере');
+    }
+  };
+
+  const stopVideoRecording = () => {
+    if (videoRecorderRef.current?.state === 'recording') {
+      videoRecorderRef.current.stop();
+    }
+    if (timerRef.current) clearInterval(timerRef.current);
+    setIsRecordingVideo(false);
+    setIsRecording(false);
+    setRecordingTime(0);
+    setIsLockedRecording(false);
+    setSwipeDirection(null);
+  };
+
+  const cancelVideoRecording = () => {
+    if (videoRecorderRef.current?.state === 'recording') {
+      videoRecorderRef.current.ondataavailable = null;
+      videoRecorderRef.current.onstop = null;
+      videoRecorderRef.current.stop();
+    }
+    if (videoStreamRef.current) {
+      videoStreamRef.current.getTracks().forEach((t) => t.stop());
+      videoStreamRef.current = null;
+    }
+    if (timerRef.current) clearInterval(timerRef.current);
+    setShowVideoPreview(false);
+    setIsRecordingVideo(false);
+    setIsRecording(false);
+    setRecordingTime(0);
+    setIsLockedRecording(false);
+    setSwipeDirection(null);
+    recordingTimeRef.current = 0;
+  };
+
+  const switchCamera = async () => {
+    setFrontCamera((prev) => !prev);
+    // Restart recording with new camera
+    if (isRecordingVideo && videoRecorderRef.current?.state === 'recording') {
+      // Stop current recording
+      videoRecorderRef.current.stop();
+      if (videoStreamRef.current) {
+        videoStreamRef.current.getTracks().forEach((t) => t.stop());
+      }
+      // Start with new camera
+      setTimeout(() => startVideoRecording(), 100);
+    }
+  };
+
+  // Touch handlers for swipe gestures
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartYRef.current = e.touches[0].clientY;
+    touchStartXRef.current = e.touches[0].clientX;
+    // Long press detection
+    longPressTimerRef.current = setTimeout(() => {
+      setIsLongPress(true);
+      // Swipe up to lock
+    }, 500);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isRecording || isLockedRecording) return;
+    const deltaY = e.touches[0].clientY - touchStartYRef.current;
+    const deltaX = e.touches[0].clientX - touchStartXRef.current;
+
+    // Swipe up to lock (threshold: -50px)
+    if (deltaY < -50 && !isLongPress) {
+      setIsLockedRecording(true);
+      setSwipeDirection('up');
+      if (longPressTimerRef.current) clearTimeout(longPressTimerRef.current);
+    }
+
+    // Swipe left to cancel (threshold: -80px)
+    if (deltaX < -80 && Math.abs(deltaY) < 50) {
+      setSwipeDirection('left');
+      if (longPressTimerRef.current) clearTimeout(longPressTimerRef.current);
+      if (recordingMode === 'video') {
+        cancelVideoRecording();
+      } else {
+        cancelRecording();
+      }
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (longPressTimerRef.current) clearTimeout(longPressTimerRef.current);
+    if (isLockedRecording) return; // Don't stop if locked
+
+    if (isRecording) {
+      if (recordingMode === 'video') {
+        stopVideoRecording();
+      } else {
+        stopRecording();
+      }
+    }
+    setIsLongPress(false);
+    setSwipeDirection(null);
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    // Start recording on click (for desktop)
+    if (recordingMode === 'video') {
+      startVideoRecording();
+    } else {
+      startRecording();
+    }
+  };
+
+  const handleMouseUp = () => {
+    if (isRecording && !isLockedRecording) {
+      if (recordingMode === 'video') {
+        stopVideoRecording();
+      } else {
+        stopRecording();
+      }
+    }
   };
 
   const handleInputContextMenu = (e: React.MouseEvent) => {
@@ -551,9 +792,9 @@ export default function MessageInput({ chatId }: MessageInputProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 z-50 rounded-[2rem] mx-6 mb-6 mt-2 bg-Nexo-500/10 border-2 border-dashed border-Nexo-400 backdrop-blur-sm flex items-center justify-center pointer-events-none"
+            className="absolute inset-0 z-50 rounded-[2rem] mx-6 mb-6 mt-2 bg-Nimbus-500/10 border-2 border-dashed border-Nimbus-400 backdrop-blur-sm flex items-center justify-center pointer-events-none"
           >
-            <div className="flex flex-col items-center gap-2 text-Nexo-300">
+            <div className="flex flex-col items-center gap-2 text-Nimbus-300">
               <FileText size={32} className="animate-bounce" />
               <p className="font-semibold">{t('dropFileHere')}</p>
             </div>
@@ -571,22 +812,22 @@ export default function MessageInput({ chatId }: MessageInputProps) {
             className="mb-2 max-w-3xl mx-auto overflow-hidden px-1.5"
           >
             <div className="flex items-center gap-3 px-4 py-2.5 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-2xl relative shadow-xl">
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 bg-gradient-to-b from-Nexo-400 to-purple-500 rounded-r-md" />
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 bg-gradient-to-b from-Nimbus-400 to-purple-500 rounded-r-md" />
               <div className="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center flex-shrink-0">
                 {editingMessage ? (
-                  <Pencil size={12} className="text-Nexo-400" />
+                  <Pencil size={12} className="text-Nimbus-400" />
                 ) : (
-                  <Reply size={12} className="text-Nexo-400" />
+                  <Reply size={12} className="text-Nimbus-400" />
                 )}
               </div>
               <div className="flex-1 min-w-0 flex flex-col justify-center">
-                <p className="text-xs font-semibold text-Nexo-400 mb-0.5">
+                <p className="text-xs font-semibold text-Nimbus-400 mb-0.5">
                   {editingMessage
                     ? t('editing')
                     : `${t('replyTo')} ${replyTo?.sender?.displayName || replyTo?.sender?.username || ''}`}
                 </p>
                 <div className="text-xs text-zinc-300 truncate opacity-80 border-l border-white/20 pl-2 ml-1">
-                  {replyTo?.quote ? `В«${replyTo.quote}В»` : (editingMessage || replyTo)?.content || t('media') || 'РњРµРґРёР°'}
+                  {replyTo?.quote ? `«${replyTo.quote}»` : (editingMessage || replyTo)?.content || t('media') || 'Медиа'}
                 </div>
               </div>
               <button
@@ -621,8 +862,8 @@ export default function MessageInput({ chatId }: MessageInputProps) {
                 >
                   <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 bg-gradient-to-b from-sky-400 to-blue-500 rounded-r-md" />
                   {attachment.uploading ? (
-                    <div className="w-10 h-10 rounded-lg bg-Nexo-500/20 flex items-center justify-center flex-shrink-0 ring-1 ring-white/10 ml-2">
-                      <div className="w-4 h-4 border-2 border-Nexo-400 border-t-transparent rounded-full animate-spin" />
+                    <div className="w-10 h-10 rounded-lg bg-Nimbus-500/20 flex items-center justify-center flex-shrink-0 ring-1 ring-white/10 ml-2">
+                      <div className="w-4 h-4 border-2 border-Nimbus-400 border-t-transparent rounded-full animate-spin" />
                     </div>
                   ) : attachment.preview ? (
                     <img
@@ -631,8 +872,8 @@ export default function MessageInput({ chatId }: MessageInputProps) {
                       className="w-10 h-10 rounded-lg object-cover flex-shrink-0 ring-1 ring-white/10 ml-2"
                     />
                   ) : attachment.type === 'video' ? (
-                    <div className="w-10 h-10 rounded-lg bg-Nexo-500/20 flex items-center justify-center flex-shrink-0 ring-1 ring-white/10 ml-2">
-                      <ImageIcon size={16} className="text-Nexo-400" />
+                    <div className="w-10 h-10 rounded-lg bg-Nimbus-500/20 flex items-center justify-center flex-shrink-0 ring-1 ring-white/10 ml-2">
+                      <ImageIcon size={16} className="text-Nimbus-400" />
                     </div>
                   ) : attachment.type === 'audio' ? (
                     <div className="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center flex-shrink-0 ring-1 ring-white/10 ml-2">
@@ -647,7 +888,7 @@ export default function MessageInput({ chatId }: MessageInputProps) {
                     <p className="text-xs font-medium text-white truncate tracking-wide">{attachment.file.name}</p>
                     <p className="text-[10px] text-zinc-400 font-mono mt-0.5">
                       {(attachment.file.size / 1024).toFixed(1)} {t('kb')}
-                      {attachment.uploading && <span className="ml-1 text-Nexo-400 animate-pulse">{t('sending')}</span>}
+                      {attachment.uploading && <span className="ml-1 text-Nimbus-400 animate-pulse">{t('sending')}</span>}
                     </p>
                   </div>
                   <button
@@ -665,35 +906,105 @@ export default function MessageInput({ chatId }: MessageInputProps) {
 
       {/* Recording UI */}
       {isRecording ? (
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 relative">
+          {/* Video Preview */}
+          {isRecordingVideo && showVideoPreview && (
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-48 h-64 bg-black rounded-2xl overflow-hidden shadow-2xl border-2 border-white/20 z-50">
+              <video
+                ref={videoPreviewRef}
+                autoPlay
+                playsInline
+                muted
+                className="w-full h-full object-cover"
+              />
+              {/* Switch camera button */}
+              <button
+                onClick={switchCamera}
+                className="absolute top-2 right-2 p-2 rounded-full bg-black/50 hover:bg-black/70 transition-colors"
+              >
+                <RotateCcw size={16} className="text-white" />
+              </button>
+              {/* Timer overlay */}
+              <div className="absolute top-2 left-2 px-2 py-1 rounded-full bg-black/50 flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                <span className="text-xs text-white font-mono">{formatTime(recordingTime)}</span>
+              </div>
+            </div>
+          )}
+
+          {/* Swipe indicators */}
+          {isRecording && !isLockedRecording && (
+            <>
+              {/* Swipe left to cancel */}
+              <AnimatePresence>
+                {swipeDirection === 'left' && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute left-0 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-red-500 rounded-full text-white text-sm font-medium"
+                  >
+                    Свайп влево для отмены
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              {/* Swipe up to lock */}
+              <AnimatePresence>
+                {swipeDirection === 'up' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-Nimbus-500 rounded-full text-white text-sm font-medium whitespace-nowrap"
+                  >
+                    Запись заблокирована
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </>
+          )}
+
+          {/* Cancel button */}
           <button
-            onClick={cancelRecording}
+            onClick={recordingMode === 'video' ? cancelVideoRecording : cancelRecording}
             className="p-2 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors flex-shrink-0"
           >
             <X size={20} />
           </button>
+
           <div className="flex-1 flex items-center gap-3">
-            <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />
-            <span className="text-sm text-zinc-300 font-mono">{formatTime(recordingTime)}</span>
-            <div className="flex-1 flex items-center gap-0.5 h-6">
-              {liveBars.map((h, i) => (
-                <div
-                  key={i}
-                  className="flex-1 bg-Nexo-400/60 rounded-full transition-all duration-100"
-                  style={{ height: `${h}%` }}
-                />
-              ))}
-            </div>
+            {/* Recording indicator */}
+            <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse flex-shrink-0" />
+            <span className="text-sm text-zinc-300 font-mono flex-shrink-0">{formatTime(recordingTime)}</span>
+            
+            {/* Waveform or lock indicator */}
+            {isLockedRecording ? (
+              <div className="flex-1 flex items-center gap-2 text-Nimbus-400">
+                <div className="px-2 py-1 rounded-full bg-Nimbus-500/20 text-xs font-medium">Запись заблокирована</div>
+              </div>
+            ) : (
+              <div className="flex-1 flex items-center gap-0.5 h-6">
+                {liveBars.map((h, i) => (
+                  <div
+                    key={i}
+                    className="flex-1 bg-Nimbus-400/60 rounded-full transition-all duration-100"
+                    style={{ height: `${h}%` }}
+                  />
+                ))}
+              </div>
+            )}
           </div>
+
+          {/* Stop/Send button */}
           <button
-            onClick={stopRecording}
+            onClick={recordingMode === 'video' ? stopVideoRecording : stopRecording}
             className="p-3 rounded-full bg-accent hover:bg-accent-hover transition-colors text-white flex-shrink-0"
           >
             <Send size={18} />
           </button>
         </div>
       ) : (
-        <div className="flex items-end gap-1.5 bg-white/[0.04] backdrop-blur-[40px] rounded-[2rem] border border-white/[0.08] p-2 w-full max-w-3xl mx-auto transition-all duration-300 hover:bg-white/[0.06] focus-within:bg-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.3)] focus-within:shadow-[0_8px_40px_rgba(99,102,241,0.15)] focus-within:border-Nexo-500/30 group">
+        <div className="flex items-end gap-1.5 bg-white/[0.04] backdrop-blur-[40px] rounded-[2rem] border border-white/[0.08] p-2 w-full max-w-3xl mx-auto transition-all duration-300 hover:bg-white/[0.06] focus-within:bg-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.3)] focus-within:shadow-[0_8px_40px_rgba(99,102,241,0.15)] focus-within:border-Nimbus-500/30 group">
           {/* Attach */}
           <div className="relative mb-0.5 ml-1 flex-shrink-0 self-center">
             <button
@@ -716,8 +1027,8 @@ export default function MessageInput({ chatId }: MessageInputProps) {
                       onClick={() => imageInputRef.current?.click()}
                       className="flex items-center gap-4 w-full px-3 py-3 rounded-xl text-sm font-medium text-zinc-200 hover:bg-white/5 hover:text-white transition-all group"
                     >
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-Nexo-400/20 to-purple-500/20 flex items-center justify-center ring-1 ring-Nexo-400/30 group-hover:scale-110 transition-transform shadow-inner">
-                        <ImageIcon size={18} className="text-Nexo-400" />
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-Nimbus-400/20 to-purple-500/20 flex items-center justify-center ring-1 ring-Nimbus-400/30 group-hover:scale-110 transition-transform shadow-inner">
+                        <ImageIcon size={18} className="text-Nimbus-400" />
                       </div>
                       {t('photoVideo')}
                     </button>
@@ -774,7 +1085,7 @@ export default function MessageInput({ chatId }: MessageInputProps) {
                       {m.user.avatar ? (
                         <img src={m.user.avatar} className="w-7 h-7 rounded-full object-cover" alt="" />
                       ) : (
-                        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-Nexo-500 to-purple-600 flex items-center justify-center text-white text-xs font-semibold">
+                        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-Nimbus-500 to-purple-600 flex items-center justify-center text-white text-xs font-semibold">
                           {(m.user.displayName || m.user.username)[0]?.toUpperCase()}
                         </div>
                       )}
@@ -876,7 +1187,7 @@ export default function MessageInput({ chatId }: MessageInputProps) {
                               <ChevronLeft size={16} />
                             </button>
                           )}
-                          <Clock size={16} className="text-Nexo-400" />
+                          <Clock size={16} className="text-Nimbus-400" />
                           <span className="text-sm font-medium text-zinc-200">{t('scheduleMessage')}</span>
                         </div>
 
@@ -937,7 +1248,7 @@ export default function MessageInput({ chatId }: MessageInputProps) {
                                 setScheduleMinute(String(now.getMinutes()).padStart(2, '0'));
                                 setScheduleStep('custom');
                               }}
-                              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-Nexo-400 hover:bg-white/10 transition-colors text-left"
+                              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-Nimbus-400 hover:bg-white/10 transition-colors text-left"
                             >
                               <Calendar size={15} className="flex-shrink-0" />
                               {t('scheduleCustom')}
@@ -969,12 +1280,33 @@ export default function MessageInput({ chatId }: MessageInputProps) {
                 </AnimatePresence>
               </>
             ) : (
-              <button
-                onClick={startRecording}
-                className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 text-white/70 hover:text-white hover:bg-white/20 transition-all shadow-md transform hover:scale-105"
-              >
-                <Mic size={18} />
-              </button>
+              <div className="relative">
+                {/* Кнопка переключения режима (tap) */}
+                <button
+                  onClick={toggleRecordingMode}
+                  className="absolute -top-8 left-1/2 -translate-x-1/2 p-1.5 rounded-full bg-white/5 hover:bg-white/10 transition-colors z-10"
+                  title={recordingMode === 'audio' ? 'Переключиться на видео' : 'Переключиться на аудио'}
+                >
+                  {recordingMode === 'audio' ? <Video size={14} className="text-zinc-400" /> : <Mic size={14} className="text-zinc-400" />}
+                </button>
+                
+                {/* Кнопка записи (long press / click) */}
+                <button
+                  onMouseDown={handleMouseDown}
+                  onMouseUp={handleMouseUp}
+                  onMouseLeave={() => { if (isRecording && !isLockedRecording) recordingMode === 'video' ? stopVideoRecording() : stopRecording(); }}
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
+                  className={`w-10 h-10 flex items-center justify-center rounded-full transition-all shadow-md transform ${
+                    isRecording
+                      ? 'bg-red-500 text-white scale-110'
+                      : 'bg-white/10 text-white/70 hover:text-white hover:bg-white/20 hover:scale-105'
+                  }`}
+                >
+                  {recordingMode === 'audio' ? <Mic size={18} /> : <Video size={18} />}
+                </button>
+              </div>
             )}
           </div>
         </div>
@@ -1150,7 +1482,7 @@ function ScheduleCalendar({
                     : isPast(day)
                       ? 'text-zinc-600 cursor-not-allowed'
                       : isToday(day)
-                        ? 'text-Nexo-400 font-semibold ring-1 ring-Nexo-500/50'
+                        ? 'text-Nimbus-400 font-semibold ring-1 ring-Nimbus-500/50'
                         : 'text-zinc-300 hover:bg-white/10'
                 }`}
               >
@@ -1170,7 +1502,7 @@ function ScheduleCalendar({
           <select
             value={hour}
             onChange={(e) => setHour(e.target.value)}
-            className="flex-1 bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-sm text-zinc-200 focus:outline-none focus:border-Nexo-500/50 appearance-none text-center"
+            className="flex-1 bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-sm text-zinc-200 focus:outline-none focus:border-Nimbus-500/50 appearance-none text-center"
           >
             {Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0')).map((h) => (
               <option key={h} value={h} className="bg-zinc-800">{h}</option>
@@ -1180,7 +1512,7 @@ function ScheduleCalendar({
           <select
             value={minute}
             onChange={(e) => setMinute(e.target.value)}
-            className="flex-1 bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-sm text-zinc-200 focus:outline-none focus:border-Nexo-500/50 appearance-none text-center"
+            className="flex-1 bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-sm text-zinc-200 focus:outline-none focus:border-Nimbus-500/50 appearance-none text-center"
           >
             {Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0')).map((m) => (
               <option key={m} value={m} className="bg-zinc-800">{m}</option>

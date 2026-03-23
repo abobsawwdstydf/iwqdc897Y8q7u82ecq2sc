@@ -32,7 +32,7 @@ class ApiClient {
     } catch (err) {
       clearTimeout(timer);
       if (err instanceof DOMException && err.name === 'AbortError') {
-        throw new Error('Р’СЂРµРјСЏ РѕР¶РёРґР°РЅРёСЏ Р·Р°РїСЂРѕСЃР° РёСЃС‚РµРєР»Рѕ');
+        throw new Error('Время ожидания запроса истекло');
       }
       console.error(`[API] Network error:`, err);
       throw err;
@@ -40,11 +40,11 @@ class ApiClient {
     clearTimeout(timer);
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' }));
+      const error = await response.json().catch(() => ({ error: 'Ошибка сервера' }));
       console.error(`[API] Error ${response.status}:`, error);
       console.error(`[API] Failed request: ${fetchOptions.method || 'GET'} ${endpoint}`);
       console.error(`[API] Request body:`, fetchOptions.body);
-      throw new Error(error.error || 'РћС€РёР±РєР° Р·Р°РїСЂРѕСЃР°');
+      throw new Error(error.error || 'Ошибка запроса');
     }
 
     const data = await response.json();
@@ -103,7 +103,7 @@ class ApiClient {
     });
     clearTimeout(timer);
 
-    if (!response.ok) throw new Error('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё Р°РІР°С‚Р°СЂР°');
+    if (!response.ok) throw new Error('Ошибка загрузки аватара');
     return response.json() as Promise<User>;
   }
 
@@ -151,7 +151,7 @@ class ApiClient {
     return this.request<Chat>(`/chats/${id}`);
   }
 
-  // в”Ђв”Ђв”Ђ Multiple Avatars Management в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ─── Multiple Avatars Management ─────────────────────────────────────
 
   async uploadChatAvatars(chatId: string, files: File[]) {
     const formData = new FormData();
@@ -241,7 +241,7 @@ class ApiClient {
       if (!response.ok) {
         const errorText = await response.text();
         console.error('[API] Upload error response:', errorText);
-        throw new Error('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё С„Р°Р№Р»РѕРІ');
+        throw new Error('Ошибка загрузки файлов');
       }
       
       const data = await response.json();
@@ -315,7 +315,7 @@ class ApiClient {
     return this.request<Message[]>(`/messages/chat/${chatId}/shared?type=${type}`);
   }
 
-  // ICE СЃРµСЂРІРµСЂС‹ РґР»СЏ WebRTC
+  // ICE серверы для WebRTC
   async getIceServers() {
     return this.request<{ iceServers: RTCIceServer[] }>('/ice-servers');
   }
@@ -393,9 +393,9 @@ class ApiClient {
     return this.request<{ success: boolean }>(`/friends/${friendshipId}`, { method: 'DELETE' });
   }
 
-  // РџР°РїРєРё С‡Р°С‚РѕРІ
+  // Chat Folders
   async getFolders() {
-    return this.request('/folders');
+    return this.request<Array<{ id: number; name: string; color: string; icon: string; position: number; chats: Array<{ chatId: number; position: number }> }>>('/folders');
   }
 
   async createFolder(name: string, color?: string, icon?: string, chatIds?: number[]) {
@@ -405,15 +405,15 @@ class ApiClient {
     });
   }
 
-  async updateFolder(id: number, data: { name?: string; color?: string; icon?: string }) {
-    return this.request(`/folders/${id}`, {
+  async updateFolder(folderId: number, data: { name?: string; color?: string; icon?: string }) {
+    return this.request(`/folders/${folderId}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     });
   }
 
-  async deleteFolder(id: number) {
-    return this.request(`/folders/${id}`, { method: 'DELETE' });
+  async deleteFolder(folderId: number) {
+    return this.request(`/folders/${folderId}`, { method: 'DELETE' });
   }
 
   async addChatsToFolder(folderId: number, chatIds: number[]) {
@@ -427,98 +427,30 @@ class ApiClient {
     return this.request(`/folders/${folderId}/chats/${chatId}`, { method: 'DELETE' });
   }
 
-  // Р§РµСЂРЅРѕРІРёРєРё
-  async getDraft(chatId: number) {
-    return this.request(`/drafts/chat/${chatId}`);
+  async reorderFolderChats(folderId: number, chatIds: number[]) {
+    return this.request(`/folders/${folderId}/chats/reorder`, {
+      method: 'PUT',
+      body: JSON.stringify({ chatIds }),
+    });
   }
 
-  async saveDraft(chatId: number | null, content: string, media?: any[]) {
+  // Drafts
+  async getDraft(chatId: string) {
+    return this.request<{ content: string }>('/drafts', {
+      method: 'POST',
+      body: JSON.stringify({ chatId }),
+    });
+  }
+
+  async saveDraft(chatId: string, content: string) {
     return this.request('/drafts', {
-      method: 'POST',
-      body: JSON.stringify({ chatId, content, media }),
-    });
-  }
-
-  async deleteDraft(id: number) {
-    return this.request(`/drafts/${id}`, { method: 'DELETE' });
-  }
-
-  // РЎРµРєСЂРµС‚РЅС‹Рµ С‡Р°С‚С‹
-  async createSecretChat(receiverId: number, ttl?: number) {
-    return this.request('/secret-chats', {
-      method: 'POST',
-      body: JSON.stringify({ receiverId, ttl }),
-    });
-  }
-
-  async getSecretChats() {
-    return this.request('/secret-chats');
-  }
-
-  async getSecretChat(id: number) {
-    return this.request(`/secret-chats/${id}`);
-  }
-
-  async updateSecretChatTtl(id: number, ttl: number) {
-    return this.request(`/secret-chats/${id}/ttl`, {
       method: 'PUT',
-      body: JSON.stringify({ ttl }),
+      body: JSON.stringify({ chatId, content }),
     });
   }
 
-  async deleteSecretChat(id: number) {
-    return this.request(`/secret-chats/${id}`, { method: 'DELETE' });
-  }
-
-  async sendSecretMessage(chatId: number, content: string) {
-    return this.request(`/secret-chats/${chatId}/messages`, {
-      method: 'POST',
-      body: JSON.stringify({ content }),
-    });
-  }
-
-  async getSecretMessages(chatId: number) {
-    return this.request(`/secret-chats/${chatId}/messages`);
-  }
-
-  // РљР°РЅР°Р»С‹
-  async subscribeToChannel(chatId: number) {
-    return this.request(`/chats/${chatId}/subscribe`, { method: 'POST' });
-  }
-
-  async unsubscribeFromChannel(chatId: number) {
-    return this.request(`/chats/${chatId}/subscribe`, { method: 'DELETE' });
-  }
-
-  async generateInviteLink(chatId: number) {
-    return this.request(`/chats/${chatId}/invite-link`, { method: 'POST' });
-  }
-
-  async joinByInviteLink(inviteLink: string) {
-    return this.request(`/chats/join/${inviteLink}`, { method: 'POST' });
-  }
-
-  async updateChannelSettings(chatId: number, data: { isPublic?: boolean; username?: string; description?: string }) {
-    return this.request(`/chats/${chatId}/settings`, {
-      method: 'PUT',
-      body: JSON.stringify(data),
-    });
-  }
-
-  // РђРґРјРёРЅ-РїР°РЅРµР»СЊ
-  async adminVerifyUser(userId: number, isVerified: boolean) {
-    return this.request(`/admin/users/${userId}/verify`, {
-      method: 'POST',
-      body: JSON.stringify({ isVerified }),
-    });
-  }
-
-  async adminGetUsers() {
-    return this.request('/admin/users');
-  }
-
-  async adminDeleteUser(userId: number) {
-    return this.request(`/admin/users/${userId}`, { method: 'DELETE' });
+  async deleteDraft(chatId: string) {
+    return this.request(`/drafts/${chatId}`, { method: 'DELETE' });
   }
 }
 
