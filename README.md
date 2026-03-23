@@ -301,11 +301,4 @@ ADMIN_TOKEN=qwertyuiopasd
 
 ---
 
-## 📞 Поддержка
-
-**GitHub:** [@haker_one](https://github.com/haker_one)  
-**Telegram:** @haker_one
-
----
-
-**© 2026 haker_one. Все права защищены.**
+**© 2026 Dark Heavens**

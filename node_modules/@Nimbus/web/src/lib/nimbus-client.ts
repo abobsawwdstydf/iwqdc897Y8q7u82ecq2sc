@@ -395,7 +395,7 @@ export const NIMBUS_CONFIG = {
     SERVER_URL: import.meta.env.VITE_API_URL || 'https://nimbus-msg.onrender.com',
     STORAGE_URL: import.meta.env.VITE_STORAGE_URL || undefined,
     PROTOCOL_VERSION: '3.0.0',
-    AUTHOR: 'haker_one',
+    AUTHOR: 'Dark Heavens',
     FEATURES: {
         encryption: true,
         doubleEncryption: true,
