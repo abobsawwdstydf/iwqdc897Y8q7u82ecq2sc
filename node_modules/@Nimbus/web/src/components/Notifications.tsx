@@ -158,3 +158,4 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
     </>
   );
 };
+

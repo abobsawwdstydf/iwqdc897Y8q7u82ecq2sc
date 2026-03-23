@@ -205,7 +205,7 @@ export default function GroupCallModal({ isOpen, onClose, chatId, chatName, call
     } catch (err: any) {
       console.error('Error joining group call:', err);
       if (err?.name === 'NotAllowedError' || err?.name === 'NotFoundError') {
-        alert('Р Р°Р·СЂРµС€РёС‚Рµ РґРѕСЃС‚СѓРї Рє РјРёРєСЂРѕС„РѕРЅСѓ РІ РЅР°СЃС‚СЂРѕР№РєР°С… Р±СЂР°СѓР·РµСЂР° РґР»СЏ СЃРѕРІРµСЂС€РµРЅРёСЏ Р·РІРѕРЅРєРѕРІ');
+        alert('Разрешите доступ к микрофону в настройках браузера для совершения звонков');
       }
       joinedRef.current = false;
     }
@@ -349,12 +349,12 @@ export default function GroupCallModal({ isOpen, onClose, chatId, chatName, call
       gainNode.gain.value = 0;
       const dest = ctx.createMediaStreamDestination();
 
-      // Signal path: source в†’ delay в†’ gain в†’ output (full quality, just gated)
+      // Signal path: source → delay → gain → output (full quality, just gated)
       source.connect(delayNode);
       delayNode.connect(gainNode);
       gainNode.connect(dest);
 
-      // Analysis path (no delay): source в†’ bandpass в†’ analyser
+      // Analysis path (no delay): source → bandpass → analyser
       source.connect(analysisHP);
       analysisHP.connect(analysisLP);
       analysisLP.connect(analyser);
@@ -530,7 +530,7 @@ export default function GroupCallModal({ isOpen, onClose, chatId, chatName, call
         next.set(data.userId, data.userInfo);
         return next;
       });
-      // The new joiner will send us an offer вЂ” we wait for it
+      // The new joiner will send us an offer — we wait for it
     };
 
     const onUserLeft = (data: { chatId: string; userId: string }) => {
@@ -772,7 +772,7 @@ export default function GroupCallModal({ isOpen, onClose, chatId, chatName, call
             <div className="flex items-center justify-between px-8 py-4 border-b border-white/5">
               <div>
                 <h3 className="text-lg font-bold text-white">{chatName}</h3>
-                <p className="text-xs text-zinc-400">{participantList.length + 1} {t('participants') || 'СѓС‡Р°СЃС‚РЅРёРєРѕРІ'} В· {formatDuration(duration)}</p>
+                <p className="text-xs text-zinc-400">{participantList.length + 1} {t('participants') || 'участников'} · {formatDuration(duration)}</p>
               </div>
               <button
                 onClick={() => setIsMinimized(true)}
@@ -796,13 +796,13 @@ export default function GroupCallModal({ isOpen, onClose, chatId, chatName, call
                   ) : (
                     <div className="flex flex-col items-center">
                       <div className="w-16 h-16 rounded-full bg-gradient-to-br from-Nexo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl mb-2">
-                        {t('you')?.charAt(0).toUpperCase() || 'РЇ'}
+                        {t('you')?.charAt(0).toUpperCase() || 'Я'}
                       </div>
                       {isMuted && <MicOff size={14} className="text-red-400" />}
                     </div>
                   )}
                   <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded-full bg-black/60 text-xs text-white">
-                    {t('you')} {isMuted ? 'рџ”‡' : ''}
+                    {t('you')} {isMuted ? '🔇' : ''}
                   </div>
                 </div>
 
@@ -864,7 +864,7 @@ export default function GroupCallModal({ isOpen, onClose, chatId, chatName, call
                   <ChevronUp size={10} />
                 </button>
               </div>
-              {/* Camera вЂ” only for video calls */}
+              {/* Camera — only for video calls */}
               {initialCallType === 'video' && (
                 <button
                   onClick={toggleVideo}
@@ -907,3 +907,4 @@ export default function GroupCallModal({ isOpen, onClose, chatId, chatName, call
     </AnimatePresence>
   );
 }
+

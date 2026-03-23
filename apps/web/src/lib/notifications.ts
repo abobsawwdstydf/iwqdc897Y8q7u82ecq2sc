@@ -76,3 +76,4 @@ export function showMessageNotification(
 
   return showNotification(title, options);
 }
+

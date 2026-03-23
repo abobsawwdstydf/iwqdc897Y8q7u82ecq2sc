@@ -365,7 +365,7 @@ function MessageBubble({
       <div
         ref={bubbleRef}
         className={`flex ${isMine ? 'justify-end' : 'justify-start'} group mb-0.5 relative transition-colors duration-200 ${selectionMode ? 'px-4 -mx-4 cursor-pointer hover:bg-white/5 rounded-xl' : ''
-          } ${isSelected ? 'bg-Nimbus-500/10 hover:bg-Nimbus-500/20' : ''}`}
+          } ${isSelected ? 'bg-Nexo-500/10 hover:bg-Nexo-500/20' : ''}`}
         onClick={() => {
           if (selectionMode) onToggleSelect?.(message.id);
         }}
@@ -374,7 +374,7 @@ function MessageBubble({
         {/* Selection Checkbox */}
         {selectionMode && (
           <div className="absolute left-1 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full border border-white/30 flex items-center justify-center transition-colors">
-            {isSelected && <div className="w-5 h-5 rounded-full bg-Nimbus-500 flex items-center justify-center">
+            {isSelected && <div className="w-5 h-5 rounded-full bg-Nexo-500 flex items-center justify-center">
               <Check size={12} className="text-white" />
             </div>}
           </div>
@@ -388,7 +388,7 @@ function MessageBubble({
                 {senderAvatar ? (
                   <img src={senderAvatar} alt="" className="w-8 h-8 rounded-full object-cover" />
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-Nimbus-500 to-purple-600 flex items-center justify-center text-white text-xs font-semibold">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-Nexo-500 to-purple-600 flex items-center justify-center text-white text-xs font-semibold">
                     {senderName[0]?.toUpperCase() || '?'}
                   </div>
                 )}
@@ -401,7 +401,7 @@ function MessageBubble({
           {/* Имя отправителя (для групп) */}
           {!isMine && showAvatar && (
             <button
-              className="text-xs font-medium text-Nimbus-400 ml-3 mb-0.5 hover:underline"
+              className="text-xs font-medium text-Nexo-400 ml-3 mb-0.5 hover:underline"
               onClick={() => onViewProfile?.(message.senderId)}
             >
               {senderName}
@@ -410,8 +410,8 @@ function MessageBubble({
 
           {/* Reply */}
           {message.replyTo && (
-            <div className={`mx-3 mb-1 px-3 py-1.5 rounded-lg border-l-2 border-Nimbus-500 bg-Nimbus-500/10 max-w-full`}>
-              <p className="text-xs font-medium text-Nimbus-400 truncate">
+            <div className={`mx-3 mb-1 px-3 py-1.5 rounded-lg border-l-2 border-Nexo-500 bg-Nexo-500/10 max-w-full`}>
+              <p className="text-xs font-medium text-Nexo-400 truncate">
                 {message.replyTo.sender?.displayName || message.replyTo.sender?.username}
               </p>
               <p className="text-xs text-zinc-400 truncate">{message.quote || message.replyTo.content || t('media')}</p>
@@ -474,13 +474,13 @@ function MessageBubble({
                 />
                 <button
                   onClick={toggleAudio}
-                  className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${isMine ? 'bg-white/20 hover:bg-white/30' : 'bg-Nimbus-500/20 hover:bg-Nimbus-500/30'
+                  className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${isMine ? 'bg-white/20 hover:bg-white/30' : 'bg-Nexo-500/20 hover:bg-Nexo-500/30'
                     } transition-colors`}
                 >
                   {isPlaying ? (
-                    <Pause size={16} className={isMine ? 'text-white' : 'text-Nimbus-400'} />
+                    <Pause size={16} className={isMine ? 'text-white' : 'text-Nexo-400'} />
                   ) : (
-                    <Play size={16} className={`${isMine ? 'text-white' : 'text-Nimbus-400'} ml-0.5`} />
+                    <Play size={16} className={`${isMine ? 'text-white' : 'text-Nexo-400'} ml-0.5`} />
                   )}
                 </button>
                 <div className="flex-1 min-w-0">
@@ -506,7 +506,7 @@ function MessageBubble({
                         <div
                           key={i}
                           className={`flex-1 rounded-full transition-colors duration-150 ${isActive
-                            ? isMine ? 'bg-white/80' : 'bg-Nimbus-400'
+                            ? isMine ? 'bg-white/80' : 'bg-Nexo-400'
                             : isMine ? 'bg-white/20' : 'bg-white/10'
                             }`}
                           style={{ height: `${barHeight}%` }}
@@ -530,7 +530,7 @@ function MessageBubble({
                 <div className="min-w-[220px]">
                   {audioMedia?.filename && (
                     <div className="flex items-center gap-2 mb-2">
-                      <Volume2 size={14} className={isMine ? 'text-white/60' : 'text-Nimbus-400'} />
+                      <Volume2 size={14} className={isMine ? 'text-white/60' : 'text-Nexo-400'} />
                       <span className={`text-xs truncate ${isMine ? 'text-white/70' : 'text-zinc-400'}`}>{audioMedia.filename}</span>
                     </div>
                   )}
@@ -543,13 +543,13 @@ function MessageBubble({
                     />
                     <button
                       onClick={toggleAudio}
-                      className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${isMine ? 'bg-white/20 hover:bg-white/30' : 'bg-Nimbus-500/20 hover:bg-Nimbus-500/30'
+                      className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${isMine ? 'bg-white/20 hover:bg-white/30' : 'bg-Nexo-500/20 hover:bg-Nexo-500/30'
                         } transition-colors`}
                     >
                       {isPlaying ? (
-                        <Pause size={16} className={isMine ? 'text-white' : 'text-Nimbus-400'} />
+                        <Pause size={16} className={isMine ? 'text-white' : 'text-Nexo-400'} />
                       ) : (
-                        <Play size={16} className={`${isMine ? 'text-white' : 'text-Nimbus-400'} ml-0.5`} />
+                        <Play size={16} className={`${isMine ? 'text-white' : 'text-Nexo-400'} ml-0.5`} />
                       )}
                     </button>
                     <div className="flex-1 min-w-0">
@@ -563,7 +563,7 @@ function MessageBubble({
                             <div
                               key={i}
                               className={`flex-1 rounded-full transition-colors duration-150 ${isActive
-                                ? isMine ? 'bg-white/80' : 'bg-Nimbus-400'
+                                ? isMine ? 'bg-white/80' : 'bg-Nexo-400'
                                 : isMine ? 'bg-white/20' : 'bg-white/10'
                                 }`}
                               style={{ height: `${barHeight}%` }}
@@ -596,9 +596,9 @@ function MessageBubble({
                     className={`flex items-center gap-3 p-2 rounded-xl ${isMine ? 'bg-white/10 hover:bg-white/15' : 'bg-surface-tertiary hover:bg-surface-hover'
                       } transition-colors mb-1`}
                   >
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isMine ? 'bg-white/20' : 'bg-Nimbus-500/20'
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isMine ? 'bg-white/20' : 'bg-Nexo-500/20'
                       }`}>
-                      <FileText size={20} className={isMine ? 'text-white' : 'text-Nimbus-400'} />
+                      <FileText size={20} className={isMine ? 'text-white' : 'text-Nexo-400'} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm truncate">{m.filename || t('fileLabel')}</p>
@@ -657,7 +657,7 @@ function MessageBubble({
                   key={emoji}
                   onClick={() => handleReaction(emoji)}
                   className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-xs transition-colors ${data.isMine
-                    ? 'bg-Nimbus-500/30 border border-Nimbus-500/50'
+                    ? 'bg-Nexo-500/30 border border-Nexo-500/50'
                     : 'bg-surface-tertiary border border-border hover:border-zinc-600'
                     }`}
                   title={data.users.join(', ')}
@@ -678,7 +678,7 @@ function MessageBubble({
                 {senderAvatar ? (
                   <img src={senderAvatar} alt="" className="w-8 h-8 rounded-full object-cover" />
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-Nimbus-500 to-purple-600 flex items-center justify-center text-white text-xs font-semibold">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-Nexo-500 to-purple-600 flex items-center justify-center text-white text-xs font-semibold">
                     {senderName[0]?.toUpperCase() || '?'}
                   </div>
                 )}
@@ -849,7 +849,7 @@ function AlbumView({ media, contentExists, isMine, onImageClick }: AlbumViewProp
     <div className={`${contentExists ? 'mb-2 -mx-3 -mt-2' : ''} ${!contentExists ? 'rounded-[1.25rem]' : ''} bg-black/40 overflow-hidden`}>
       {/* Album header with collapse button */}
       {isAlbum && (
-        <div className={`flex items-center justify-between px-3 py-2 ${isMine ? 'bg-white/5' : 'bg-Nimbus-500/10'}`}>
+        <div className={`flex items-center justify-between px-3 py-2 ${isMine ? 'bg-white/5' : 'bg-Nexo-500/10'}`}>
           <span className="text-xs text-zinc-400">
             {count} {count === 1 ? 'файл' : count <= 4 ? 'файла' : 'файлов'}
           </span>
@@ -909,7 +909,7 @@ function AlbumView({ media, contentExists, isMine, onImageClick }: AlbumViewProp
       {!isExpanded && isAlbum && count > 3 && (
         <button
           onClick={() => setIsExpanded(true)}
-          className={`w-full py-2 text-xs ${isMine ? 'bg-white/10 hover:bg-white/20' : 'bg-Nimbus-500/10 hover:bg-Nimbus-500/20'} transition-colors`}
+          className={`w-full py-2 text-xs ${isMine ? 'bg-white/10 hover:bg-white/20' : 'bg-Nexo-500/10 hover:bg-Nexo-500/20'} transition-colors`}
         >
           Показать все {count} фото
         </button>
@@ -1159,7 +1159,7 @@ function VideoPlayer({ src, isMine, filename, onOpenLightbox }: VideoPlayerProps
                             onClick={() => setPlaybackSpeed(rate)}
                             className={`flex items-center justify-between w-full px-3 py-2 text-sm rounded-lg transition-colors ${
                               playbackRate === rate
-                                ? 'bg-Nimbus-500/30 text-Nimbus-400'
+                                ? 'bg-Nexo-500/30 text-Nexo-400'
                                 : 'text-white hover:bg-white/10'
                             }`}
                           >
@@ -1214,7 +1214,7 @@ function VideoPlayer({ src, isMine, filename, onOpenLightbox }: VideoPlayerProps
               onClick={handleProgressClick}
             >
               <div
-                className={`h-full rounded-full relative ${isMine ? 'bg-white' : 'bg-Nimbus-400'}`}
+                className={`h-full rounded-full relative ${isMine ? 'bg-white' : 'bg-Nexo-400'}`}
                 style={{ width: `${progress}%` }}
               >
                 <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full opacity-0 group-hover/progress:opacity-100 transition-opacity" />
@@ -1273,3 +1273,4 @@ function VideoPlayer({ src, isMine, filename, onOpenLightbox }: VideoPlayerProps
 }
 
 export default memo(MessageBubble);
+

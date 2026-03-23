@@ -407,7 +407,7 @@ export default function GroupSettings({ chat, onClose }: GroupSettingsProps) {
                         <p className="text-sm font-medium text-white truncate">
                           {member.user.displayName || member.user.username}
                           {member.user.id === user?.id && (
-                            <span className="text-zinc-500 ml-1 text-xs">({t('you') || 'РІС‹'})</span>
+                            <span className="text-zinc-500 ml-1 text-xs">({t('you') || 'вы'})</span>
                           )}
                         </p>
                         {member.role === 'admin' && (
@@ -444,3 +444,4 @@ export default function GroupSettings({ chat, onClose }: GroupSettingsProps) {
     </>
   );
 }
+

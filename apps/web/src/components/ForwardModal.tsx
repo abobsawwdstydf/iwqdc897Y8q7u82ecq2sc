@@ -58,7 +58,7 @@ export default function ForwardModal({ onClose, onForward }: ForwardModalProps) 
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
                         <input
                             type="text"
-                            placeholder={t('searchChats') || 'РџРѕРёСЃРє С‡Р°С‚РѕРІ'}
+                            placeholder={t('searchChats') || 'Поиск чатов'}
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             className="w-full bg-black/20 border border-white/10 rounded-xl py-2.5 pl-10 pr-4 text-white placeholder-zinc-500 focus:outline-none focus:border-Nexo-500 transition-colors"
@@ -95,3 +95,4 @@ export default function ForwardModal({ onClose, onForward }: ForwardModalProps) 
         </div>
     );
 }
+

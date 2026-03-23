@@ -71,16 +71,16 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
   const [friendSearchLoading, setFriendSearchLoading] = useState(false);
 
   const themeCards: { id: ChatTheme; color: string; accent: string; name: string; nameEn: string; desc: string; descEn: string; animated?: boolean; gradient?: string }[] = [
-    { id: 'midnight', color: '#0f0f13', accent: '#6366f1', name: 'РџРѕР»РЅРѕС‡СЊ', nameEn: 'Midnight', desc: 'РўС‘РјРЅР°СЏ С‚РµРјР° СЃ РјСЏРіРєРёРјРё Р°РєС†РµРЅС‚Р°РјРё', descEn: 'Dark theme with soft accents' },
-    { id: 'ocean', color: '#0b172a', accent: '#3b82f6', name: 'РћРєРµР°РЅ', nameEn: 'Ocean', desc: 'Р“Р»СѓР±РѕРєРёР№ СЃРёРЅРёР№ СЃ РїСЂРѕС…Р»Р°РґРЅС‹РјРё С‚РѕРЅР°РјРё', descEn: 'Deep blue with cool tones' },
-    { id: 'forest', color: '#0f1c15', accent: '#10b981', name: 'Р›РµСЃ', nameEn: 'Forest', desc: 'РџСЂРёСЂРѕРґРЅС‹Р№ Р·РµР»С‘РЅС‹Р№ Рё СЃРїРѕРєРѕР№СЃС‚РІРёРµ', descEn: 'Natural green and serenity' },
-    { id: 'sunset', color: '#1f111a', accent: '#ec4899', gradient: 'linear-gradient(135deg, #1f111a, #150a0f)', name: 'Р—Р°РєР°С‚', nameEn: 'Sunset', desc: 'РўС‘РїР»С‹Р№ СЂРѕР·РѕРІС‹Р№ РіСЂР°РґРёРµРЅС‚ Р·Р°РєР°С‚Р°', descEn: 'Warm pink sunset gradient' },
-    { id: 'classic', color: '#121215', accent: '#a1a1aa', name: 'РљР»Р°СЃСЃРёРєР°', nameEn: 'Classic', desc: 'РњРёРЅРёРјР°Р»РёСЃС‚РёС‡РЅР°СЏ РјРѕРЅРѕС…СЂРѕРјРЅР°СЏ С‚РµРјР°', descEn: 'Minimalist monochrome theme' },
-    { id: 'neon', color: '#0b0f19', accent: '#8b5cf6', name: 'РќРµРѕРЅ', nameEn: 'Neon', desc: 'Р¤РёРѕР»РµС‚РѕРІРѕРµ СЃРІРµС‡РµРЅРёРµ Р·Р° РєСѓСЂСЃРѕСЂРѕРј', descEn: 'Purple glow follows your cursor', animated: true },
-    { id: 'aurora', color: '#022c22', accent: '#10b981', gradient: 'linear-gradient(135deg, #022c22, #064e3b)', name: 'РђРІСЂРѕСЂР°', nameEn: 'Aurora', desc: 'РЎРµРІРµСЂРЅРѕРµ СЃРёСЏРЅРёРµ СЂРµР°РіРёСЂСѓРµС‚ РЅР° РјС‹С€СЊ', descEn: 'Northern lights react to mouse', animated: true },
-    { id: 'cyber', color: '#000000', accent: '#f59e0b', name: 'РљРёР±РµСЂ', nameEn: 'Cyber', desc: 'РЎРµС‚РєР° Рё СЏРЅС‚Р°СЂРЅРѕРµ СЃРІРµС‡РµРЅРёРµ РјС‹С€Рё', descEn: 'Grid pattern with amber glow', animated: true },
-    { id: 'glass', color: '#0d1117', accent: '#3b82f6', name: 'РЎС‚РµРєР»Рѕ', nameEn: 'Glass', desc: 'РџР»Р°РІРЅРѕРµ СЃРІРµС‡РµРЅРёРµ СЃР»РµРґСѓРµС‚ Р·Р° РјС‹С€СЊСЋ', descEn: 'Smooth glow follows the cursor', animated: true },
-    { id: 'void', color: '#000000', accent: '#ffffff', name: 'Р‘РµР·РґРЅР°', nameEn: 'Void', desc: 'РђР±СЃРѕР»СЋС‚РЅС‹Р№ РјСЂР°Рє СЃ С‚РѕС‡РµС‡РЅС‹Рј СЃРІРµС‚РѕРј', descEn: 'Absolute darkness with spot light', animated: true },
+    { id: 'midnight', color: '#0f0f13', accent: '#6366f1', name: 'Полночь', nameEn: 'Midnight', desc: 'Тёмная тема с мягкими акцентами', descEn: 'Dark theme with soft accents' },
+    { id: 'ocean', color: '#0b172a', accent: '#3b82f6', name: 'Океан', nameEn: 'Ocean', desc: 'Глубокий синий с прохладными тонами', descEn: 'Deep blue with cool tones' },
+    { id: 'forest', color: '#0f1c15', accent: '#10b981', name: 'Лес', nameEn: 'Forest', desc: 'Природный зелёный и спокойствие', descEn: 'Natural green and serenity' },
+    { id: 'sunset', color: '#1f111a', accent: '#ec4899', gradient: 'linear-gradient(135deg, #1f111a, #150a0f)', name: 'Закат', nameEn: 'Sunset', desc: 'Тёплый розовый градиент заката', descEn: 'Warm pink sunset gradient' },
+    { id: 'classic', color: '#121215', accent: '#a1a1aa', name: 'Классика', nameEn: 'Classic', desc: 'Минималистичная монохромная тема', descEn: 'Minimalist monochrome theme' },
+    { id: 'neon', color: '#0b0f19', accent: '#8b5cf6', name: 'Неон', nameEn: 'Neon', desc: 'Фиолетовое свечение за курсором', descEn: 'Purple glow follows your cursor', animated: true },
+    { id: 'aurora', color: '#022c22', accent: '#10b981', gradient: 'linear-gradient(135deg, #022c22, #064e3b)', name: 'Аврора', nameEn: 'Aurora', desc: 'Северное сияние реагирует на мышь', descEn: 'Northern lights react to mouse', animated: true },
+    { id: 'cyber', color: '#000000', accent: '#f59e0b', name: 'Кибер', nameEn: 'Cyber', desc: 'Сетка и янтарное свечение мыши', descEn: 'Grid pattern with amber glow', animated: true },
+    { id: 'glass', color: '#0d1117', accent: '#3b82f6', name: 'Стекло', nameEn: 'Glass', desc: 'Плавное свечение следует за мышью', descEn: 'Smooth glow follows the cursor', animated: true },
+    { id: 'void', color: '#000000', accent: '#ffffff', name: 'Бездна', nameEn: 'Void', desc: 'Абсолютный мрак с точечным светом', descEn: 'Absolute darkness with spot light', animated: true },
   ];
 
   const changeView = (next: SideView) => {
@@ -214,7 +214,7 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
     };
 
     const onFriendRequestAccepted = () => {
-      // Someone accepted our request вЂ” reload friends
+      // Someone accepted our request — reload friends
       loadFriendsRef.current();
     };
 
@@ -317,7 +317,7 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
   // ======= MAIN VIEW =======
   const renderMain = () => (
     <motion.div key="main" className="flex flex-col h-full" initial={false} animate="center" exit="exit" variants={viewVariants} custom={-1} transition={{ duration: 0.2 }}>
-      {/* в”Ђв”Ђ Premium header with avatar в”Ђв”Ђ */}
+      {/* ── Premium header with avatar ── */}
       <div className="relative overflow-hidden flex-shrink-0">
         {/* Animated gradient backdrop */}
         <div className="absolute inset-0 bg-gradient-to-br from-Nexo-500/40 via-purple-600/25 to-transparent pointer-events-none" />
@@ -359,7 +359,7 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
         <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
       </div>
 
-      {/* в”Ђв”Ђ Menu items в”Ђв”Ђ */}
+      {/* ── Menu items ── */}
       <div className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
         {menuItems.map((item, i) => {
           if ('divider' in item) return <div key={i} className="my-2 mx-2 h-px bg-gradient-to-r from-transparent via-white/8 to-transparent" />;
@@ -389,7 +389,7 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
         })}
       </div>
 
-      {/* в”Ђв”Ђ Logout button в”Ђв”Ђ */}
+      {/* ── Logout button ── */}
       <div className="px-3 pb-4 pt-1">
         <div className="h-px bg-gradient-to-r from-transparent via-white/8 to-transparent mb-3" />
         <button
@@ -619,9 +619,9 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
               onClick={() => setLang('ru')}
               className={`w-full flex items-center gap-4 px-3 py-3 rounded-xl transition-colors ${lang === 'ru' ? 'bg-Nexo-500/15 ring-1 ring-Nexo-500/30' : 'bg-surface-tertiary/50 hover:bg-surface-hover'}`}
             >
-              <span className="text-lg">рџ‡·рџ‡є</span>
+              <span className="text-lg">🇷🇺</span>
               <div className="flex-1 min-w-0 text-left">
-                <p className="text-sm text-zinc-200">Р СѓСЃСЃРєРёР№</p>
+                <p className="text-sm text-zinc-200">Русский</p>
               </div>
               {lang === 'ru' && <Check size={16} className="text-Nexo-400" />}
             </button>
@@ -629,7 +629,7 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
               onClick={() => setLang('en')}
               className={`w-full flex items-center gap-4 px-3 py-3 rounded-xl transition-colors ${lang === 'en' ? 'bg-Nexo-500/15 ring-1 ring-Nexo-500/30' : 'bg-surface-tertiary/50 hover:bg-surface-hover'}`}
             >
-              <span className="text-lg">рџ‡¬рџ‡§</span>
+              <span className="text-lg">🇬🇧</span>
               <div className="flex-1 min-w-0 text-left">
                 <p className="text-sm text-zinc-200">English</p>
               </div>
@@ -710,16 +710,16 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
                 {/* Fake chat bubbles */}
                 <div className="absolute inset-0 p-4 flex flex-col justify-end gap-2">
                   <div className="self-start max-w-[65%] px-3 py-2 rounded-2xl rounded-bl-md bg-white/10 backdrop-blur-sm">
-                    <p className="text-[11px] text-white/70">Hey! How's it going? рџ‘‹</p>
+                    <p className="text-[11px] text-white/70">Hey! How's it going? 👋</p>
                   </div>
                   <div className="self-end max-w-[65%] px-3 py-2 rounded-2xl rounded-br-md" style={{ backgroundColor: currentCard.accent + '40' }}>
-                    <p className="text-[11px] text-white/80">Pretty great, thanks! вњЁ</p>
+                    <p className="text-[11px] text-white/80">Pretty great, thanks! ✨</p>
                   </div>
                 </div>
                 {currentCard.animated && (
                   <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/10 backdrop-blur-sm">
                     <Sparkles size={10} className="text-yellow-400" />
-                    <span className="text-[9px] text-white/60 font-medium">{lang === 'ru' ? 'РРЅС‚РµСЂР°РєС‚РёРІ' : 'Interactive'}</span>
+                    <span className="text-[9px] text-white/60 font-medium">{lang === 'ru' ? 'Интерактив' : 'Interactive'}</span>
                   </div>
                 )}
               </div>
@@ -750,7 +750,7 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
                 }`}
               disabled={isActive}
             >
-              {isActive ? (lang === 'ru' ? 'вњ“ Р’С‹Р±СЂР°РЅРѕ' : 'вњ“ Selected') : (lang === 'ru' ? 'РџСЂРёРјРµРЅРёС‚СЊ' : 'Apply')}
+              {isActive ? (lang === 'ru' ? '✓ Выбрано' : '✓ Selected') : (lang === 'ru' ? 'Применить' : 'Apply')}
             </button>
             <button
               onClick={() => setThemeIndex(i => (i + 1) % themeCards.length)}
@@ -968,7 +968,7 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
         <div className="text-xs text-zinc-500 space-y-1">
           <p>{t('modernMessenger')}</p>
           <p>{t('onPrivacy')}</p>
-          <p className="mt-4 text-zinc-600">В© 2026 Dark Heavens Corporate</p>
+          <p className="mt-4 text-zinc-600">© 2026 Dark Heavens Corporate</p>
           <p className="text-zinc-700">Lead Developer: haker_one</p>
           <p className="text-zinc-700">Dark Dev Studio</p>
         </div>
@@ -1002,3 +1002,4 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
     </AnimatePresence>
   );
 }
+

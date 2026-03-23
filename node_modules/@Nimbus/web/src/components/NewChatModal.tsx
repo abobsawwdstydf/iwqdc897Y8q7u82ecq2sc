@@ -58,9 +58,9 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
   useEffect(() => {
     if (channelUsername) {
       if (channelUsername.length < 3) {
-        setUsernameError('РњРёРЅРёРјСѓРј 3 СЃРёРјРІРѕР»Р°');
+        setUsernameError('Минимум 3 символа');
       } else if (!/^[a-zA-Z0-9_]+$/.test(channelUsername)) {
-        setUsernameError('РўРѕР»СЊРєРѕ Р±СѓРєРІС‹, С†РёС„СЂС‹ Рё _');
+        setUsernameError('Только буквы, цифры и _');
       } else {
         setUsernameError('');
       }
@@ -146,7 +146,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
         onClick={(e) => e.target === e.currentTarget && onClose()}
       >
         <div className="w-full max-w-md rounded-2xl glass-strong shadow-2xl overflow-hidden" role="dialog" aria-modal="true" aria-label={t('newChat')}>
-          {/* РЁР°РїРєР° */}
+          {/* Шапка */}
           <div className="flex items-center justify-between p-4 border-b border-border">
             <div className="flex items-center gap-2">
               {mode !== 'menu' && (
@@ -176,7 +176,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
             </button>
           </div>
 
-          {/* Р“Р»Р°РІРЅРѕРµ РјРµРЅСЋ */}
+          {/* Главное меню */}
           {mode === 'menu' && (
             <div className="p-4 space-y-3">
               <button
@@ -207,7 +207,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
             </div>
           )}
 
-          {/* РЎРѕР·РґР°РЅРёРµ РєР°РЅР°Р»Р° */}
+          {/* Создание канала */}
           {mode === 'channel' && (
             <div className="p-4 space-y-4">
               <div>
@@ -239,9 +239,9 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
               </div>
 
               <div>
-                <label className="text-xs text-zinc-400 mb-1 block">РћРїРёСЃР°РЅРёРµ РєР°РЅР°Р»Р°</label>
+                <label className="text-xs text-zinc-400 mb-1 block">Описание канала</label>
                 <textarea
-                  placeholder="Р Р°СЃСЃРєР°Р¶РёС‚Рµ, Рѕ С‡РµРј Р±СѓРґРµС‚ РІР°С€ РєР°РЅР°Р»..."
+                  placeholder="Расскажите, о чем будет ваш канал..."
                   value={channelDescription}
                   onChange={(e) => setChannelDescription(e.target.value.slice(0, 255))}
                   className="w-full px-4 py-2.5 rounded-xl bg-surface-tertiary text-sm text-white placeholder-zinc-500 border border-border focus:border-accent transition-colors resize-none"
@@ -291,7 +291,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
             </div>
           )}
 
-          {/* РЎРѕР·РґР°РЅРёРµ РіСЂСѓРїРїС‹ - С€Р°Рі 2 */}
+          {/* Создание группы - шаг 2 */}
           {mode === 'group-name' && (
             <div className="p-4 space-y-4">
               <input
@@ -347,10 +347,10 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
             </div>
           )}
 
-          {/* Р’С‹Р±РѕСЂ СѓС‡Р°СЃС‚РЅРёРєРѕРІ */}
+          {/* Выбор участников */}
           {mode === 'group-select' && (
             <>
-              {/* РџРѕРёСЃРє */}
+              {/* Поиск */}
               <div className="p-4 space-y-3">
                 {mode === 'group-select' && selectedUsers.length > 0 && (
                   <div className="flex items-center gap-2 flex-wrap">
@@ -380,7 +380,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
                 </div>
               </div>
 
-              {/* Р РµР·СѓР»СЊС‚Р°С‚С‹ */}
+              {/* Результаты */}
               <div className="max-h-72 overflow-y-auto px-2 pb-4">
                 {isLoading ? (
                   <div className="flex justify-center py-8">
@@ -485,7 +485,7 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
                 )}
               </div>
 
-              {/* РљРЅРѕРїРєР° "Р”Р°Р»РµРµ" РґР»СЏ РіСЂСѓРїРїС‹ */}
+              {/* Кнопка "Далее" для группы */}
               {mode === 'group-select' && selectedUsers.length > 0 && (
                 <div className="p-4 border-t border-border">
                   <button
@@ -504,3 +504,4 @@ export default function NewChatModal({ onClose }: NewChatModalProps) {
     </>
   );
 }
+

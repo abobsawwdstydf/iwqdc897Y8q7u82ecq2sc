@@ -130,7 +130,7 @@ export default function MessageInput({ chatId }: MessageInputProps) {
 
   // Load recording mode from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem('Nimbus_recordingMode');
+    const saved = localStorage.getItem('Nexo_recordingMode');
     if (saved === 'video' || saved === 'audio') {
       setRecordingMode(saved);
     }
@@ -140,7 +140,7 @@ export default function MessageInput({ chatId }: MessageInputProps) {
   const toggleRecordingMode = () => {
     const newMode = recordingMode === 'audio' ? 'video' : 'audio';
     setRecordingMode(newMode);
-    localStorage.setItem('Nimbus_recordingMode', newMode);
+    localStorage.setItem('Nexo_recordingMode', newMode);
   };
 
   // Cleanup recording resources on unmount
@@ -792,9 +792,9 @@ export default function MessageInput({ chatId }: MessageInputProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 z-50 rounded-[2rem] mx-6 mb-6 mt-2 bg-Nimbus-500/10 border-2 border-dashed border-Nimbus-400 backdrop-blur-sm flex items-center justify-center pointer-events-none"
+            className="absolute inset-0 z-50 rounded-[2rem] mx-6 mb-6 mt-2 bg-Nexo-500/10 border-2 border-dashed border-Nexo-400 backdrop-blur-sm flex items-center justify-center pointer-events-none"
           >
-            <div className="flex flex-col items-center gap-2 text-Nimbus-300">
+            <div className="flex flex-col items-center gap-2 text-Nexo-300">
               <FileText size={32} className="animate-bounce" />
               <p className="font-semibold">{t('dropFileHere')}</p>
             </div>
@@ -812,16 +812,16 @@ export default function MessageInput({ chatId }: MessageInputProps) {
             className="mb-2 max-w-3xl mx-auto overflow-hidden px-1.5"
           >
             <div className="flex items-center gap-3 px-4 py-2.5 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-2xl relative shadow-xl">
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 bg-gradient-to-b from-Nimbus-400 to-purple-500 rounded-r-md" />
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 bg-gradient-to-b from-Nexo-400 to-purple-500 rounded-r-md" />
               <div className="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center flex-shrink-0">
                 {editingMessage ? (
-                  <Pencil size={12} className="text-Nimbus-400" />
+                  <Pencil size={12} className="text-Nexo-400" />
                 ) : (
-                  <Reply size={12} className="text-Nimbus-400" />
+                  <Reply size={12} className="text-Nexo-400" />
                 )}
               </div>
               <div className="flex-1 min-w-0 flex flex-col justify-center">
-                <p className="text-xs font-semibold text-Nimbus-400 mb-0.5">
+                <p className="text-xs font-semibold text-Nexo-400 mb-0.5">
                   {editingMessage
                     ? t('editing')
                     : `${t('replyTo')} ${replyTo?.sender?.displayName || replyTo?.sender?.username || ''}`}
@@ -862,8 +862,8 @@ export default function MessageInput({ chatId }: MessageInputProps) {
                 >
                   <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 bg-gradient-to-b from-sky-400 to-blue-500 rounded-r-md" />
                   {attachment.uploading ? (
-                    <div className="w-10 h-10 rounded-lg bg-Nimbus-500/20 flex items-center justify-center flex-shrink-0 ring-1 ring-white/10 ml-2">
-                      <div className="w-4 h-4 border-2 border-Nimbus-400 border-t-transparent rounded-full animate-spin" />
+                    <div className="w-10 h-10 rounded-lg bg-Nexo-500/20 flex items-center justify-center flex-shrink-0 ring-1 ring-white/10 ml-2">
+                      <div className="w-4 h-4 border-2 border-Nexo-400 border-t-transparent rounded-full animate-spin" />
                     </div>
                   ) : attachment.preview ? (
                     <img
@@ -872,8 +872,8 @@ export default function MessageInput({ chatId }: MessageInputProps) {
                       className="w-10 h-10 rounded-lg object-cover flex-shrink-0 ring-1 ring-white/10 ml-2"
                     />
                   ) : attachment.type === 'video' ? (
-                    <div className="w-10 h-10 rounded-lg bg-Nimbus-500/20 flex items-center justify-center flex-shrink-0 ring-1 ring-white/10 ml-2">
-                      <ImageIcon size={16} className="text-Nimbus-400" />
+                    <div className="w-10 h-10 rounded-lg bg-Nexo-500/20 flex items-center justify-center flex-shrink-0 ring-1 ring-white/10 ml-2">
+                      <ImageIcon size={16} className="text-Nexo-400" />
                     </div>
                   ) : attachment.type === 'audio' ? (
                     <div className="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center flex-shrink-0 ring-1 ring-white/10 ml-2">
@@ -888,7 +888,7 @@ export default function MessageInput({ chatId }: MessageInputProps) {
                     <p className="text-xs font-medium text-white truncate tracking-wide">{attachment.file.name}</p>
                     <p className="text-[10px] text-zinc-400 font-mono mt-0.5">
                       {(attachment.file.size / 1024).toFixed(1)} {t('kb')}
-                      {attachment.uploading && <span className="ml-1 text-Nimbus-400 animate-pulse">{t('sending')}</span>}
+                      {attachment.uploading && <span className="ml-1 text-Nexo-400 animate-pulse">{t('sending')}</span>}
                     </p>
                   </div>
                   <button
@@ -955,7 +955,7 @@ export default function MessageInput({ chatId }: MessageInputProps) {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
-                    className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-Nimbus-500 rounded-full text-white text-sm font-medium whitespace-nowrap"
+                    className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-Nexo-500 rounded-full text-white text-sm font-medium whitespace-nowrap"
                   >
                     Запись заблокирована
                   </motion.div>
@@ -979,15 +979,15 @@ export default function MessageInput({ chatId }: MessageInputProps) {
             
             {/* Waveform or lock indicator */}
             {isLockedRecording ? (
-              <div className="flex-1 flex items-center gap-2 text-Nimbus-400">
-                <div className="px-2 py-1 rounded-full bg-Nimbus-500/20 text-xs font-medium">Запись заблокирована</div>
+              <div className="flex-1 flex items-center gap-2 text-Nexo-400">
+                <div className="px-2 py-1 rounded-full bg-Nexo-500/20 text-xs font-medium">Запись заблокирована</div>
               </div>
             ) : (
               <div className="flex-1 flex items-center gap-0.5 h-6">
                 {liveBars.map((h, i) => (
                   <div
                     key={i}
-                    className="flex-1 bg-Nimbus-400/60 rounded-full transition-all duration-100"
+                    className="flex-1 bg-Nexo-400/60 rounded-full transition-all duration-100"
                     style={{ height: `${h}%` }}
                   />
                 ))}
@@ -1004,7 +1004,7 @@ export default function MessageInput({ chatId }: MessageInputProps) {
           </button>
         </div>
       ) : (
-        <div className="flex items-end gap-1.5 bg-white/[0.04] backdrop-blur-[40px] rounded-[2rem] border border-white/[0.08] p-2 w-full max-w-3xl mx-auto transition-all duration-300 hover:bg-white/[0.06] focus-within:bg-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.3)] focus-within:shadow-[0_8px_40px_rgba(99,102,241,0.15)] focus-within:border-Nimbus-500/30 group">
+        <div className="flex items-end gap-1.5 bg-white/[0.04] backdrop-blur-[40px] rounded-[2rem] border border-white/[0.08] p-2 w-full max-w-3xl mx-auto transition-all duration-300 hover:bg-white/[0.06] focus-within:bg-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.3)] focus-within:shadow-[0_8px_40px_rgba(99,102,241,0.15)] focus-within:border-Nexo-500/30 group">
           {/* Attach */}
           <div className="relative mb-0.5 ml-1 flex-shrink-0 self-center">
             <button
@@ -1027,8 +1027,8 @@ export default function MessageInput({ chatId }: MessageInputProps) {
                       onClick={() => imageInputRef.current?.click()}
                       className="flex items-center gap-4 w-full px-3 py-3 rounded-xl text-sm font-medium text-zinc-200 hover:bg-white/5 hover:text-white transition-all group"
                     >
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-Nimbus-400/20 to-purple-500/20 flex items-center justify-center ring-1 ring-Nimbus-400/30 group-hover:scale-110 transition-transform shadow-inner">
-                        <ImageIcon size={18} className="text-Nimbus-400" />
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-Nexo-400/20 to-purple-500/20 flex items-center justify-center ring-1 ring-Nexo-400/30 group-hover:scale-110 transition-transform shadow-inner">
+                        <ImageIcon size={18} className="text-Nexo-400" />
                       </div>
                       {t('photoVideo')}
                     </button>
@@ -1085,7 +1085,7 @@ export default function MessageInput({ chatId }: MessageInputProps) {
                       {m.user.avatar ? (
                         <img src={m.user.avatar} className="w-7 h-7 rounded-full object-cover" alt="" />
                       ) : (
-                        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-Nimbus-500 to-purple-600 flex items-center justify-center text-white text-xs font-semibold">
+                        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-Nexo-500 to-purple-600 flex items-center justify-center text-white text-xs font-semibold">
                           {(m.user.displayName || m.user.username)[0]?.toUpperCase()}
                         </div>
                       )}
@@ -1187,7 +1187,7 @@ export default function MessageInput({ chatId }: MessageInputProps) {
                               <ChevronLeft size={16} />
                             </button>
                           )}
-                          <Clock size={16} className="text-Nimbus-400" />
+                          <Clock size={16} className="text-Nexo-400" />
                           <span className="text-sm font-medium text-zinc-200">{t('scheduleMessage')}</span>
                         </div>
 
@@ -1248,7 +1248,7 @@ export default function MessageInput({ chatId }: MessageInputProps) {
                                 setScheduleMinute(String(now.getMinutes()).padStart(2, '0'));
                                 setScheduleStep('custom');
                               }}
-                              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-Nimbus-400 hover:bg-white/10 transition-colors text-left"
+                              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-Nexo-400 hover:bg-white/10 transition-colors text-left"
                             >
                               <Calendar size={15} className="flex-shrink-0" />
                               {t('scheduleCustom')}
@@ -1482,7 +1482,7 @@ function ScheduleCalendar({
                     : isPast(day)
                       ? 'text-zinc-600 cursor-not-allowed'
                       : isToday(day)
-                        ? 'text-Nimbus-400 font-semibold ring-1 ring-Nimbus-500/50'
+                        ? 'text-Nexo-400 font-semibold ring-1 ring-Nexo-500/50'
                         : 'text-zinc-300 hover:bg-white/10'
                 }`}
               >
@@ -1502,7 +1502,7 @@ function ScheduleCalendar({
           <select
             value={hour}
             onChange={(e) => setHour(e.target.value)}
-            className="flex-1 bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-sm text-zinc-200 focus:outline-none focus:border-Nimbus-500/50 appearance-none text-center"
+            className="flex-1 bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-sm text-zinc-200 focus:outline-none focus:border-Nexo-500/50 appearance-none text-center"
           >
             {Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0')).map((h) => (
               <option key={h} value={h} className="bg-zinc-800">{h}</option>
@@ -1512,7 +1512,7 @@ function ScheduleCalendar({
           <select
             value={minute}
             onChange={(e) => setMinute(e.target.value)}
-            className="flex-1 bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-sm text-zinc-200 focus:outline-none focus:border-Nimbus-500/50 appearance-none text-center"
+            className="flex-1 bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-sm text-zinc-200 focus:outline-none focus:border-Nexo-500/50 appearance-none text-center"
           >
             {Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0')).map((m) => (
               <option key={m} value={m} className="bg-zinc-800">{m}</option>

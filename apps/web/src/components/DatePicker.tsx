@@ -137,7 +137,7 @@ export default function DatePicker({ value, onChange }: DatePickerProps) {
     ? `${months[viewMonth]} ${viewYear}`
     : view === 'months'
       ? `${viewYear}`
-      : `${yearRangeStart} вЂ” ${yearRangeStart + 23}`;
+      : `${yearRangeStart} — ${yearRangeStart + 23}`;
 
   const handlePrev = () => {
     if (view === 'days') prevMonth();
@@ -160,7 +160,7 @@ export default function DatePicker({ value, onChange }: DatePickerProps) {
       >
         <Calendar size={14} className="text-zinc-500 flex-shrink-0" />
         <span className={displayValue ? 'text-white' : 'text-zinc-500'}>
-          {displayValue || (lang === 'ru' ? 'РґРґ.РјРј.РіРіРіРі' : 'mm/dd/yyyy')}
+          {displayValue || (lang === 'ru' ? 'дд.мм.гггг' : 'mm/dd/yyyy')}
         </span>
       </button>
 
@@ -335,3 +335,4 @@ export default function DatePicker({ value, onChange }: DatePickerProps) {
     </div>
   );
 }
+

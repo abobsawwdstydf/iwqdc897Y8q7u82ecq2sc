@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Calendar, AtSign, Edit3, Check, Loader2, Image as ImageIcon, FileText, Link as LinkIcon, Download, ExternalLink, Play, UserPlus, UserMinus, UserCheck, Clock, Share2, Copy, ShieldCheck } from 'lucide-react';
+import { X, Calendar, AtSign, Edit3, Check, Loader2, Image as ImageIcon, FileText, Link as LinkIcon, Download, ExternalLink, Play, UserPlus, UserMinus, UserCheck, Clock, Share2, Copy } from 'lucide-react';
 import { api } from '../lib/api';
 import { useAuthStore } from '../stores/authStore';
 import { useLang } from '../lib/i18n';
@@ -176,11 +176,11 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
         transition={{ type: 'spring', damping: 25, stiffness: 300, mass: 0.8 }}
         className="fixed right-3 top-3 bottom-3 w-[360px] max-w-[calc(100%-24px)] bg-surface-secondary/80 backdrop-blur-2xl shadow-[0_0_120px_rgba(0,0,0,0.6)] border border-white/5 rounded-[2rem] z-50 flex flex-col overflow-hidden"
       >
-        {/* РЁР°РїРєР° */}
+        {/* Шапка */}
         <div className="flex items-center justify-between p-5 border-b border-white/5 bg-white/5 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-Nexo-500/20 to-purple-500/10 pointer-events-none" />
           <h2 className="text-xl font-bold tracking-tight text-white drop-shadow-sm relative z-10">
-            {channelId ? 'РџСЂРѕС„РёР»СЊ РєР°РЅР°Р»Р°' : isSelf ? t('myProfile') : t('profileTitle')}
+            {channelId ? 'Профиль канала' : isSelf ? t('myProfile') : t('profileTitle')}
           </h2>
           <button
             onClick={onClose}
@@ -195,9 +195,9 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
             <div className="w-8 h-8 border-2 border-Nexo-500 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : channel ? (
-          /* РџСЂРѕС„РёР»СЊ РєР°РЅР°Р»Р° */
+          /* Профиль канала */
           <div className="flex-1 overflow-y-auto">
-            {/* РђРІР°С‚Р°СЂ РєР°РЅР°Р»Р° */}
+            {/* Аватар канала */}
             <div className="flex flex-col items-center pt-8 pb-4 px-6 relative overflow-visible">
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] h-[240px] bg-Nexo-500/10 rounded-full blur-[80px] pointer-events-none" />
 
@@ -222,12 +222,12 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                 </div>
               </div>
 
-              {/* РќР°Р·РІР°РЅРёРµ РєР°РЅР°Р»Р° */}
+              {/* Название канала */}
               <h3 className="mt-5 text-[28px] font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/70 tracking-tight text-center px-4">
                 {channel.name || channel.username}
               </h3>
 
-              {/* Username РєР°РЅР°Р»Р° */}
+              {/* Username канала */}
               {channel.username && (
                 <div className="flex items-center justify-between gap-2 mt-2.5 bg-Nexo-500/10 hover:bg-Nexo-500/20 transition-colors px-4 py-2 rounded-full border border-Nexo-500/20 backdrop-blur-sm">
                   <div className="flex items-center gap-1.5">
@@ -242,14 +242,14 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                       setTimeout(() => setCopied(false), 2000);
                     }}
                     className="p-1.5 rounded-full hover:bg-Nexo-500/30 transition-colors text-Nexo-400"
-                    title="РљРѕРїРёСЂРѕРІР°С‚СЊ СЃСЃС‹Р»РєСѓ"
+                    title="Копировать ссылку"
                   >
                     {copied ? <Check size={14} /> : <Copy size={14} />}
                   </button>
                 </div>
               )}
 
-              {/* РћРїРёСЃР°РЅРёРµ РєР°РЅР°Р»Р° */}
+              {/* Описание канала */}
               {channel.description && (
                 <div className="mt-4 bg-black/20 backdrop-blur-xl border border-white/5 rounded-2xl p-4 transition-all hover:bg-black/30 hover:border-white/10 group max-w-full">
                   <p className="text-sm text-zinc-200 leading-relaxed pl-1 text-center">
@@ -258,23 +258,23 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                 </div>
               )}
 
-              {/* РљРѕР»РёС‡РµСЃС‚РІРѕ СѓС‡Р°СЃС‚РЅРёРєРѕРІ */}
+              {/* Количество участников */}
               <div className="mt-4 flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full border border-white/5">
                 <UserPlus size={16} className="text-zinc-400" />
-                <span className="text-sm text-zinc-300">{channel.members?.length || 0} РїРѕРґРїРёСЃС‡РёРєРѕРІ</span>
+                <span className="text-sm text-zinc-300">{channel.members?.length || 0} подписчиков</span>
               </div>
             </div>
 
-            {/* РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РєР°РЅР°Р»Рµ */}
+            {/* Информация о канале */}
             <div className="px-5 space-y-3 pb-8 relative z-10">
-              {/* Р”Р°С‚Р° СЃРѕР·РґР°РЅРёСЏ */}
+              {/* Дата создания */}
               <div className="bg-black/20 backdrop-blur-xl border border-white/5 rounded-2xl p-4 transition-all hover:bg-black/30 hover:border-white/10 group">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30">
                     <Check size={12} className="text-emerald-400" />
                   </div>
                   <label className="text-xs font-semibold text-emerald-200/50 uppercase tracking-widest">
-                    РЎРѕР·РґР°РЅ
+                    Создан
                   </label>
                 </div>
                 <p className="text-sm text-zinc-200 pl-1">
@@ -287,7 +287,7 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
               </div>
             </div>
 
-            {/* РњРµРґРёР° / Р¤Р°Р№Р»С‹ / РЎСЃС‹Р»РєРё */}
+            {/* Медиа / Файлы / Ссылки */}
             <div className="border-t border-white/5 bg-black/10 mt-2 backdrop-blur-md">
               <div className="flex px-2 pt-2 gap-1 overflow-x-auto no-scrollbar">
                 {tabs.map((tab) => (
@@ -359,7 +359,7 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                               <p className="text-sm text-white truncate">{m.filename || 'file'}</p>
                               <p className="text-xs text-zinc-500">
                                 {m.size ? `${(m.size / 1024).toFixed(1)} KB` : ''}
-                                {msg.sender ? ` В· ${msg.sender.displayName || msg.sender.username}` : ''}
+                                {msg.sender ? ` · ${msg.sender.displayName || msg.sender.username}` : ''}
                               </p>
                             </div>
                             <Download size={16} className="text-zinc-500 flex-shrink-0" />
@@ -378,7 +378,7 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                       {sharedLinks.map((msg) => (
                         <div key={msg.id} className="px-4 py-3 hover:bg-white/5 transition-colors">
                           <p className="text-xs text-zinc-500 mb-1.5 font-medium">
-                            {msg.sender?.displayName || msg.sender?.username} В· {new Date(msg.createdAt).toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-US')}
+                            {msg.sender?.displayName || msg.sender?.username} · {new Date(msg.createdAt).toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-US')}
                           </p>
                           {(msg.links || []).map((link: string, i: number) => (
                             <a
@@ -408,9 +408,9 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
             </div>
           </div>
         ) : profile ? (
-          /* РџСЂРѕС„РёР»СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ */
+          /* Профиль пользователя */
           <div className="flex-1 overflow-y-auto">
-            {/* РђРІР°С‚Р°СЂ */}
+            {/* Аватар */}
             <div className="flex flex-col items-center pt-8 pb-4 px-6 relative overflow-visible">
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] h-[240px] bg-Nexo-500/10 rounded-full blur-[80px] pointer-events-none" />
 
@@ -436,12 +436,9 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                 )}
               </div>
 
-              {/* РРјСЏ */}
-              <h3 className="mt-5 text-[28px] font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/70 tracking-tight text-center px-4 flex items-center justify-center gap-2">
+              {/* Имя */}
+              <h3 className="mt-5 text-[28px] font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/70 tracking-tight text-center px-4">
                 {profile.displayName || profile.username}
-                {profile.isVerified && (
-                  <ShieldCheck size={24} className="text-blue-500 flex-shrink-0" />
-                )}
               </h3>
 
               {/* Username */}
@@ -459,14 +456,14 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                       setTimeout(() => setCopied(false), 2000);
                     }}
                     className="p-1.5 rounded-full hover:bg-Nexo-500/30 transition-colors text-Nexo-400"
-                    title="РљРѕРїРёСЂРѕРІР°С‚СЊ СЃСЃС‹Р»РєСѓ"
+                    title="Копировать ссылку"
                   >
                     {copied ? <Check size={14} /> : <Copy size={14} />}
                   </button>
                 </div>
               )}
 
-              {/* РћРЅР»Р°Р№РЅ СЃС‚Р°С‚СѓСЃ */}
+              {/* Онлайн статус */}
               <p className="text-xs font-semibold uppercase tracking-widest mt-4">
                 {profile.isOnline ? (
                   <span className="text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.8)] flex items-center gap-1.5">
@@ -533,9 +530,9 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
               )}
             </div>
 
-            {/* РРЅС„РѕСЂРјР°С†РёСЏ */}
+            {/* Информация */}
             <div className="px-5 space-y-3 pb-8 relative z-10">
-              {/* Рћ СЃРµР±Рµ */}
+              {/* О себе */}
               <div className="bg-black/20 backdrop-blur-xl border border-white/5 rounded-2xl p-4 transition-all hover:bg-black/30 hover:border-white/10 group">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-6 h-6 rounded-full bg-Nexo-500/20 flex items-center justify-center border border-Nexo-500/30">
@@ -550,7 +547,7 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                 </p>
               </div>
 
-              {/* Р”Р°С‚Р° СЂРѕР¶РґРµРЅРёСЏ */}
+              {/* Дата рождения */}
               {profile.birthday && (
                 <div className="bg-black/20 backdrop-blur-xl border border-white/5 rounded-2xl p-4 transition-all hover:bg-black/30 hover:border-white/10 group">
                   <div className="flex items-center gap-2 mb-2">
@@ -571,7 +568,7 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                 </div>
               )}
 
-              {/* Р”Р°С‚Р° СЂРµРіРёСЃС‚СЂР°С†РёРё */}
+              {/* Дата регистрации */}
               <div className="bg-black/20 backdrop-blur-xl border border-white/5 rounded-2xl p-4 transition-all hover:bg-black/30 hover:border-white/10 group">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30">
@@ -591,7 +588,7 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
               </div>
             </div>
 
-            {/* РњРµРґРёР° / Р¤Р°Р№Р»С‹ / РЎСЃС‹Р»РєРё */}
+            {/* Медиа / Файлы / Ссылки */}
             <div className="border-t border-white/5 bg-black/10 mt-2 backdrop-blur-md">
               <div className="flex px-2 pt-2 gap-1 overflow-x-auto no-scrollbar">
                 {tabs.map((tab) => (
@@ -663,7 +660,7 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                               <p className="text-sm text-white truncate">{m.filename || 'file'}</p>
                               <p className="text-xs text-zinc-500">
                                 {m.size ? `${(m.size / 1024).toFixed(1)} KB` : ''}
-                                {msg.sender ? ` В· ${msg.sender.displayName || msg.sender.username}` : ''}
+                                {msg.sender ? ` · ${msg.sender.displayName || msg.sender.username}` : ''}
                               </p>
                             </div>
                             <Download size={16} className="text-zinc-500 flex-shrink-0" />
@@ -682,7 +679,7 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
                       {sharedLinks.map((msg) => (
                         <div key={msg.id} className="px-4 py-3 hover:bg-white/5 transition-colors">
                           <p className="text-xs text-zinc-500 mb-1.5 font-medium">
-                            {msg.sender?.displayName || msg.sender?.username} В· {new Date(msg.createdAt).toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-US')}
+                            {msg.sender?.displayName || msg.sender?.username} · {new Date(msg.createdAt).toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-US')}
                           </p>
                           {(msg.links || []).map((link: string, i: number) => (
                             <a
@@ -731,3 +728,4 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
     </>
   );
 }
+

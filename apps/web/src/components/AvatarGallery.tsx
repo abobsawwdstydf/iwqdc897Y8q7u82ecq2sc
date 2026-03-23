@@ -27,7 +27,7 @@ export default function AvatarGallery({ chatId, avatars, onAvatarsChange }: Avat
       onAvatarsChange();
     } catch (error) {
       console.error('Upload error:', error);
-      alert('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё: ' + (error as Error).message);
+      alert('Ошибка загрузки: ' + (error as Error).message);
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) {
@@ -46,7 +46,7 @@ export default function AvatarGallery({ chatId, avatars, onAvatarsChange }: Avat
   };
 
   const handleDelete = async (avatarId: number) => {
-    if (!confirm('РЈРґР°Р»РёС‚СЊ СЌС‚Рѕ С„РѕС‚Рѕ?')) return;
+    if (!confirm('Удалить это фото?')) return;
     try {
       await api.deleteChatAvatar(chatId, avatarId);
       onAvatarsChange();
@@ -72,14 +72,14 @@ export default function AvatarGallery({ chatId, avatars, onAvatarsChange }: Avat
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h4 className="text-sm font-semibold text-zinc-300">Р¤РѕС‚РѕРіСЂР°С„РёРё РїСЂРѕС„РёР»СЏ</h4>
+        <h4 className="text-sm font-semibold text-zinc-300">Фотографии профиля</h4>
         <button
           onClick={() => fileInputRef.current?.click()}
           disabled={isUploading || avatars.length >= 100}
           className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-Nexo-500/20 text-Nexo-400 hover:bg-Nexo-500/30 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Upload size={14} />
-          {isUploading ? 'Р—Р°РіСЂСѓР·РєР°...' : `Р”РѕР±Р°РІРёС‚СЊ С„РѕС‚Рѕ (${avatars.length}/100)`}
+          {isUploading ? 'Загрузка...' : `Добавить фото (${avatars.length}/100)`}
         </button>
       </div>
 
@@ -98,8 +98,8 @@ export default function AvatarGallery({ chatId, avatars, onAvatarsChange }: Avat
           className="border-2 border-dashed border-white/10 rounded-xl p-8 text-center cursor-pointer hover:border-white/20 hover:bg-white/5 transition-all"
         >
           <ImageIcon size={32} className="mx-auto mb-3 text-zinc-600" />
-          <p className="text-sm text-zinc-400">РќРµС‚ С„РѕС‚РѕРіСЂР°С„РёР№</p>
-          <p className="text-xs text-zinc-500 mt-1">РќР°Р¶РјРёС‚Рµ С‡С‚РѕР±С‹ РґРѕР±Р°РІРёС‚СЊ РґРѕ 100 С„РѕС‚Рѕ</p>
+          <p className="text-sm text-zinc-400">Нет фотографий</p>
+          <p className="text-xs text-zinc-500 mt-1">Нажмите чтобы добавить до 100 фото</p>
         </div>
       ) : (
         <Reorder.Group
@@ -134,7 +134,7 @@ export default function AvatarGallery({ chatId, avatars, onAvatarsChange }: Avat
                   <button
                     onClick={(e) => { e.stopPropagation(); handleSetMain(parseInt(avatar.id)); }}
                     className="p-2 rounded-full bg-yellow-500/20 hover:bg-yellow-500/30 transition-colors"
-                    title="РЎРґРµР»Р°С‚СЊ РіР»Р°РІРЅС‹Рј"
+                    title="Сделать главным"
                   >
                     <Star size={16} className="text-yellow-400" />
                   </button>
@@ -142,7 +142,7 @@ export default function AvatarGallery({ chatId, avatars, onAvatarsChange }: Avat
                 <button
                   onClick={(e) => { e.stopPropagation(); handleDelete(parseInt(avatar.id)); }}
                   className="p-2 rounded-full bg-red-500/20 hover:bg-red-500/30 transition-colors"
-                  title="РЈРґР°Р»РёС‚СЊ"
+                  title="Удалить"
                 >
                   <Trash2 size={16} className="text-red-400" />
                 </button>
@@ -185,3 +185,4 @@ export default function AvatarGallery({ chatId, avatars, onAvatarsChange }: Avat
     </div>
   );
 }
+

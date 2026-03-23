@@ -313,3 +313,4 @@ export default function ChatFolderModal({ isOpen, onClose, onSuccess }: ChatFold
     </AnimatePresence>
   );
 }
+

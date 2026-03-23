@@ -79,7 +79,7 @@ export default function ChatPage() {
     }
   }, [activeChat]);
 
-  // РћР±СЂР°Р±РѕС‚РєР° Р·Р°РєСЂС‹С‚РёСЏ РІРєР»Р°РґРєРё вЂ” РѕС‚РїСЂР°РІРёС‚СЊ disconnect
+  // Обработка закрытия вкладки — отправить disconnect
   useEffect(() => {
     const handleBeforeUnload = () => {
       const socket = getSocket();
@@ -351,3 +351,4 @@ export default function ChatPage() {
     </motion.div>
   );
 }
+

@@ -70,7 +70,7 @@ function ChatListItem({ chat, isActive, onChatSelect }: ChatListItemProps) {
 
   const isMine = lastMessage?.senderId === user?.id;
 
-  // Р“Р°Р»РѕС‡РєРё РїСЂРѕС‡С‚РµРЅРёСЏ
+  // Галочки прочтения
   const isRead = lastMessage?.readBy?.some((r) => r.userId !== user?.id);
 
   const timeStr = lastMessage
@@ -134,7 +134,7 @@ function ChatListItem({ chat, isActive, onChatSelect }: ChatListItemProps) {
           isActive ? 'bg-accent/15 border-r-2 border-accent' : 'hover:bg-surface-hover'
         }`}
       >
-        {/* РђРІР°С‚Р°СЂ */}
+        {/* Аватар */}
         <div className="relative flex-shrink-0">
           {isFavorites ? (
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg">
@@ -145,7 +145,7 @@ function ChatListItem({ chat, isActive, onChatSelect }: ChatListItemProps) {
           )}
         </div>
 
-        {/* РРЅС„Рѕ */}
+        {/* Инфо */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5 min-w-0">
@@ -214,3 +214,4 @@ function ChatListItem({ chat, isActive, onChatSelect }: ChatListItemProps) {
 }
 
 export default memo(ChatListItem);
+

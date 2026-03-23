@@ -58,3 +58,4 @@ function AvatarInner({ src, name, size = 'md', className = '', online }: AvatarP
 
 const Avatar = memo(AvatarInner);
 export default Avatar;
+

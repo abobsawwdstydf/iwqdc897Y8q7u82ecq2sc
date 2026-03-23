@@ -313,3 +313,4 @@ export default function SecretChatsModal({ isOpen, onClose, onSelectChat }: Secr
     </AnimatePresence>
   );
 }
+

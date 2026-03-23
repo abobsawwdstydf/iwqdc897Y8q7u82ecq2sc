@@ -15,3 +15,4 @@ export const useCallStore = create<CallState>((set) => ({
   setInCall: (isInCall, callType = null, callChatId = null) => set({ isInCall, callType, callChatId }),
   clearCall: () => set({ isInCall: false, callType: null, callChatId: null }),
 }));
+

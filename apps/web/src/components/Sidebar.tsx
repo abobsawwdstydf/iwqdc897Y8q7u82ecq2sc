@@ -136,8 +136,8 @@ export default function Sidebar({ onChatSelect, isOpen = true, onClose }: Sideba
             <Menu size={20} />
           </button>
           <div className="flex items-center gap-2 flex-1 min-w-0">
-            <img src="/logo.png" alt="Nimbus" className="w-8 h-8 rounded-lg object-cover" />
-            <h1 className="text-lg font-bold gradient-text truncate">Nimbus</h1>
+            <img src="/logo.png" alt="Nexo" className="w-8 h-8 rounded-lg object-cover" />
+            <h1 className="text-lg font-bold gradient-text truncate">Nexo</h1>
           </div>
           <button
             onClick={() => setShowNewChat(true)}
@@ -218,8 +218,8 @@ export default function Sidebar({ onChatSelect, isOpen = true, onClose }: Sideba
               onClick={() => setShowCreateStory(true)}
               className="flex flex-col items-center gap-1 flex-shrink-0 group"
             >
-              <div className="w-14 h-14 rounded-full border-2 border-dashed border-zinc-600 flex items-center justify-center group-hover:border-Nimbus-400 transition-colors">
-                <Plus size={20} className="text-zinc-400 group-hover:text-Nimbus-400 transition-colors" />
+              <div className="w-14 h-14 rounded-full border-2 border-dashed border-zinc-600 flex items-center justify-center group-hover:border-Nexo-400 transition-colors">
+                <Plus size={20} className="text-zinc-400 group-hover:text-Nexo-400 transition-colors" />
               </div>
               <span className="text-[10px] text-zinc-500 truncate w-14 text-center">{t('newStory')}</span>
             </button>
@@ -235,7 +235,7 @@ export default function Sidebar({ onChatSelect, isOpen = true, onClose }: Sideba
                 >
                   <div className={`w-14 h-14 rounded-full p-[2.5px] transition-transform group-hover:scale-105 ${
                     group.hasUnviewed
-                      ? 'bg-gradient-to-tr from-Nimbus-400 via-purple-500 to-pink-500 shadow-lg shadow-Nimbus-500/25'
+                      ? 'bg-gradient-to-tr from-Nexo-400 via-purple-500 to-pink-500 shadow-lg shadow-Nexo-500/25'
                       : isMine
                         ? 'bg-gradient-to-tr from-zinc-500 to-zinc-600'
                         : 'bg-zinc-700'
@@ -317,3 +317,4 @@ export default function Sidebar({ onChatSelect, isOpen = true, onClose }: Sideba
     </>
   );
 }
+

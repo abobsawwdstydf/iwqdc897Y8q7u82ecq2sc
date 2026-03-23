@@ -36,7 +36,7 @@ export default function AuthPage() {
         await login(username, password);
       } else {
         if (requireCaptcha && !captchaPassed) {
-          setError('РџСЂРѕР№РґРёС‚Рµ РєР°РїС‡Сѓ');
+          setError('Пройдите капчу');
           setIsSubmitting(false);
           return;
         }
@@ -46,9 +46,9 @@ export default function AuthPage() {
       const error = err as Error & { requireCaptcha?: boolean };
       if (error.requireCaptcha) {
         setRequireCaptcha(true);
-        setError('РўСЂРµР±СѓРµС‚СЃСЏ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ');
+        setError('Требуется подтверждение');
       } else {
-        setError(err instanceof Error ? err.message : 'РћС€РёР±РєР°');
+        setError(err instanceof Error ? err.message : 'Ошибка');
       }
     } finally {
       setIsSubmitting(false);
@@ -62,7 +62,7 @@ export default function AuthPage() {
       exit={{ opacity: 0 }}
       className="h-full flex items-center justify-center relative overflow-hidden bg-surface"
     >
-      {/* РђРЅРёРјРёСЂРѕРІР°РЅРЅС‹Р№ С„РѕРЅ */}
+      {/* Анимированный фон */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] opacity-20">
           <div className="absolute inset-0 rounded-full bg-gradient-to-r from-Nexo-600/30 to-purple-600/30 blur-[120px] animate-pulse" />
@@ -71,7 +71,7 @@ export default function AuthPage() {
         <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/10 rounded-full blur-[100px]" />
       </div>
 
-      {/* РљР°СЂС‚РѕС‡РєР° Р°РІС‚РѕСЂРёР·Р°С†РёРё */}
+      {/* Карточка авторизации */}
       <motion.div
         initial={{ scale: 0.95, y: 20 }}
         animate={{ scale: 1, y: 0 }}
@@ -79,7 +79,7 @@ export default function AuthPage() {
         className="relative z-10 w-full max-w-md mx-4"
       >
         <div className="glass-strong rounded-3xl p-8 shadow-2xl shadow-Nexo-500/5">
-          {/* Р›РѕРіРѕС‚РёРї */}
+          {/* Логотип */}
           <div className="flex flex-col items-center mb-8 no-select">
             <motion.div
               initial={{ rotate: -180, scale: 0 }}
@@ -96,7 +96,7 @@ export default function AuthPage() {
             <p className="text-zinc-500 text-sm mt-1">{t('modernMessengerShort')}</p>
           </div>
 
-          {/* РџРµСЂРµРєР»СЋС‡Р°С‚РµР»СЊ Р’С…РѕРґ/Р РµРіРёСЃС‚СЂР°С†РёСЏ */}
+          {/* Переключатель Вход/Регистрация */}
           <div className="flex rounded-xl bg-white/5 p-1 mb-6">
             <button
               onClick={() => { setIsLogin(true); setError(''); setPassword(''); }}
@@ -124,7 +124,7 @@ export default function AuthPage() {
             </button>
           </div>
 
-          {/* РћС€РёР±РєР° */}
+          {/* Ошибка */}
           <AnimatePresence>
             {error && (
               <motion.div
@@ -139,7 +139,7 @@ export default function AuthPage() {
             )}
           </AnimatePresence>
 
-          {/* Р¤РѕСЂРјР° */}
+          {/* Форма */}
           <form onSubmit={handleSubmit} className="space-y-4" autoComplete="off">
             <div>
               <label className="block text-sm font-medium text-zinc-400 mb-1.5">
@@ -262,3 +262,4 @@ export default function AuthPage() {
     </motion.div>
   );
 }
+

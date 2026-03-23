@@ -1,4 +1,4 @@
-// Notification sound using Web Audio API вЂ” generates a pleasant chime
+// Notification sound using Web Audio API — generates a pleasant chime
 let audioContext: AudioContext | null = null;
 
 function getAudioContext(): AudioContext {
@@ -17,8 +17,8 @@ export function playNotificationSound() {
     
     const now = ctx.currentTime;
 
-    // Soft, warm notification вЂ” lower frequencies, triangle waves, gentle volume
-    // First note вЂ” warm mellow tone
+    // Soft, warm notification — lower frequencies, triangle waves, gentle volume
+    // First note — warm mellow tone
     const osc1 = ctx.createOscillator();
     const gain1 = ctx.createGain();
     osc1.type = 'triangle';
@@ -30,7 +30,7 @@ export function playNotificationSound() {
     osc1.start(now);
     osc1.stop(now + 0.3);
 
-    // Second note вЂ” gentle higher tone
+    // Second note — gentle higher tone
     const osc2 = ctx.createOscillator();
     const gain2 = ctx.createGain();
     osc2.type = 'triangle';
@@ -43,7 +43,7 @@ export function playNotificationSound() {
     osc2.start(now + 0.08);
     osc2.stop(now + 0.35);
   } catch (e) {
-    // Audio context not supported вЂ” silent fail
+    // Audio context not supported — silent fail
   }
 }
 
@@ -104,7 +104,7 @@ export function stopCallRingtone() {
   }
 }
 
-// "РђР±РѕРЅРµРЅС‚ РЅРµРґРѕСЃС‚СѓРїРµРЅ" sound
+// "Абонент недоступен" sound
 export function playUnavailableSound(): Promise<void> {
   return new Promise((resolve) => {
     try {
@@ -118,3 +118,4 @@ export function playUnavailableSound(): Promise<void> {
     }
   });
 }
+

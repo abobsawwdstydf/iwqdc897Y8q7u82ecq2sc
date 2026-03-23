@@ -407,3 +407,4 @@ export const Nexo_CONFIG = {
         maxSecurityLevel: 'maximum'
     }
 };
+

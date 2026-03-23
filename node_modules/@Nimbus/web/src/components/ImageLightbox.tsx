@@ -116,3 +116,4 @@ export default function ImageLightbox({ url, images, initialIndex = 0, onClose }
     document.body
   );
 }
+

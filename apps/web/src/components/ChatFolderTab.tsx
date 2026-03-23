@@ -37,7 +37,7 @@ export default function ChatFolderTab({ folder, isActive, onClick }: ChatFolderT
       className={`
         flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap
         ${isActive 
-          ? 'bg-Nimbus-500/20 text-Nimbus-400 ring-1 ring-Nimbus-500/30' 
+          ? 'bg-Nexo-500/20 text-Nexo-400 ring-1 ring-Nexo-500/30' 
           : 'bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white'
         }
       `}
@@ -54,7 +54,7 @@ export default function ChatFolderTab({ folder, isActive, onClick }: ChatFolderT
       {folder.count !== undefined && folder.count > 0 && (
         <span className={`
           px-1.5 py-0.5 rounded-full text-[10px] font-bold min-w-[20px]
-          ${isActive ? 'bg-Nimbus-500/30 text-white' : 'bg-zinc-700 text-zinc-300'}
+          ${isActive ? 'bg-Nexo-500/30 text-white' : 'bg-zinc-700 text-zinc-300'}
         `}>
           {folder.count}
         </span>
@@ -62,3 +62,4 @@ export default function ChatFolderTab({ folder, isActive, onClick }: ChatFolderT
     </motion.button>
   );
 }
+

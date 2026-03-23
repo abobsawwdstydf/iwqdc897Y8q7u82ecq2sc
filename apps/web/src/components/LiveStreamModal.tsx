@@ -81,7 +81,7 @@ export default function LiveStreamModal({ isOpen, onClose, chatId, chatName }: L
       }
 
       if (!stream) {
-        setError('РќРµ СѓРґР°Р»РѕСЃСЊ РїРѕР»СѓС‡РёС‚СЊ РґРѕСЃС‚СѓРї Рє РёСЃС‚РѕС‡РЅРёРєСѓ');
+        setError('Не удалось получить доступ к источнику');
         return;
       }
 
@@ -109,7 +109,7 @@ export default function LiveStreamModal({ isOpen, onClose, chatId, chatName }: L
 
     } catch (err) {
       console.error('Stream error:', err);
-      setError('РћС€РёР±РєР° Р·Р°РїСѓСЃРєР° С‚СЂР°РЅСЃР»СЏС†РёРё: ' + (err as Error).message);
+      setError('Ошибка запуска трансляции: ' + (err as Error).message);
     }
   };
 
@@ -250,7 +250,7 @@ export default function LiveStreamModal({ isOpen, onClose, chatId, chatName }: L
                 <Video size={20} className="text-white" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white">РўСЂР°РЅСЃР»СЏС†РёСЏ</h3>
+                <h3 className="text-lg font-semibold text-white">Трансляция</h3>
                 <p className="text-xs text-zinc-400">{chatName}</p>
               </div>
             </div>
@@ -271,7 +271,7 @@ export default function LiveStreamModal({ isOpen, onClose, chatId, chatName }: L
                 <button
                   onClick={() => setIsMinimized(!isMinimized)}
                   className="p-2 rounded-full hover:bg-white/10 transition-colors text-zinc-400 hover:text-white"
-                  title={isMinimized ? 'Р Р°Р·РІРµСЂРЅСѓС‚СЊ' : 'РЎРІРµСЂРЅСѓС‚СЊ'}
+                  title={isMinimized ? 'Развернуть' : 'Свернуть'}
                 >
                   {isMinimized ? <Maximize2 size={18} /> : <Minimize2 size={18} />}
                 </button>
@@ -291,7 +291,7 @@ export default function LiveStreamModal({ isOpen, onClose, chatId, chatName }: L
               /* Stream setup */
               <div className="space-y-6">
                 <div>
-                  <h4 className="text-sm font-medium text-zinc-300 mb-3">Р’С‹Р±РµСЂРёС‚Рµ РёСЃС‚РѕС‡РЅРёРє</h4>
+                  <h4 className="text-sm font-medium text-zinc-300 mb-3">Выберите источник</h4>
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       onClick={() => setStreamType('camera')}
@@ -302,7 +302,7 @@ export default function LiveStreamModal({ isOpen, onClose, chatId, chatName }: L
                       }`}
                     >
                       <Video size={24} className="mx-auto mb-2" />
-                      <p className="text-sm font-medium">РљР°РјРµСЂР°</p>
+                      <p className="text-sm font-medium">Камера</p>
                     </button>
                     <button
                       onClick={() => setStreamType('screen')}
@@ -313,7 +313,7 @@ export default function LiveStreamModal({ isOpen, onClose, chatId, chatName }: L
                       }`}
                     >
                       <Monitor size={24} className="mx-auto mb-2" />
-                      <p className="text-sm font-medium">Р”РµРјРѕРЅСЃС‚СЂР°С†РёСЏ СЌРєСЂР°РЅР°</p>
+                      <p className="text-sm font-medium">Демонстрация экрана</p>
                     </button>
                   </div>
                 </div>
@@ -328,7 +328,7 @@ export default function LiveStreamModal({ isOpen, onClose, chatId, chatName }: L
                   onClick={startStream}
                   className="w-full py-3 rounded-xl bg-gradient-to-r from-red-500 to-orange-500 text-white font-medium hover:opacity-90 transition-opacity"
                 >
-                  РќР°С‡Р°С‚СЊ С‚СЂР°РЅСЃР»СЏС†РёСЋ
+                  Начать трансляцию
                 </button>
               </div>
             ) : (
@@ -365,7 +365,7 @@ export default function LiveStreamModal({ isOpen, onClose, chatId, chatName }: L
                     className="px-6 py-3 rounded-full bg-red-500 hover:bg-red-600 text-white font-medium transition-colors flex items-center gap-2"
                   >
                     <Square size={18} />
-                    Р—Р°РІРµСЂС€РёС‚СЊ
+                    Завершить
                   </button>
                 </div>
               </div>
@@ -434,3 +434,4 @@ export default function LiveStreamModal({ isOpen, onClose, chatId, chatName }: L
     </AnimatePresence>
   );
 }
+

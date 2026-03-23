@@ -52,7 +52,7 @@ export default function MathCaptcha({ onSuccess, onError }: MathCaptchaProps) {
       className="p-4 rounded-xl bg-white/5 border border-white/10"
     >
       <p className="text-sm text-zinc-300 mb-3 font-medium">
-        РџРѕРґС‚РІРµСЂРґРёС‚Рµ, С‡С‚Рѕ РІС‹ РЅРµ СЂРѕР±РѕС‚:
+        Подтвердите, что вы не робот:
       </p>
       
       <form onSubmit={handleSubmit} className="flex items-center gap-3">
@@ -89,9 +89,10 @@ export default function MathCaptcha({ onSuccess, onError }: MathCaptchaProps) {
           animate={{ opacity: 1 }}
           className="text-xs text-red-400 mt-2"
         >
-          РќРµРІРµСЂРЅРѕ, РїРѕРїСЂРѕР±СѓР№С‚Рµ РµС‰С‘ СЂР°Р·
+          Неверно, попробуйте ещё раз
         </motion.p>
       )}
     </motion.div>
   );
 }
+

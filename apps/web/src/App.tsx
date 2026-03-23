@@ -1,21 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { useAuthStore } from './stores/authStore';
 import { useChatStore } from './stores/chatStore';
 import AuthPage from './pages/AuthPage';
 import ChatPage from './pages/ChatPage';
-import AdminPanel from './components/AdminPanel';
 import { api } from './lib/api';
 
 export default function App() {
   const { token, user, checkAuth, isLoading } = useAuthStore();
   const { setActiveChat } = useChatStore();
-  const [isAdminRoute, setIsAdminRoute] = useState(false);
 
   useEffect(() => {
     checkAuth();
-    // Check if on admin route
-    setIsAdminRoute(window.location.pathname === '/admin' || window.location.pathname === '/aaddmmiinnppaanneell');
   }, [checkAuth]);
 
   // Handle username links (/@username)
@@ -24,14 +20,14 @@ export default function App() {
 
     const path = window.location.pathname;
     const match = path.match(/^\/@([a-zA-Z0-9_]+)$/);
-
+    
     if (match) {
       const username = match[1];
-
+      
       // Find chat/user by username
       api.getChats().then(chats => {
         const targetChat = chats.find(c => c.username === username || c.members?.some(m => m.user.username === username));
-
+        
         if (targetChat) {
           setActiveChat(targetChat.id);
         }
@@ -55,11 +51,6 @@ export default function App() {
         </div>
       </div>
     );
-  }
-
-  // Admin panel route
-  if (isAdminRoute) {
-    return <AdminPanel />;
   }
 
   return (
@@ -88,3 +79,4 @@ function NexoLoader() {
     </div>
   );
 }
+

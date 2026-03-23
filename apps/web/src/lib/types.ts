@@ -215,3 +215,4 @@ export const MAX_FILE_SIZE = 20 * 1024 * 1024 * 1024;
 
 /** Max avatar size (5MB). */
 export const MAX_AVATAR_SIZE = 5 * 1024 * 1024;
+

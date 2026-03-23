@@ -46,7 +46,7 @@ async function getCanvasFingerprint(): Promise<string> {
     ctx.fillStyle = '#069';
     ctx.fillText('Nexo Fingerprint', 2, 15);
     ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
-    ctx.fillText('Nexo Fingerprint рџЉ', 4, 17);
+    ctx.fillText('Nexo Fingerprint 😊', 4, 17);
     
     return canvas.toDataURL().slice(-50);
   } catch {
@@ -120,3 +120,4 @@ async function hashString(str: string): Promise<string> {
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 32);
 }
+

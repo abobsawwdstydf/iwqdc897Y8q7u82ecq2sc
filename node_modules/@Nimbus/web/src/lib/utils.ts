@@ -15,10 +15,10 @@ export function formatDate(date: string | Date, lang: string = 'ru'): string {
   const diff = now.getTime() - d.getTime();
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-  if (days === 0) return lang === 'ru' ? 'РЎРµРіРѕРґРЅСЏ' : 'Today';
-  if (days === 1) return lang === 'ru' ? 'Р’С‡РµСЂР°' : 'Yesterday';
+  if (days === 0) return lang === 'ru' ? 'Сегодня' : 'Today';
+  if (days === 1) return lang === 'ru' ? 'Вчера' : 'Yesterday';
   if (days < 7) {
-    const weekDaysRu = ['Р’РѕСЃРєСЂРµСЃРµРЅСЊРµ', 'РџРѕРЅРµРґРµР»СЊРЅРёРє', 'Р’С‚РѕСЂРЅРёРє', 'РЎСЂРµРґР°', 'Р§РµС‚РІРµСЂРі', 'РџСЏС‚РЅРёС†Р°', 'РЎСѓР±Р±РѕС‚Р°'];
+    const weekDaysRu = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
     const weekDaysEn = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     return (lang === 'ru' ? weekDaysRu : weekDaysEn)[d.getDay()];
   }
@@ -36,13 +36,13 @@ export function formatLastSeen(date: string | Date, lang: string = 'ru'): string
   const diff = now.getTime() - d.getTime();
   const minutes = Math.floor(diff / (1000 * 60));
 
-  if (minutes < 1) return lang === 'ru' ? 'С‚РѕР»СЊРєРѕ С‡С‚Рѕ' : 'just now';
-  if (minutes < 60) return lang === 'ru' ? `${minutes} РјРёРЅ. РЅР°Р·Р°Рґ` : `${minutes}m ago`;
+  if (minutes < 1) return lang === 'ru' ? 'только что' : 'just now';
+  if (minutes < 60) return lang === 'ru' ? `${minutes} мин. назад` : `${minutes}m ago`;
 
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return lang === 'ru' ? `${hours} С‡. РЅР°Р·Р°Рґ` : `${hours}h ago`;
+  if (hours < 24) return lang === 'ru' ? `${hours} ч. назад` : `${hours}h ago`;
 
-  const at = lang === 'ru' ? ' РІ ' : ' at ';
+  const at = lang === 'ru' ? ' в ' : ' at ';
   return formatDate(date, lang) + at + formatTime(date, lang);
 }
 
@@ -137,3 +137,4 @@ export async function extractWaveform(url: string, bars: number = 28): Promise<n
     return Array(bars).fill(0.5);
   }
 }
+

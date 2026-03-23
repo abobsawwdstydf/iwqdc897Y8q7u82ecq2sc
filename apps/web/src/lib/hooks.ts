@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
 /**
- * Debounced value вЂ” updates value after the specified delay.
+ * Debounced value — updates value after the specified delay.
  */
 export function useDebouncedValue<T>(value: T, delay: number): T {
   const [debounced, setDebounced] = useState(value);
@@ -15,7 +15,7 @@ export function useDebouncedValue<T>(value: T, delay: number): T {
 }
 
 /**
- * Debounced callback вЂ” returns a function that delays execution.
+ * Debounced callback — returns a function that delays execution.
  */
 export function useDebouncedCallback<T extends (...args: unknown[]) => unknown>(
   callback: T,
@@ -57,3 +57,4 @@ export function useAbortController() {
 
   return getSignal;
 }
+

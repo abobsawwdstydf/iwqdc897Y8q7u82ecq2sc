@@ -446,7 +446,7 @@ export function CreateStoryModal({ onClose, onCreated }: CreateStoryModalProps) 
             onClick={() => setMode('video')}
             className={`flex-1 py-2.5 text-sm font-medium transition-colors ${mode === 'video' ? 'text-Nexo-400 border-b-2 border-Nexo-400' : 'text-zinc-400'}`}
           >
-            {t('videoStory') || 'Р’РёРґРµРѕ'}
+            {t('videoStory') || 'Видео'}
           </button>
         </div>
 
@@ -535,3 +535,4 @@ export function CreateStoryModal({ onClose, onCreated }: CreateStoryModalProps) 
     </motion.div>
   );
 }
+

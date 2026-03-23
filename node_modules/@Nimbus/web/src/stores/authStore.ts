@@ -80,7 +80,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         console.warn(`checkAuth attempt ${attempt + 1} failed:`, msg);
         
         // Only retry on network/server errors, not on auth errors (401/403)
-        if (msg.includes('РўСЂРµР±СѓРµС‚СЃСЏ Р°РІС‚РѕСЂРёР·Р°С†РёСЏ') || msg.includes('РќРµРґРµР№СЃС‚РІРёС‚РµР»СЊРЅС‹Р№ С‚РѕРєРµРЅ')) {
+        if (msg.includes('Требуется авторизация') || msg.includes('Недействительный токен')) {
           break;
         }
         if (attempt < 2) {
@@ -100,3 +100,4 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 }));
+
