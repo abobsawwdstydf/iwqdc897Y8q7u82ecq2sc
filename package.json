@@ -7,13 +7,14 @@
     "apps/*"
   ],
   "scripts": {
-    "go": "npm install && npm run build && npm run db:setup && npm run dev",
-    "prod": "npm install && npm run build && npm run db:setup && npm start",
+    "go": "npm install && npm run build && npm run db:init && npm run dev",
+    "prod": "npm install && npm run build && npm run db:init && npm start",
     "dev": "concurrently -k -n server,web -c \"#6366f1\",\"#8b5cf6\" \"npm run dev -w apps/server\" \"npm run dev -w apps/web\"",
     "build": "npm run build -w apps/server && npm run build -w apps/web",
     "start": "npm run dev",
     "setup": "npm install && npm run build && npm run db:setup",
-    "db:setup": "cd apps/server && npx prisma generate && npx prisma db push --accept-data-loss",
+    "db:init": "cd apps/server && npx prisma generate && node scripts/db-init.js",
+    "db:setup": "cd apps/server && npx prisma db push --accept-data-loss",
     "db:push": "npm run db:push -w apps/server",
     "db:seed": "npm run db:seed -w apps/server"
   },
