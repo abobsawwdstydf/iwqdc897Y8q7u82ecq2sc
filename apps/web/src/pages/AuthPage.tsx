@@ -143,13 +143,13 @@ export default function AuthPage() {
           <form onSubmit={handleSubmit} className="space-y-4" autoComplete="off">
             <div>
               <label className="block text-sm font-medium text-zinc-400 mb-1.5">
-                Username {!isLogin && <span className="text-zinc-600">{t('latinOnly')}</span>}
+                {t('username')} {!isLogin && <span className="text-zinc-600">{t('latinOnly')}</span>}
               </label>
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))}
-                placeholder="username"
+                placeholder={t('username')}
                 className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-zinc-600 focus:border-Nexo-500/50 focus:ring-1 focus:ring-Nexo-500/25 transition-all"
                 required
                 autoFocus
