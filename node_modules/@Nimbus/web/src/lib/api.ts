@@ -392,6 +392,134 @@ class ApiClient {
   async removeFriend(friendshipId: string) {
     return this.request<{ success: boolean }>(`/friends/${friendshipId}`, { method: 'DELETE' });
   }
+
+  // Папки чатов
+  async getFolders() {
+    return this.request('/folders');
+  }
+
+  async createFolder(name: string, color?: string, icon?: string, chatIds?: number[]) {
+    return this.request('/folders', {
+      method: 'POST',
+      body: JSON.stringify({ name, color, icon, chatIds }),
+    });
+  }
+
+  async updateFolder(id: number, data: { name?: string; color?: string; icon?: string }) {
+    return this.request(`/folders/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteFolder(id: number) {
+    return this.request(`/folders/${id}`, { method: 'DELETE' });
+  }
+
+  async addChatsToFolder(folderId: number, chatIds: number[]) {
+    return this.request(`/folders/${folderId}/chats`, {
+      method: 'POST',
+      body: JSON.stringify({ chatIds }),
+    });
+  }
+
+  async removeChatFromFolder(folderId: number, chatId: number) {
+    return this.request(`/folders/${folderId}/chats/${chatId}`, { method: 'DELETE' });
+  }
+
+  // Черновики
+  async getDraft(chatId: number) {
+    return this.request(`/drafts/chat/${chatId}`);
+  }
+
+  async saveDraft(chatId: number | null, content: string, media?: any[]) {
+    return this.request('/drafts', {
+      method: 'POST',
+      body: JSON.stringify({ chatId, content, media }),
+    });
+  }
+
+  async deleteDraft(id: number) {
+    return this.request(`/drafts/${id}`, { method: 'DELETE' });
+  }
+
+  // Секретные чаты
+  async createSecretChat(receiverId: number, ttl?: number) {
+    return this.request('/secret-chats', {
+      method: 'POST',
+      body: JSON.stringify({ receiverId, ttl }),
+    });
+  }
+
+  async getSecretChats() {
+    return this.request('/secret-chats');
+  }
+
+  async getSecretChat(id: number) {
+    return this.request(`/secret-chats/${id}`);
+  }
+
+  async updateSecretChatTtl(id: number, ttl: number) {
+    return this.request(`/secret-chats/${id}/ttl`, {
+      method: 'PUT',
+      body: JSON.stringify({ ttl }),
+    });
+  }
+
+  async deleteSecretChat(id: number) {
+    return this.request(`/secret-chats/${id}`, { method: 'DELETE' });
+  }
+
+  async sendSecretMessage(chatId: number, content: string) {
+    return this.request(`/secret-chats/${chatId}/messages`, {
+      method: 'POST',
+      body: JSON.stringify({ content }),
+    });
+  }
+
+  async getSecretMessages(chatId: number) {
+    return this.request(`/secret-chats/${chatId}/messages`);
+  }
+
+  // Каналы
+  async subscribeToChannel(chatId: number) {
+    return this.request(`/chats/${chatId}/subscribe`, { method: 'POST' });
+  }
+
+  async unsubscribeFromChannel(chatId: number) {
+    return this.request(`/chats/${chatId}/subscribe`, { method: 'DELETE' });
+  }
+
+  async generateInviteLink(chatId: number) {
+    return this.request(`/chats/${chatId}/invite-link`, { method: 'POST' });
+  }
+
+  async joinByInviteLink(inviteLink: string) {
+    return this.request(`/chats/join/${inviteLink}`, { method: 'POST' });
+  }
+
+  async updateChannelSettings(chatId: number, data: { isPublic?: boolean; username?: string; description?: string }) {
+    return this.request(`/chats/${chatId}/settings`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // Админ-панель
+  async adminVerifyUser(userId: number, isVerified: boolean) {
+    return this.request(`/admin/users/${userId}/verify`, {
+      method: 'POST',
+      body: JSON.stringify({ isVerified }),
+    });
+  }
+
+  async adminGetUsers() {
+    return this.request('/admin/users');
+  }
+
+  async adminDeleteUser(userId: number) {
+    return this.request(`/admin/users/${userId}`, { method: 'DELETE' });
+  }
 }
 
 export const api = new ApiClient();

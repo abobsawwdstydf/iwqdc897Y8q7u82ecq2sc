@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Calendar, AtSign, Edit3, Check, Loader2, Image as ImageIcon, FileText, Link as LinkIcon, Download, ExternalLink, Play, UserPlus, UserMinus, UserCheck, Clock, Share2, Copy } from 'lucide-react';
+import { X, Calendar, AtSign, Edit3, Check, Loader2, Image as ImageIcon, FileText, Link as LinkIcon, Download, ExternalLink, Play, UserPlus, UserMinus, UserCheck, Clock, Share2, Copy, ShieldCheck } from 'lucide-react';
 import { api } from '../lib/api';
 import { useAuthStore } from '../stores/authStore';
 import { useLang } from '../lib/i18n';
@@ -437,8 +437,11 @@ export default function UserProfile({ userId, channelId, chatId, onClose, isSelf
               </div>
 
               {/* Имя */}
-              <h3 className="mt-5 text-[28px] font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/70 tracking-tight text-center px-4">
+              <h3 className="mt-5 text-[28px] font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/70 tracking-tight text-center px-4 flex items-center justify-center gap-2">
                 {profile.displayName || profile.username}
+                {profile.isVerified && (
+                  <ShieldCheck size={24} className="text-blue-500 flex-shrink-0" />
+                )}
               </h3>
 
               {/* Username */}
