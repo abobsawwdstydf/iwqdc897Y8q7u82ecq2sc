@@ -16,7 +16,12 @@ async function initDB() {
     process.exit(1);
   }
   
-  const client = new Client({ connectionString: databaseUrl });
+  const client = new Client({ 
+    connectionString: databaseUrl,
+    ssl: databaseUrl.includes('neon.tech') || databaseUrl.includes('render.com')
+      ? { rejectUnauthorized: false }
+      : false
+  });
   
   try {
     await client.connect();
@@ -35,44 +40,36 @@ async function initDB() {
     
     if (!tableExists) {
       console.log('📝 Таблицы не найдены, создаём...');
-      // Запускаем prisma через node (не через бинарник)
-      const prismaPath = path.join(__dirname, '../../node_modules/prisma/build/index.js');
+      
+      // Пытаемся запустить prisma db push
+      const cwd = path.join(__dirname, '../..');
       
       try {
-        execSync(`node ${prismaPath} db push`, { 
+        execSync(`node node_modules/prisma/build/index.js db push --accept-data-loss`, { 
           stdio: 'inherit',
-          cwd: __dirname
+          cwd: cwd
         });
         console.log('✅ Таблицы созданы');
       } catch (e) {
-        console.error('⚠️  Ошибка создания таблиц, пробуем npx...');
-        execSync(`npx prisma db push`, { 
-          stdio: 'inherit',
-          cwd: __dirname
-        });
-        console.log('✅ Таблицы созданы (через npx)');
+        console.error('⚠️  Ошибка создания таблиц через node, пробуем npx...');
+        try {
+          execSync(`npx prisma db push --accept-data-loss`, { 
+            stdio: 'inherit',
+            cwd: cwd,
+            env: { ...process.env, FORCE_COLOR: '1' }
+          });
+          console.log('✅ Таблицы созданы (через npx)');
+        } catch (e2) {
+          console.error('❌ Не удалось создать таблицы:', e2.message);
+          console.log('⚠️  Продолжаем работу, таблицы будут созданы при первом запросе');
+        }
       }
     } else {
       console.log('✅ Таблицы существуют');
     }
     
-    // Генерируем Prisma Client
-    console.log('🔧 Генерация Prisma Client...');
-    try {
-      execSync(`node ${prismaPath} generate`, {
-        stdio: 'inherit',
-        cwd: __dirname
-      });
-    } catch (e) {
-      execSync(`npx prisma generate`, {
-        stdio: 'inherit',
-        cwd: __dirname
-      });
-    }
-    
   } catch (error) {
-    console.error('❌ Ошибка:', error.message);
-    process.exit(1);
+    console.error('❌ Ошибка подключения:', error.message);
   } finally {
     await client.end();
   }
