@@ -6,15 +6,14 @@
 
 ## ⚡ ОДНА КОМАНДА ДЛЯ ВСЕГО!
 
-### Локально:
+### Локально (разработка):
 ```bash
 npm run go
 ```
 
-### На Render:
-**Start Command:**
+### Продакшен (Render/VDS):
 ```bash
-npm run go
+npm run prod
 ```
 
 **ВСЁ!** 🎉
@@ -60,6 +59,7 @@ npm run go
 | Команда | Описание |
 |---------|----------|
 | `npm run go` | **ЗАПУСТИТЬ ВСЁ** (install + build + setup + dev) |
+| `npm run prod` | **ПРОДАКШЕН** (install + build + setup + start) |
 | `npm run dev` | Запуск разработки |
 | `npm run build` | Сборка |
 | `npm run db:setup` | Настройка БД |
@@ -82,7 +82,7 @@ Name: nexo-messenger
 Region: Frankfurt
 Branch: main
 Build Command: npm install && npm run build
-Start Command: npm run go
+Start Command: npm run prod
 ```
 
 ### 4. Environment Variables
