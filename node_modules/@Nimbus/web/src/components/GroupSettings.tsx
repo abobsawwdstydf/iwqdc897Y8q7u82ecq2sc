@@ -186,7 +186,7 @@ export default function GroupSettings({ chat, onClose }: GroupSettingsProps) {
           {/* Avatar */}
           <div className="flex flex-col items-center py-8 px-6">
             <div className="relative group">
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-Nimbus-500/20 rounded-full blur-[40px] pointer-events-none" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-Nexo-500/20 rounded-full blur-[40px] pointer-events-none" />
               <div className="relative z-10 p-1.5 rounded-full bg-gradient-to-br from-white/10 to-transparent backdrop-blur-md border border-white/10 shadow-2xl">
                 {chat.avatar ? (
                   <img
@@ -195,7 +195,7 @@ export default function GroupSettings({ chat, onClose }: GroupSettingsProps) {
                     className="w-32 h-32 rounded-full object-cover shadow-inner"
                   />
                 ) : (
-                  <div className="w-32 h-32 rounded-full bg-gradient-to-br from-Nimbus-500 to-purple-600 flex items-center justify-center text-white font-bold text-4xl shadow-inner">
+                  <div className="w-32 h-32 rounded-full bg-gradient-to-br from-Nexo-500 to-purple-600 flex items-center justify-center text-white font-bold text-4xl shadow-inner">
                     {initials}
                   </div>
                 )}
@@ -256,7 +256,7 @@ export default function GroupSettings({ chat, onClose }: GroupSettingsProps) {
                   type="text"
                   value={groupName}
                   onChange={(e) => setGroupName(e.target.value)}
-                  className="flex-1 text-lg font-bold text-center text-white bg-transparent border-b border-Nimbus-500 outline-none px-2 py-1"
+                  className="flex-1 text-lg font-bold text-center text-white bg-transparent border-b border-Nexo-500 outline-none px-2 py-1"
                   autoFocus
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') handleSaveName();
@@ -317,7 +317,7 @@ export default function GroupSettings({ chat, onClose }: GroupSettingsProps) {
                       setTimeout(() => searchInputRef.current?.focus(), 100);
                     }
                   }}
-                  className="flex items-center gap-1 text-xs text-Nimbus-400 hover:text-Nimbus-300 transition-colors"
+                  className="flex items-center gap-1 text-xs text-Nexo-400 hover:text-Nexo-300 transition-colors"
                 >
                   <UserPlus size={14} />
                   {t('addMember')}
@@ -359,7 +359,7 @@ export default function GroupSettings({ chat, onClose }: GroupSettingsProps) {
                       {u.avatar ? (
                         <img src={u.avatar} alt="" className="w-8 h-8 rounded-full object-cover" />
                       ) : (
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-Nimbus-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-Nexo-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
                           {(u.displayName || u.username || '?')[0].toUpperCase()}
                         </div>
                       )}
@@ -367,7 +367,7 @@ export default function GroupSettings({ chat, onClose }: GroupSettingsProps) {
                         <p className="text-sm text-white truncate">{u.displayName || u.username}</p>
                         <p className="text-xs text-zinc-500">@{u.username}</p>
                       </div>
-                      <UserPlus size={14} className="text-Nimbus-400 flex-shrink-0" />
+                      <UserPlus size={14} className="text-Nexo-400 flex-shrink-0" />
                     </button>
                   ))}
                   {searchQuery.trim() && !isSearching && searchResults.length === 0 && (
@@ -394,7 +394,7 @@ export default function GroupSettings({ chat, onClose }: GroupSettingsProps) {
                       {member.user.avatar ? (
                         <img src={member.user.avatar} alt="" className="w-9 h-9 rounded-full object-cover" />
                       ) : (
-                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-Nimbus-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
+                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-Nexo-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
                           {(member.user.displayName || member.user.username || '?')[0].toUpperCase()}
                         </div>
                       )}
@@ -407,7 +407,7 @@ export default function GroupSettings({ chat, onClose }: GroupSettingsProps) {
                         <p className="text-sm font-medium text-white truncate">
                           {member.user.displayName || member.user.username}
                           {member.user.id === user?.id && (
-                            <span className="text-zinc-500 ml-1 text-xs">({t('you') || 'вы'})</span>
+                            <span className="text-zinc-500 ml-1 text-xs">({t('you') || 'РІС‹'})</span>
                           )}
                         </p>
                         {member.role === 'admin' && (

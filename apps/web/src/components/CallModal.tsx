@@ -80,7 +80,7 @@ async function getMediaWithCameraFallback(
   try {
     console.log('[getMedia] Requesting audio+video (default camera)...');
     const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }, video: true });
-    console.log('[getMedia] Success —', stream.getVideoTracks().map(t => `${t.label}:${t.readyState}`));
+    console.log('[getMedia] Success вЂ”', stream.getVideoTracks().map(t => `${t.label}:${t.readyState}`));
     return { stream, hasVideo: true };
   } catch (e) {
     console.warn('[getMedia] audio+video failed:', e);
@@ -229,11 +229,11 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
         );
         console.log('[checkVideo] videoTracks:', videoTracks.map(t =>
           `${t.label} state=${t.readyState} enabled=${t.enabled} muted=${t.muted}`
-        ), '→ hasRemoteVideo:', hasVideo);
+        ), 'в†’ hasRemoteVideo:', hasVideo);
         setHasRemoteVideo(hasVideo);
       };
 
-      // Listen for unmute/mute on every video track (muted→unmuted when data starts flowing)
+      // Listen for unmute/mute on every video track (mutedв†’unmuted when data starts flowing)
       const attachTrackListeners = (track: MediaStreamTrack) => {
         if (track.kind !== 'video') return;
         track.onunmute = checkVideo;
@@ -259,7 +259,7 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
       };
       stream.onremovetrack = checkVideo;
 
-      // Also schedule a delayed check — some browsers delay unmute
+      // Also schedule a delayed check вЂ” some browsers delay unmute
       setTimeout(checkVideo, 500);
       setTimeout(checkVideo, 1500);
     };
@@ -305,7 +305,7 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
       // Get media (video with camera enumeration fallback)
       console.log('[startCall] Getting media, wantVideo:', callType === 'video');
       const { stream, hasVideo } = await getMediaWithCameraFallback(callType === 'video');
-      console.log('[startCall] Got media — hasVideo:', hasVideo,
+      console.log('[startCall] Got media вЂ” hasVideo:', hasVideo,
         'audioTracks:', stream.getAudioTracks().length,
         'videoTracks:', stream.getVideoTracks().length);
       let effectiveCallType = callType;
@@ -370,8 +370,8 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
       console.error('Error starting call:', err);
       if (err?.name === 'NotAllowedError' || err?.name === 'NotFoundError') {
         alert(callType === 'video'
-          ? 'Разрешите доступ к камере и микрофону в настройках браузера для совершения звонков'
-          : 'Разрешите доступ к микрофону в настройках браузера для совершения звонков');
+          ? 'Р Р°Р·СЂРµС€РёС‚Рµ РґРѕСЃС‚СѓРї Рє РєР°РјРµСЂРµ Рё РјРёРєСЂРѕС„РѕРЅСѓ РІ РЅР°СЃС‚СЂРѕР№РєР°С… Р±СЂР°СѓР·РµСЂР° РґР»СЏ СЃРѕРІРµСЂС€РµРЅРёСЏ Р·РІРѕРЅРєРѕРІ'
+          : 'Р Р°Р·СЂРµС€РёС‚Рµ РґРѕСЃС‚СѓРї Рє РјРёРєСЂРѕС„РѕРЅСѓ РІ РЅР°СЃС‚СЂРѕР№РєР°С… Р±СЂР°СѓР·РµСЂР° РґР»СЏ СЃРѕРІРµСЂС€РµРЅРёСЏ Р·РІРѕРЅРєРѕРІ');
       }
       setCallState('ended');
       cleanup();
@@ -388,7 +388,7 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
     try {
       console.log('[acceptCall] Getting media, wantVideo:', incoming.callType === 'video');
       const { stream, hasVideo } = await getMediaWithCameraFallback(incoming.callType === 'video');
-      console.log('[acceptCall] Got media — hasVideo:', hasVideo,
+      console.log('[acceptCall] Got media вЂ” hasVideo:', hasVideo,
         'audioTracks:', stream.getAudioTracks().length,
         'videoTracks:', stream.getVideoTracks().length,
         'videoEnabled:', stream.getVideoTracks().map(t => t.enabled));
@@ -423,14 +423,14 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
       // This creates transceivers from the offer's m-lines
       await pc.setRemoteDescription(new RTCSessionDescription(incoming.offer));
 
-      // Now add local tracks — they reuse the transceivers created from the offer,
+      // Now add local tracks вЂ” they reuse the transceivers created from the offer,
       // changing direction from recvonly to sendrecv
       stream.getTracks().forEach(track => {
         pc.addTrack(track, stream);
       });
 
       // If this is a video call but we only have audio, we need a recvonly video transceiver.
-      // After setRemoteDescription, one already exists from the offer — but only if the offer
+      // After setRemoteDescription, one already exists from the offer вЂ” but only if the offer
       // contained a video m-line. If it did, the transceiver is already recvonly.
       // If there's no video transceiver at all and we want to receive video, add one.
       if (incoming.callType === 'video' && !hasVideo) {
@@ -498,7 +498,7 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
     } catch (err: any) {
       console.error('Error accepting call:', err);
       if (err?.name === 'NotAllowedError' || err?.name === 'NotFoundError') {
-        alert('Разрешите доступ к микрофону в настройках браузера для совершения звонков');
+        alert('Р Р°Р·СЂРµС€РёС‚Рµ РґРѕСЃС‚СѓРї Рє РјРёРєСЂРѕС„РѕРЅСѓ РІ РЅР°СЃС‚СЂРѕР№РєР°С… Р±СЂР°СѓР·РµСЂР° РґР»СЏ СЃРѕРІРµСЂС€РµРЅРёСЏ Р·РІРѕРЅРєРѕРІ');
       }
       if (!callEndedRef.current) {
         setCallState('ended');
@@ -567,12 +567,12 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
       gainNode.gain.value = 0;
       const dest = ctx.createMediaStreamDestination();
 
-      // Signal path: source → delay → gain → output (full quality, just gated)
+      // Signal path: source в†’ delay в†’ gain в†’ output (full quality, just gated)
       source.connect(delayNode);
       delayNode.connect(gainNode);
       gainNode.connect(dest);
 
-      // Analysis path (no delay): source → bandpass → analyser
+      // Analysis path (no delay): source в†’ bandpass в†’ analyser
       source.connect(analysisHP);
       analysisHP.connect(analysisLP);
       analysisLP.connect(analyser);
@@ -603,11 +603,11 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
             state = 1; // pending
             pendingSince = now;
           }
-        } else if (state === 1) { // pending — wait to confirm sustained energy (voice) vs transient (click)
+        } else if (state === 1) { // pending вЂ” wait to confirm sustained energy (voice) vs transient (click)
           if (db <= CLOSE_THRESHOLD) {
-            state = 0; // energy dropped fast → was a click, stay closed
+            state = 0; // energy dropped fast в†’ was a click, stay closed
           } else if (now - pendingSince >= CONFIRM_MS) {
-            state = 2; // sustained → voice confirmed, open gate
+            state = 2; // sustained в†’ voice confirmed, open gate
             holdUntil = now + HOLD_TIME;
             gainNode.gain.setTargetAtTime(1, ctx.currentTime, ATTACK);
           }
@@ -959,7 +959,7 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
       const hadVideo = hadVideoBeforeScreenShareRef.current;
 
       if (hadVideo) {
-        // Restore camera — request video only (no audio) to avoid interfering with existing mic
+        // Restore camera вЂ” request video only (no audio) to avoid interfering with existing mic
         let cameraRestored = false;
         try {
           const constraints: MediaStreamConstraints = activeCameraId
@@ -1012,7 +1012,7 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
           setIsVideoOff(true);
         }
       } else {
-        // Was voice call — don't restore camera, just null out the video sender
+        // Was voice call вЂ” don't restore camera, just null out the video sender
         const sender = findVideoSender(pc);
         if (sender) {
           await sender.replaceTrack(null);
@@ -1042,7 +1042,7 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
 
       setIsScreenSharing(false);
     } else {
-      // Start screen share — remember current video state
+      // Start screen share вЂ” remember current video state
       hadVideoBeforeScreenShareRef.current = callType === 'video' && !isVideoOff;
       try {
         const screenStream = await navigator.mediaDevices.getDisplayMedia({
@@ -1068,7 +1068,7 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
             });
           }
         } else {
-          // No video sender — add track associated with localStream to keep audio on same stream
+          // No video sender вЂ” add track associated with localStream to keep audio on same stream
           pc.addTrack(screenTrack, localStreamRef.current || screenStream);
           const offer = await pc.createOffer();
           await pc.setLocalDescription(offer);
@@ -1090,7 +1090,7 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
           const snd = peerRef.current ? findVideoSender(peerRef.current) : undefined;
 
           if (hadVideo) {
-            // Restore camera — video only, no audio
+            // Restore camera вЂ” video only, no audio
             let cameraRestored = false;
             try {
               const constraints: MediaStreamConstraints = activeCameraId
@@ -1138,7 +1138,7 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
               }
             }
           } else {
-            // Was voice call — just null out video sender
+            // Was voice call вЂ” just null out video sender
             if (snd) {
               await snd.replaceTrack(null);
               const currentPc = peerRef.current;
@@ -1391,11 +1391,11 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
         >
           {/* Avatar */}
           <div className="relative">
-            <div className="absolute inset-0 rounded-full bg-Nimbus-500/30 animate-call-wave" />
+            <div className="absolute inset-0 rounded-full bg-Nexo-500/30 animate-call-wave" />
             {displayAvatar ? (
               <img src={displayAvatar} alt="" className="relative w-10 h-10 rounded-full object-cover" />
             ) : (
-              <div className="relative w-10 h-10 rounded-full bg-gradient-to-br from-Nimbus-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">
+              <div className="relative w-10 h-10 rounded-full bg-gradient-to-br from-Nexo-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">
                 {initials}
               </div>
             )}
@@ -1439,7 +1439,7 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
       >
         {/* Ambient background glow for call modal */}
         <div className="absolute inset-0 pointer-events-none opacity-40">
-          <div className="absolute top-[10%] left-[20%] w-[50vh] h-[50vh] bg-Nimbus-500/30 rounded-full blur-[120px] animate-float" />
+          <div className="absolute top-[10%] left-[20%] w-[50vh] h-[50vh] bg-Nexo-500/30 rounded-full blur-[120px] animate-float" />
           <div className="absolute bottom-[10%] right-[20%] w-[50vh] h-[50vh] bg-emerald-500/20 rounded-full blur-[120px] animate-float-delayed" />
         </div>
 
@@ -1462,7 +1462,7 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
                     key={mic.deviceId}
                     onClick={() => switchMicrophone(mic.deviceId)}
                     className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${activeMicId === mic.deviceId
-                        ? 'text-Nimbus-400 bg-Nimbus-500/20 font-medium'
+                        ? 'text-Nexo-400 bg-Nexo-500/20 font-medium'
                         : 'text-zinc-200 hover:bg-zinc-700'
                       }`}
                   >
@@ -1484,7 +1484,7 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
                     key={cam.deviceId}
                     onClick={() => switchCamera(cam.deviceId)}
                     className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${activeCameraId === cam.deviceId
-                        ? 'text-Nimbus-400 bg-Nimbus-500/20 font-medium'
+                        ? 'text-Nexo-400 bg-Nexo-500/20 font-medium'
                         : 'text-zinc-200 hover:bg-zinc-700'
                       }`}
                   >
@@ -1509,7 +1509,7 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
                     step="0.05"
                     value={remoteVolume}
                     onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
-                    className="w-full h-1.5 rounded-full appearance-none bg-zinc-600 accent-Nimbus-500 cursor-pointer"
+                    className="w-full h-1.5 rounded-full appearance-none bg-zinc-600 accent-Nexo-500 cursor-pointer"
                   />
                   <span className="text-xs text-zinc-300 w-8 text-right">{Math.round(remoteVolume * 100)}%</span>
                 </div>
@@ -1523,7 +1523,7 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
               className="relative bg-black w-full"
               style={{ aspectRatio: '16 / 9' }}
             >
-              {/* Remote video — fills container, preserves natural aspect ratio */}
+              {/* Remote video вЂ” fills container, preserves natural aspect ratio */}
               {hasRemoteVideo ? (
                 <video
                   ref={remoteVideoRef}
@@ -1592,7 +1592,7 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
                   <Minimize2 size={16} />
                 </button>
               )}
-              {/* Avatar with pulse — right-click for volume */}
+              {/* Avatar with pulse вЂ” right-click for volume */}
               <div
                 className="relative mb-8 mt-4"
                 onContextMenu={(e) => {
@@ -1605,8 +1605,8 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
               >
                 {(callState === 'calling' || callState === 'connected') && (
                   <>
-                    <div className="absolute inset-0 rounded-full bg-Nimbus-500/30 animate-call-wave" />
-                    <div className="absolute inset-0 rounded-full bg-Nimbus-500/20 animate-call-wave-delayed" />
+                    <div className="absolute inset-0 rounded-full bg-Nexo-500/30 animate-call-wave" />
+                    <div className="absolute inset-0 rounded-full bg-Nexo-500/20 animate-call-wave-delayed" />
                   </>
                 )}
                 {callState === 'incoming' && (
@@ -1619,7 +1619,7 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
                   {displayAvatar ? (
                     <img src={displayAvatar} alt="" className="w-32 h-32 rounded-full object-cover shadow-inner" />
                   ) : (
-                    <div className="w-32 h-32 rounded-full bg-gradient-to-br from-Nimbus-500 to-purple-600 flex items-center justify-center text-white font-bold text-4xl shadow-inner">
+                    <div className="w-32 h-32 rounded-full bg-gradient-to-br from-Nexo-500 to-purple-600 flex items-center justify-center text-white font-bold text-4xl shadow-inner">
                       {initials}
                     </div>
                   )}
@@ -1691,7 +1691,7 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
                     <ChevronUp size={10} />
                   </button>
                 </div>
-                {/* Camera toggle — only for video calls */}
+                {/* Camera toggle вЂ” only for video calls */}
                 {initialCallType === 'video' && (
                   <button
                     onClick={toggleVideo}
@@ -1701,7 +1701,7 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
                     {isVideoOff ? <VideoOff size={18} /> : <Video size={18} />}
                   </button>
                 )}
-                {/* Camera selector — only for video calls */}
+                {/* Camera selector вЂ” only for video calls */}
                 {initialCallType === 'video' && (
                   <button
                     onClick={openCameraMenu}
@@ -1713,7 +1713,7 @@ export default function CallModal({ isOpen, onClose, targetUser, callType: initi
                 )}
                 <button
                   onClick={toggleScreenShare}
-                  className={`w-11 h-11 rounded-full flex items-center justify-center transition-colors ${isScreenSharing ? 'bg-Nimbus-500/30 text-Nimbus-400' : 'bg-white/10 text-white hover:bg-white/20'
+                  className={`w-11 h-11 rounded-full flex items-center justify-center transition-colors ${isScreenSharing ? 'bg-Nexo-500/30 text-Nexo-400' : 'bg-white/10 text-white hover:bg-white/20'
                     }`}
                   title={isScreenSharing ? t('stopScreenShare') : t('screenShare')}
                 >

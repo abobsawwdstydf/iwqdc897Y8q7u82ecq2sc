@@ -70,7 +70,7 @@ function ChatListItem({ chat, isActive, onChatSelect }: ChatListItemProps) {
 
   const isMine = lastMessage?.senderId === user?.id;
 
-  // Галочки прочтения
+  // Р“Р°Р»РѕС‡РєРё РїСЂРѕС‡С‚РµРЅРёСЏ
   const isRead = lastMessage?.readBy?.some((r) => r.userId !== user?.id);
 
   const timeStr = lastMessage
@@ -134,7 +134,7 @@ function ChatListItem({ chat, isActive, onChatSelect }: ChatListItemProps) {
           isActive ? 'bg-accent/15 border-r-2 border-accent' : 'hover:bg-surface-hover'
         }`}
       >
-        {/* Аватар */}
+        {/* РђРІР°С‚Р°СЂ */}
         <div className="relative flex-shrink-0">
           {isFavorites ? (
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg">
@@ -145,11 +145,11 @@ function ChatListItem({ chat, isActive, onChatSelect }: ChatListItemProps) {
           )}
         </div>
 
-        {/* Инфо */}
+        {/* РРЅС„Рѕ */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5 min-w-0">
-              {isPinned && <Pin size={12} className="text-Nimbus-400 flex-shrink-0 rotate-45" />}
+              {isPinned && <Pin size={12} className="text-Nexo-400 flex-shrink-0 rotate-45" />}
               <span className="text-sm font-medium text-white truncate">{chatName}</span>
             </div>
             {timeStr && <span className="text-xs text-zinc-500 flex-shrink-0 ml-2">{timeStr}</span>}
@@ -159,13 +159,13 @@ function ChatListItem({ chat, isActive, onChatSelect }: ChatListItemProps) {
               {isMine && lastMessage && !lastMessage.isDeleted && (
                 <span className="flex-shrink-0">
                   {isRead ? (
-                    <CheckCheck size={14} className="text-Nimbus-400" />
+                    <CheckCheck size={14} className="text-Nexo-400" />
                   ) : (
                     <Check size={14} className="text-zinc-500" />
                   )}
                 </span>
               )}
-              <p className={`text-xs truncate ${isTyping ? 'text-Nimbus-400 font-medium' : draft ? 'text-red-400' : 'text-zinc-400'}`}>
+              <p className={`text-xs truncate ${isTyping ? 'text-Nexo-400 font-medium' : draft ? 'text-red-400' : 'text-zinc-400'}`}>
                 {isTyping ? t('typing') : draft ? <><span className="font-medium">{t('draft')} </span>{stripMarkdown(draft)}</> : previewText}
               </p>
             </div>

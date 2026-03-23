@@ -52,7 +52,7 @@ export default function MathCaptcha({ onSuccess, onError }: MathCaptchaProps) {
       className="p-4 rounded-xl bg-white/5 border border-white/10"
     >
       <p className="text-sm text-zinc-300 mb-3 font-medium">
-        Подтвердите, что вы не робот:
+        РџРѕРґС‚РІРµСЂРґРёС‚Рµ, С‡С‚Рѕ РІС‹ РЅРµ СЂРѕР±РѕС‚:
       </p>
       
       <form onSubmit={handleSubmit} className="flex items-center gap-3">
@@ -69,7 +69,7 @@ export default function MathCaptcha({ onSuccess, onError }: MathCaptchaProps) {
           value={answer}
           onChange={(e) => setAnswer(e.target.value)}
           className={`w-20 px-3 py-2 rounded-lg bg-white/10 border text-white text-center font-bold outline-none transition-colors ${
-            error ? 'border-red-500/50' : 'border-white/20 focus:border-Nimbus-500/50'
+            error ? 'border-red-500/50' : 'border-white/20 focus:border-Nexo-500/50'
           }`}
           placeholder="?"
           autoFocus
@@ -77,7 +77,7 @@ export default function MathCaptcha({ onSuccess, onError }: MathCaptchaProps) {
         
         <button
           type="submit"
-          className="px-4 py-2 rounded-lg bg-Nimbus-500 hover:bg-Nimbus-600 text-white font-medium transition-colors"
+          className="px-4 py-2 rounded-lg bg-Nexo-500 hover:bg-Nexo-600 text-white font-medium transition-colors"
         >
           OK
         </button>
@@ -89,7 +89,7 @@ export default function MathCaptcha({ onSuccess, onError }: MathCaptchaProps) {
           animate={{ opacity: 1 }}
           className="text-xs text-red-400 mt-2"
         >
-          Неверно, попробуйте ещё раз
+          РќРµРІРµСЂРЅРѕ, РїРѕРїСЂРѕР±СѓР№С‚Рµ РµС‰С‘ СЂР°Р·
         </motion.p>
       )}
     </motion.div>

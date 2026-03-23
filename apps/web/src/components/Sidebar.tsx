@@ -73,7 +73,7 @@ export default function Sidebar({ onChatSelect }: SidebarProps) {
   return (
     <>
       <div className="w-[340px] h-full flex flex-col bg-surface-secondary rounded-3xl overflow-hidden border border-border/50 shadow-2xl relative z-10">
-        {/* Шапка */}
+        {/* РЁР°РїРєР° */}
         <div className="h-[76px] px-4 flex items-center gap-3 border-b border-border/40 bg-surface-secondary flex-shrink-0">
           <button
             onClick={() => setShowSideMenu(true)}
@@ -83,8 +83,8 @@ export default function Sidebar({ onChatSelect }: SidebarProps) {
             <Menu size={20} />
           </button>
           <div className="flex items-center gap-2 flex-1 min-w-0">
-            <img src="/logo.png" alt="Nimbus" className="w-8 h-8 rounded-lg object-cover" />
-            <h1 className="text-lg font-bold gradient-text truncate">Nimbus</h1>
+            <img src="/logo.png" alt="Nexo" className="w-8 h-8 rounded-lg object-cover" />
+            <h1 className="text-lg font-bold gradient-text truncate">Nexo</h1>
           </div>
           <button
             onClick={() => setShowNewChat(true)}
@@ -95,7 +95,7 @@ export default function Sidebar({ onChatSelect }: SidebarProps) {
           </button>
         </div>
 
-        {/* Поиск */}
+        {/* РџРѕРёСЃРє */}
         <div className="p-4 bg-surface-secondary/50">
           <div className="relative group">
             <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-accent transition-colors" />
@@ -125,8 +125,8 @@ export default function Sidebar({ onChatSelect }: SidebarProps) {
               onClick={() => setShowCreateStory(true)}
               className="flex flex-col items-center gap-1 flex-shrink-0 group"
             >
-              <div className="w-14 h-14 rounded-full border-2 border-dashed border-zinc-600 flex items-center justify-center group-hover:border-Nimbus-400 transition-colors">
-                <Plus size={20} className="text-zinc-400 group-hover:text-Nimbus-400 transition-colors" />
+              <div className="w-14 h-14 rounded-full border-2 border-dashed border-zinc-600 flex items-center justify-center group-hover:border-Nexo-400 transition-colors">
+                <Plus size={20} className="text-zinc-400 group-hover:text-Nexo-400 transition-colors" />
               </div>
               <span className="text-[10px] text-zinc-500 truncate w-14 text-center">{t('newStory')}</span>
             </button>
@@ -142,7 +142,7 @@ export default function Sidebar({ onChatSelect }: SidebarProps) {
                 >
                   <div className={`w-14 h-14 rounded-full p-[2.5px] transition-transform group-hover:scale-105 ${
                     group.hasUnviewed
-                      ? 'bg-gradient-to-tr from-Nimbus-400 via-purple-500 to-pink-500 shadow-lg shadow-Nimbus-500/25'
+                      ? 'bg-gradient-to-tr from-Nexo-400 via-purple-500 to-pink-500 shadow-lg shadow-Nexo-500/25'
                       : isMine
                         ? 'bg-gradient-to-tr from-zinc-500 to-zinc-600'
                         : 'bg-zinc-700'
@@ -165,7 +165,7 @@ export default function Sidebar({ onChatSelect }: SidebarProps) {
           </div>
         )}
 
-        {/* Список чатов */}
+        {/* РЎРїРёСЃРѕРє С‡Р°С‚РѕРІ */}
         <div className="flex-1 overflow-y-auto">
           {filteredChats.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-zinc-500 gap-3 px-6">
@@ -182,7 +182,7 @@ export default function Sidebar({ onChatSelect }: SidebarProps) {
         </div>
       </div>
 
-      {/* Модалки */}
+      {/* РњРѕРґР°Р»РєРё */}
       <AnimatePresence>
         {showNewChat && <NewChatModal onClose={() => setShowNewChat(false)} />}
       </AnimatePresence>

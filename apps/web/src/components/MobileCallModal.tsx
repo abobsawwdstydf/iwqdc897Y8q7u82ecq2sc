@@ -169,12 +169,12 @@ export const MobileCallModal: React.FC<MobileCallModalProps> = ({
               )}
             </div>
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 text-center px-4">
-              {targetUser.displayName || targetUser.username || 'РќРµРёР·РІРµСЃС‚РЅС‹Р№'}
+              {targetUser.displayName || targetUser.username || 'Р СњР ВµР С‘Р В·Р Р†Р ВµРЎРѓРЎвЂљР Р…РЎвЂ№Р в„–'}
             </h2>
             <p className="text-white/60 text-base md:text-lg">
-              {callState === 'calling' && (isIncoming ? 'Р’С…РѕРґСЏС‰РёР№ РІС‹Р·РѕРІ...' : 'Р’С‹Р·РѕРІ...')}
+              {callState === 'calling' && (isIncoming ? 'Р вЂ™РЎвЂ¦Р С•Р Т‘РЎРЏРЎвЂ°Р С‘Р в„– Р Р†РЎвЂ№Р В·Р С•Р Р†...' : 'Р вЂ™РЎвЂ№Р В·Р С•Р Р†...')}
               {callState === 'connected' && formatDuration(duration)}
-              {callState === 'ended' && 'Р’С‹Р·РѕРІ Р·Р°РІРµСЂС€С‘РЅ'}
+              {callState === 'ended' && 'Р вЂ™РЎвЂ№Р В·Р С•Р Р† Р В·Р В°Р Р†Р ВµРЎР‚РЎв‚¬РЎвЂР Р…'}
             </p>
           </div>
 
@@ -219,7 +219,7 @@ export const MobileCallModal: React.FC<MobileCallModalProps> = ({
                       className={`w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center transition-all flex-shrink-0 ${
                         isMuted ? 'bg-white text-gray-900' : 'bg-white/20 text-white'
                       }`}
-                      aria-label={isMuted ? 'Р’РєР»СЋС‡РёС‚СЊ РјРёРєСЂРѕС„РѕРЅ' : 'Р’С‹РєР»СЋС‡РёС‚СЊ РјРёРєСЂРѕС„РѕРЅ'}
+                      aria-label={isMuted ? 'Р вЂ™Р С”Р В»РЎР‹РЎвЂЎР С‘РЎвЂљРЎРЉ Р СР С‘Р С”РЎР‚Р С•РЎвЂћР С•Р Р…' : 'Р вЂ™РЎвЂ№Р С”Р В»РЎР‹РЎвЂЎР С‘РЎвЂљРЎРЉ Р СР С‘Р С”РЎР‚Р С•РЎвЂћР С•Р Р…'}
                     >
                       {isMuted ? <MicOff size={24} /> : <Mic size={24} />}
                     </button>
@@ -229,7 +229,7 @@ export const MobileCallModal: React.FC<MobileCallModalProps> = ({
                         className={`w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center transition-all flex-shrink-0 ${
                           isVideoOff ? 'bg-white text-gray-900' : 'bg-white/20 text-white'
                         }`}
-                        aria-label={isVideoOff ? 'Р’РєР»СЋС‡РёС‚СЊ РІРёРґРµРѕ' : 'Р’С‹РєР»СЋС‡РёС‚СЊ РІРёРґРµРѕ'}
+                        aria-label={isVideoOff ? 'Р вЂ™Р С”Р В»РЎР‹РЎвЂЎР С‘РЎвЂљРЎРЉ Р Р†Р С‘Р Т‘Р ВµР С•' : 'Р вЂ™РЎвЂ№Р С”Р В»РЎР‹РЎвЂЎР С‘РЎвЂљРЎРЉ Р Р†Р С‘Р Т‘Р ВµР С•'}
                       >
                         {isVideoOff ? <VideoOff size={24} /> : <Video size={24} />}
                       </button>
@@ -237,7 +237,7 @@ export const MobileCallModal: React.FC<MobileCallModalProps> = ({
                     <button
                       onClick={(e) => e.stopPropagation()}
                       className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-white/20 text-white flex items-center justify-center flex-shrink-0"
-                      aria-label="Р“СЂРѕРјРєРѕСЃС‚СЊ"
+                      aria-label="Р вЂњРЎР‚Р С•Р СР С”Р С•РЎРѓРЎвЂљРЎРЉ"
                     >
                       <Volume2 size={24} />
                     </button>
@@ -250,14 +250,14 @@ export const MobileCallModal: React.FC<MobileCallModalProps> = ({
                       <button
                         onClick={(e) => { e.stopPropagation(); handleAnswer(); }}
                         className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-green-500 text-white flex items-center justify-center hover:scale-110 transition-transform flex-shrink-0"
-                        aria-label="РћС‚РІРµС‚РёС‚СЊ"
+                        aria-label="Р С›РЎвЂљР Р†Р ВµРЎвЂљР С‘РЎвЂљРЎРЉ"
                       >
                         <Phone size={32} />
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); handleEndCall(); }}
                         className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-red-500 text-white flex items-center justify-center hover:scale-110 transition-transform flex-shrink-0"
-                        aria-label="РћС‚РєР»РѕРЅРёС‚СЊ"
+                        aria-label="Р С›РЎвЂљР С”Р В»Р С•Р Р…Р С‘РЎвЂљРЎРЉ"
                       >
                         <PhoneOff size={32} />
                       </button>
@@ -266,7 +266,7 @@ export const MobileCallModal: React.FC<MobileCallModalProps> = ({
                     <button
                       onClick={(e) => { e.stopPropagation(); handleEndCall(); }}
                       className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-red-500 text-white flex items-center justify-center hover:scale-110 transition-transform flex-shrink-0"
-                      aria-label="Р—Р°РІРµСЂС€РёС‚СЊ"
+                      aria-label="Р вЂ”Р В°Р Р†Р ВµРЎР‚РЎв‚¬Р С‘РЎвЂљРЎРЉ"
                     >
                       <PhoneOff size={32} />
                     </button>
@@ -275,7 +275,7 @@ export const MobileCallModal: React.FC<MobileCallModalProps> = ({
 
                 {isIncoming && callState === 'calling' && (
                   <p className="text-white/60 mt-2 text-sm md:text-base">
-                    {callType === 'video' ? 'Р’РёРґРµРѕР·РІРѕРЅРѕРє' : 'Р“РѕР»РѕСЃРѕРІРѕР№ РІС‹Р·РѕРІ'}
+                    {callType === 'video' ? 'Р вЂ™Р С‘Р Т‘Р ВµР С•Р В·Р Р†Р С•Р Р…Р С•Р С”' : 'Р вЂњР С•Р В»Р С•РЎРѓР С•Р Р†Р С•Р в„– Р Р†РЎвЂ№Р В·Р С•Р Р†'}
                   </p>
                 )}
               </motion.div>

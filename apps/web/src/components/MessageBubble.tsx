@@ -66,7 +66,7 @@ function MessageBubble({
   const bubbleRef = useRef<HTMLDivElement>(null);
   const [quotedText, setQuotedText] = useState<string | null>(null);
 
-  // Прочитано
+  // РџСЂРѕС‡РёС‚Р°РЅРѕ
   const isRead = message.readBy?.some((r) => r.userId !== user?.id);
 
   const timeStr = new Date(message.createdAt).toLocaleTimeString(lang === 'ru' ? 'ru-RU' : 'en-US', {
@@ -151,7 +151,7 @@ function MessageBubble({
     setDeleteMenuMode(false);
   };
 
-  // Имя собеседника для кнопки «Удалить также для ...»
+  // РРјСЏ СЃРѕР±РµСЃРµРґРЅРёРєР° РґР»СЏ РєРЅРѕРїРєРё В«РЈРґР°Р»РёС‚СЊ С‚Р°РєР¶Рµ РґР»СЏ ...В»
   const chatForDelete = chats.find(c => c.id === message.chatId);
   const otherMemberName = chatForDelete?.type === 'personal'
     ? chatForDelete.members.find(m => m.user.id !== user?.id)?.user.displayName
@@ -188,7 +188,7 @@ function MessageBubble({
     setShowContext(false);
   };
 
-  // Аудио плеер
+  // РђСѓРґРёРѕ РїР»РµРµСЂ
   const toggleAudio = () => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -277,7 +277,7 @@ function MessageBubble({
     };
   }, [showContext]);
 
-  // Deleted message — auto-hide after 5 seconds
+  // Deleted message вЂ” auto-hide after 5 seconds
   const [deletedVisible, setDeletedVisible] = useState(true);
   useEffect(() => {
     if (message.isDeleted) {
@@ -309,7 +309,7 @@ function MessageBubble({
   const hasFile = media.some((m) => m.type !== 'image' && m.type !== 'voice' && m.type !== 'video' && m.type !== 'audio');
   const hasVideo = media.some((m) => m.type === 'video');
 
-  // Группировка реакций
+  // Р“СЂСѓРїРїРёСЂРѕРІРєР° СЂРµР°РєС†РёР№
   const reactionGroups: Record<string, { count: number; users: string[]; isMine: boolean }> = {};
   (message.reactions || []).forEach((r) => {
     if (!reactionGroups[r.emoji]) {
@@ -365,7 +365,7 @@ function MessageBubble({
       <div
         ref={bubbleRef}
         className={`flex ${isMine ? 'justify-end' : 'justify-start'} group mb-0.5 relative transition-colors duration-200 ${selectionMode ? 'px-4 -mx-4 cursor-pointer hover:bg-white/5 rounded-xl' : ''
-          } ${isSelected ? 'bg-Nimbus-500/10 hover:bg-Nimbus-500/20' : ''}`}
+          } ${isSelected ? 'bg-Nexo-500/10 hover:bg-Nexo-500/20' : ''}`}
         onClick={() => {
           if (selectionMode) onToggleSelect?.(message.id);
         }}
@@ -374,13 +374,13 @@ function MessageBubble({
         {/* Selection Checkbox */}
         {selectionMode && (
           <div className="absolute left-1 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full border border-white/30 flex items-center justify-center transition-colors">
-            {isSelected && <div className="w-5 h-5 rounded-full bg-Nimbus-500 flex items-center justify-center">
+            {isSelected && <div className="w-5 h-5 rounded-full bg-Nexo-500 flex items-center justify-center">
               <Check size={12} className="text-white" />
             </div>}
           </div>
         )}
 
-        {/* Аватар (чужие) */}
+        {/* РђРІР°С‚Р°СЂ (С‡СѓР¶РёРµ) */}
         {!isMine && (
           <div className="w-8 flex-shrink-0 mr-2 self-end">
             {showAvatar ? (
@@ -388,7 +388,7 @@ function MessageBubble({
                 {senderAvatar ? (
                   <img src={senderAvatar} alt="" className="w-8 h-8 rounded-full object-cover" />
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-Nimbus-500 to-purple-600 flex items-center justify-center text-white text-xs font-semibold">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-Nexo-500 to-purple-600 flex items-center justify-center text-white text-xs font-semibold">
                     {senderName[0]?.toUpperCase() || '?'}
                   </div>
                 )}
@@ -398,10 +398,10 @@ function MessageBubble({
         )}
 
         <div className={`max-w-[65%] ${isMine ? 'items-end' : 'items-start'} flex flex-col`}>
-          {/* Имя отправителя (для групп) */}
+          {/* РРјСЏ РѕС‚РїСЂР°РІРёС‚РµР»СЏ (РґР»СЏ РіСЂСѓРїРї) */}
           {!isMine && showAvatar && (
             <button
-              className="text-xs font-medium text-Nimbus-400 ml-3 mb-0.5 hover:underline"
+              className="text-xs font-medium text-Nexo-400 ml-3 mb-0.5 hover:underline"
               onClick={() => onViewProfile?.(message.senderId)}
             >
               {senderName}
@@ -410,15 +410,15 @@ function MessageBubble({
 
           {/* Reply */}
           {message.replyTo && (
-            <div className={`mx-3 mb-1 px-3 py-1.5 rounded-lg border-l-2 border-Nimbus-500 bg-Nimbus-500/10 max-w-full`}>
-              <p className="text-xs font-medium text-Nimbus-400 truncate">
+            <div className={`mx-3 mb-1 px-3 py-1.5 rounded-lg border-l-2 border-Nexo-500 bg-Nexo-500/10 max-w-full`}>
+              <p className="text-xs font-medium text-Nexo-400 truncate">
                 {message.replyTo.sender?.displayName || message.replyTo.sender?.username}
               </p>
               <p className="text-xs text-zinc-400 truncate">{message.quote || message.replyTo.content || t('media')}</p>
             </div>
           )}
 
-          {/* Пузырь */}
+          {/* РџСѓР·С‹СЂСЊ */}
           <div
             onContextMenu={handleContextMenu}
             onDoubleClick={handleReply}
@@ -431,7 +431,7 @@ function MessageBubble({
                   : 'bubble-received text-zinc-100 shadow-sm px-4 py-2.5 hover:shadow-md hover:brightness-105'
             }`}
           >
-            {/* Рендер пересланного сообщения */}
+            {/* Р РµРЅРґРµСЂ РїРµСЂРµСЃР»Р°РЅРЅРѕРіРѕ СЃРѕРѕР±С‰РµРЅРёСЏ */}
             {message.forwardedFrom && (
               <div className="mb-2 text-xs opacity-90 border-l-[3px] border-white/30 pl-2">
                 <span className="font-medium">{t('forwardedFrom')}: </span>
@@ -439,7 +439,7 @@ function MessageBubble({
               </div>
             )}
 
-            {/* Альбом (изображения и видео) */}
+            {/* РђР»СЊР±РѕРј (РёР·РѕР±СЂР°Р¶РµРЅРёСЏ Рё РІРёРґРµРѕ) */}
             {hasImage && (
               <AlbumView
                 media={media.filter((m) => m.type === 'image' || m.type === 'video')}
@@ -449,7 +449,7 @@ function MessageBubble({
               />
             )}
 
-            {/* Видео (отдельные, не в альбоме) */}
+            {/* Р’РёРґРµРѕ (РѕС‚РґРµР»СЊРЅС‹Рµ, РЅРµ РІ Р°Р»СЊР±РѕРјРµ) */}
             {hasVideo && !hasImage &&
               media
                 .filter((m) => m.type === 'video')
@@ -463,7 +463,7 @@ function MessageBubble({
                   />
                 ))}
 
-            {/* Голосовое */}
+            {/* Р“РѕР»РѕСЃРѕРІРѕРµ */}
             {hasVoice && (
               <div className="flex items-center gap-3 min-w-[200px]">
                 <audio
@@ -474,13 +474,13 @@ function MessageBubble({
                 />
                 <button
                   onClick={toggleAudio}
-                  className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${isMine ? 'bg-white/20 hover:bg-white/30' : 'bg-Nimbus-500/20 hover:bg-Nimbus-500/30'
+                  className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${isMine ? 'bg-white/20 hover:bg-white/30' : 'bg-Nexo-500/20 hover:bg-Nexo-500/30'
                     } transition-colors`}
                 >
                   {isPlaying ? (
-                    <Pause size={16} className={isMine ? 'text-white' : 'text-Nimbus-400'} />
+                    <Pause size={16} className={isMine ? 'text-white' : 'text-Nexo-400'} />
                   ) : (
-                    <Play size={16} className={`${isMine ? 'text-white' : 'text-Nimbus-400'} ml-0.5`} />
+                    <Play size={16} className={`${isMine ? 'text-white' : 'text-Nexo-400'} ml-0.5`} />
                   )}
                 </button>
                 <div className="flex-1 min-w-0">
@@ -506,7 +506,7 @@ function MessageBubble({
                         <div
                           key={i}
                           className={`flex-1 rounded-full transition-colors duration-150 ${isActive
-                            ? isMine ? 'bg-white/80' : 'bg-Nimbus-400'
+                            ? isMine ? 'bg-white/80' : 'bg-Nexo-400'
                             : isMine ? 'bg-white/20' : 'bg-white/10'
                             }`}
                           style={{ height: `${barHeight}%` }}
@@ -523,14 +523,14 @@ function MessageBubble({
               </div>
             )}
 
-            {/* Аудио (mp3 файлы) */}
+            {/* РђСѓРґРёРѕ (mp3 С„Р°Р№Р»С‹) */}
             {hasAudio && (() => {
               const audioMedia = media.find((m) => m.type === 'audio');
               return (
                 <div className="min-w-[220px]">
                   {audioMedia?.filename && (
                     <div className="flex items-center gap-2 mb-2">
-                      <Volume2 size={14} className={isMine ? 'text-white/60' : 'text-Nimbus-400'} />
+                      <Volume2 size={14} className={isMine ? 'text-white/60' : 'text-Nexo-400'} />
                       <span className={`text-xs truncate ${isMine ? 'text-white/70' : 'text-zinc-400'}`}>{audioMedia.filename}</span>
                     </div>
                   )}
@@ -543,13 +543,13 @@ function MessageBubble({
                     />
                     <button
                       onClick={toggleAudio}
-                      className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${isMine ? 'bg-white/20 hover:bg-white/30' : 'bg-Nimbus-500/20 hover:bg-Nimbus-500/30'
+                      className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${isMine ? 'bg-white/20 hover:bg-white/30' : 'bg-Nexo-500/20 hover:bg-Nexo-500/30'
                         } transition-colors`}
                     >
                       {isPlaying ? (
-                        <Pause size={16} className={isMine ? 'text-white' : 'text-Nimbus-400'} />
+                        <Pause size={16} className={isMine ? 'text-white' : 'text-Nexo-400'} />
                       ) : (
-                        <Play size={16} className={`${isMine ? 'text-white' : 'text-Nimbus-400'} ml-0.5`} />
+                        <Play size={16} className={`${isMine ? 'text-white' : 'text-Nexo-400'} ml-0.5`} />
                       )}
                     </button>
                     <div className="flex-1 min-w-0">
@@ -563,7 +563,7 @@ function MessageBubble({
                             <div
                               key={i}
                               className={`flex-1 rounded-full transition-colors duration-150 ${isActive
-                                ? isMine ? 'bg-white/80' : 'bg-Nimbus-400'
+                                ? isMine ? 'bg-white/80' : 'bg-Nexo-400'
                                 : isMine ? 'bg-white/20' : 'bg-white/10'
                                 }`}
                               style={{ height: `${barHeight}%` }}
@@ -582,7 +582,7 @@ function MessageBubble({
               );
             })()}
 
-            {/* Файлы */}
+            {/* Р¤Р°Р№Р»С‹ */}
             {hasFile &&
               media
                 .filter((m) => m.type !== 'image' && m.type !== 'voice' && m.type !== 'video')
@@ -596,9 +596,9 @@ function MessageBubble({
                     className={`flex items-center gap-3 p-2 rounded-xl ${isMine ? 'bg-white/10 hover:bg-white/15' : 'bg-surface-tertiary hover:bg-surface-hover'
                       } transition-colors mb-1`}
                   >
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isMine ? 'bg-white/20' : 'bg-Nimbus-500/20'
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isMine ? 'bg-white/20' : 'bg-Nexo-500/20'
                       }`}>
-                      <FileText size={20} className={isMine ? 'text-white' : 'text-Nimbus-400'} />
+                      <FileText size={20} className={isMine ? 'text-white' : 'text-Nexo-400'} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm truncate">{m.filename || t('fileLabel')}</p>
@@ -610,7 +610,7 @@ function MessageBubble({
                   </a>
                 ))}
 
-            {/* Текст */}
+            {/* РўРµРєСЃС‚ */}
             {message.content && (
               <div className="flex items-end gap-2">
                 <p className="text-sm whitespace-pre-wrap break-words flex-1 leading-relaxed">
@@ -632,7 +632,7 @@ function MessageBubble({
               </div>
             )}
 
-            {/* Время для медиа без текста */}
+            {/* Р’СЂРµРјСЏ РґР»СЏ РјРµРґРёР° Р±РµР· С‚РµРєСЃС‚Р° */}
             {!message.content && (hasImage || hasVideo) && (
               <div className={`flex justify-end px-3 py-1 ${hasImage ? '-mt-8 relative z-10' : ''}`}>
                 <span className="text-[10px] text-white/70 bg-black/40 px-2 py-0.5 rounded-full flex items-center gap-1 backdrop-blur-sm">
@@ -649,7 +649,7 @@ function MessageBubble({
             )}
           </div>
 
-          {/* Реакции */}
+          {/* Р РµР°РєС†РёРё */}
           {Object.keys(reactionGroups).length > 0 && (
             <div className="flex flex-wrap gap-1 mt-1 mx-1">
               {Object.entries(reactionGroups).map(([emoji, data]) => (
@@ -657,7 +657,7 @@ function MessageBubble({
                   key={emoji}
                   onClick={() => handleReaction(emoji)}
                   className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-xs transition-colors ${data.isMine
-                    ? 'bg-Nimbus-500/30 border border-Nimbus-500/50'
+                    ? 'bg-Nexo-500/30 border border-Nexo-500/50'
                     : 'bg-surface-tertiary border border-border hover:border-zinc-600'
                     }`}
                   title={data.users.join(', ')}
@@ -670,7 +670,7 @@ function MessageBubble({
           )}
         </div>
 
-        {/* Аватар (свои) */}
+        {/* РђРІР°С‚Р°СЂ (СЃРІРѕРё) */}
         {isMine && (
           <div className="w-8 flex-shrink-0 ml-2 self-end">
             {showAvatar ? (
@@ -678,7 +678,7 @@ function MessageBubble({
                 {senderAvatar ? (
                   <img src={senderAvatar} alt="" className="w-8 h-8 rounded-full object-cover" />
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-Nimbus-500 to-purple-600 flex items-center justify-center text-white text-xs font-semibold">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-Nexo-500 to-purple-600 flex items-center justify-center text-white text-xs font-semibold">
                     {senderName[0]?.toUpperCase() || '?'}
                   </div>
                 )}
@@ -688,7 +688,7 @@ function MessageBubble({
         )}
       </div>
 
-      {/* Контекстное меню */}
+      {/* РљРѕРЅС‚РµРєСЃС‚РЅРѕРµ РјРµРЅСЋ */}
       {typeof document !== 'undefined' && createPortal(
         <AnimatePresence>
           {showContext && (
@@ -736,9 +736,9 @@ function MessageBubble({
                 </>
               ) : (
                 <>
-              {/* Быстрые реакции */}
+              {/* Р‘С‹СЃС‚СЂС‹Рµ СЂРµР°РєС†РёРё */}
               <div className="flex items-center gap-1 px-3 py-2 border-b border-border">
-                {['👍', '❤️', '😂', '😮', '😢', '🔥'].map((emoji) => (
+                {['рџ‘Ќ', 'вќ¤пёЏ', 'рџ‚', 'рџ®', 'рџў', 'рџ”Ґ'].map((emoji) => (
                   <button
                     key={emoji}
                     onClick={() => handleReaction(emoji)}
@@ -822,7 +822,7 @@ function MessageBubble({
   );
 }
 
-// ─── Album Component ──────────────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Album Component в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
 interface AlbumViewProps {
   media: MediaItem[];
@@ -849,15 +849,15 @@ function AlbumView({ media, contentExists, isMine, onImageClick }: AlbumViewProp
     <div className={`${contentExists ? 'mb-2 -mx-3 -mt-2' : ''} ${!contentExists ? 'rounded-[1.25rem]' : ''} bg-black/40 overflow-hidden`}>
       {/* Album header with collapse button */}
       {isAlbum && (
-        <div className={`flex items-center justify-between px-3 py-2 ${isMine ? 'bg-white/5' : 'bg-Nimbus-500/10'}`}>
+        <div className={`flex items-center justify-between px-3 py-2 ${isMine ? 'bg-white/5' : 'bg-Nexo-500/10'}`}>
           <span className="text-xs text-zinc-400">
-            {count} {count === 1 ? 'файл' : count <= 4 ? 'файла' : 'файлов'}
+            {count} {count === 1 ? 'С„Р°Р№Р»' : count <= 4 ? 'С„Р°Р№Р»Р°' : 'С„Р°Р№Р»РѕРІ'}
           </span>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="text-xs text-zinc-400 hover:text-white transition-colors flex items-center gap-1"
           >
-            {isExpanded ? 'Свернуть' : 'Развернуть'}
+            {isExpanded ? 'РЎРІРµСЂРЅСѓС‚СЊ' : 'Р Р°Р·РІРµСЂРЅСѓС‚СЊ'}
             <svg
               className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
               fill="none"
@@ -909,16 +909,16 @@ function AlbumView({ media, contentExists, isMine, onImageClick }: AlbumViewProp
       {!isExpanded && isAlbum && count > 3 && (
         <button
           onClick={() => setIsExpanded(true)}
-          className={`w-full py-2 text-xs ${isMine ? 'bg-white/10 hover:bg-white/20' : 'bg-Nimbus-500/10 hover:bg-Nimbus-500/20'} transition-colors`}
+          className={`w-full py-2 text-xs ${isMine ? 'bg-white/10 hover:bg-white/20' : 'bg-Nexo-500/10 hover:bg-Nexo-500/20'} transition-colors`}
         >
-          Показать все {count} фото
+          РџРѕРєР°Р·Р°С‚СЊ РІСЃРµ {count} С„РѕС‚Рѕ
         </button>
       )}
     </div>
   );
 }
 
-// ─── Video Player Component (Telegram-style) ────────────────────────
+// в”Ђв”Ђв”Ђ Video Player Component (Telegram-style) в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 
 interface VideoPlayerProps {
   src: string;
@@ -1140,7 +1140,7 @@ function VideoPlayer({ src, isMine, filename, onOpenLightbox }: VideoPlayerProps
                     onClick={() => setShowSpeedMenu(!showSpeedMenu)}
                     className="flex items-center justify-between w-full px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
                   >
-                    <span>Скорость</span>
+                    <span>РЎРєРѕСЂРѕСЃС‚СЊ</span>
                     <span className="text-xs text-zinc-400">{playbackRate}x</span>
                   </button>
 
@@ -1159,7 +1159,7 @@ function VideoPlayer({ src, isMine, filename, onOpenLightbox }: VideoPlayerProps
                             onClick={() => setPlaybackSpeed(rate)}
                             className={`flex items-center justify-between w-full px-3 py-2 text-sm rounded-lg transition-colors ${
                               playbackRate === rate
-                                ? 'bg-Nimbus-500/30 text-Nimbus-400'
+                                ? 'bg-Nexo-500/30 text-Nexo-400'
                                 : 'text-white hover:bg-white/10'
                             }`}
                           >
@@ -1178,7 +1178,7 @@ function VideoPlayer({ src, isMine, filename, onOpenLightbox }: VideoPlayerProps
                   className="flex items-center gap-3 w-full px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors border-t border-white/5"
                 >
                   <Download size={16} />
-                  Скачать
+                  РЎРєР°С‡Р°С‚СЊ
                 </button>
               </motion.div>
             )}
@@ -1214,7 +1214,7 @@ function VideoPlayer({ src, isMine, filename, onOpenLightbox }: VideoPlayerProps
               onClick={handleProgressClick}
             >
               <div
-                className={`h-full rounded-full relative ${isMine ? 'bg-white' : 'bg-Nimbus-400'}`}
+                className={`h-full rounded-full relative ${isMine ? 'bg-white' : 'bg-Nexo-400'}`}
                 style={{ width: `${progress}%` }}
               >
                 <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full opacity-0 group-hover/progress:opacity-100 transition-opacity" />

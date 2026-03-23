@@ -124,7 +124,7 @@ function InAppNotificationItem({ notification, onDismiss }: { notification: InAp
                   className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-400 transition-colors"
                 >
                   <PhoneOff size={16} />
-                  РћС‚РєР»РѕРЅРёС‚СЊ
+                  Р С›РЎвЂљР С”Р В»Р С•Р Р…Р С‘РЎвЂљРЎРЉ
                 </button>
               )}
               {notification.onAccept && (
@@ -136,7 +136,7 @@ function InAppNotificationItem({ notification, onDismiss }: { notification: InAp
                   className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 transition-colors"
                 >
                   <Phone size={16} />
-                  РџСЂРёРЅСЏС‚СЊ
+                  Р СџРЎР‚Р С‘Р Р…РЎРЏРЎвЂљРЎРЉ
                 </button>
               )}
             </div>

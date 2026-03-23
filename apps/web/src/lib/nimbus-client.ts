@@ -1,6 +1,6 @@
 /**
  * Nexo Client - Advanced Encryption Library
- * РњРЅРѕРіРѕСѓСЂРѕРІРЅРµРІРѕРµ С€РёС„СЂРѕРІР°РЅРёРµ РґР»СЏ РјР°РєСЃРёРјР°Р»СЊРЅРѕР№ Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё
+ * Р СљР Р…Р С•Р С–Р С•РЎС“РЎР‚Р С•Р Р†Р Р…Р ВµР Р†Р С•Р Вµ РЎв‚¬Р С‘РЎвЂћРЎР‚Р С•Р Р†Р В°Р Р…Р С‘Р Вµ Р Т‘Р В»РЎРЏ Р СР В°Р С”РЎРѓР С‘Р СР В°Р В»РЎРЉР Р…Р С•Р в„– Р В±Р ВµР В·Р С•Р С—Р В°РЎРѓР Р…Р С•РЎРѓРЎвЂљР С‘
  */
 
 export interface NexoConfig {
@@ -22,9 +22,9 @@ export class NexoCrypto {
     private iterations: number = 100000;
 
     /**
-     * Р“РµРЅРµСЂР°С†РёСЏ РєР»СЋС‡Р° С€РёС„СЂРѕРІР°РЅРёСЏ РёР· РїР°СЂРѕР»СЏ
-     * @param password - РџР°СЂРѕР»СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
-     * @param salt - РЎРѕР»СЊ (РѕРїС†РёРѕРЅР°Р»СЊРЅРѕ)
+     * Р вЂњР ВµР Р…Р ВµРЎР‚Р В°РЎвЂ Р С‘РЎРЏ Р С”Р В»РЎР‹РЎвЂЎР В° РЎв‚¬Р С‘РЎвЂћРЎР‚Р С•Р Р†Р В°Р Р…Р С‘РЎРЏ Р С‘Р В· Р С—Р В°РЎР‚Р С•Р В»РЎРЏ
+     * @param password - Р СџР В°РЎР‚Р С•Р В»РЎРЉ Р С—Р С•Р В»РЎРЉР В·Р С•Р Р†Р В°РЎвЂљР ВµР В»РЎРЏ
+     * @param salt - Р РЋР С•Р В»РЎРЉ (Р С•Р С—РЎвЂ Р С‘Р С•Р Р…Р В°Р В»РЎРЉР Р…Р С•)
      */
     async generateKey(password: string, salt?: string): Promise<void> {
         const encoder = new TextEncoder();
@@ -43,7 +43,7 @@ export class NexoCrypto {
                 name: 'PBKDF2',
                 salt: saltBytes,
                 iterations: this.iterations,
-                hash: 'SHA-512' // РЈР»СѓС‡С€РµРЅРѕ СЃ SHA-256
+                hash: 'SHA-512' // Р Р€Р В»РЎС“РЎвЂЎРЎв‚¬Р ВµР Р…Р С• РЎРѓ SHA-256
             },
             keyMaterial,
             { name: 'AES-GCM', length: 256 },
@@ -53,7 +53,7 @@ export class NexoCrypto {
     }
 
     /**
-     * РЁРёС„СЂРѕРІР°РЅРёРµ СЃРѕРѕР±С‰РµРЅРёСЏ СЃ РІС‹Р±РѕСЂРѕРј РјРµС‚РѕРґР°
+     * Р РЃР С‘РЎвЂћРЎР‚Р С•Р Р†Р В°Р Р…Р С‘Р Вµ РЎРѓР С•Р С•Р В±РЎвЂ°Р ВµР Р…Р С‘РЎРЏ РЎРѓ Р Р†РЎвЂ№Р В±Р С•РЎР‚Р С•Р С Р СР ВµРЎвЂљР С•Р Т‘Р В°
      */
     async encryptMessage(content: string, method: 'AES-GCM' | 'AES-CTR' | 'AES-CBC' = 'AES-GCM'): Promise<EncryptedData> {
         if (!this.encryptionKey) {
@@ -73,7 +73,7 @@ export class NexoCrypto {
                 encoder.encode(content)
             );
             
-            // Р”Р»СЏ GCM РёР·РІР»РµРєР°РµРј authTag РёР· РїРѕСЃР»РµРґРЅРёС… 16 Р±Р°Р№С‚
+            // Р вЂќР В»РЎРЏ GCM Р С‘Р В·Р Р†Р В»Р ВµР С”Р В°Р ВµР С authTag Р С‘Р В· Р С—Р С•РЎРѓР В»Р ВµР Т‘Р Р…Р С‘РЎвЂ¦ 16 Р В±Р В°Р в„–РЎвЂљ
             if (method === 'AES-GCM') {
                 const encBytes = new Uint8Array(encrypted);
                 authTag = this.arrayBufferToHex(encBytes.slice(-16));
@@ -93,7 +93,7 @@ export class NexoCrypto {
     }
 
     /**
-     * Р Р°СЃС€РёС„СЂРѕРІРєР° СЃРѕРѕР±С‰РµРЅРёСЏ
+     * Р В Р В°РЎРѓРЎв‚¬Р С‘РЎвЂћРЎР‚Р С•Р Р†Р С”Р В° РЎРѓР С•Р С•Р В±РЎвЂ°Р ВµР Р…Р С‘РЎРЏ
      */
     async decryptMessage(data: EncryptedData): Promise<string> {
         if (!this.encryptionKey) {
@@ -103,7 +103,7 @@ export class NexoCrypto {
         const iv = this.hexToArrayBuffer(data.iv);
         let encrypted = this.hexToArrayBuffer(data.encrypted);
 
-        // Р”Р»СЏ GCM РґРѕР±Р°РІР»СЏРµРј authTag РѕР±СЂР°С‚РЅРѕ
+        // Р вЂќР В»РЎРЏ GCM Р Т‘Р С•Р В±Р В°Р Р†Р В»РЎРЏР ВµР С authTag Р С•Р В±РЎР‚Р В°РЎвЂљР Р…Р С•
         if (data.authTag && data.method === 'AES-GCM') {
             const encBytes = new Uint8Array(encrypted);
             const tagBytes = this.hexToArrayBuffer(data.authTag);
@@ -128,13 +128,13 @@ export class NexoCrypto {
     }
 
     /**
-     * Р”РІСѓС…С„Р°РєС‚РѕСЂРЅРѕРµ С€РёС„СЂРѕРІР°РЅРёРµ (РґР»СЏ РїРѕРІС‹С€РµРЅРЅРѕР№ Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё)
+     * Р вЂќР Р†РЎС“РЎвЂ¦РЎвЂћР В°Р С”РЎвЂљР С•РЎР‚Р Р…Р С•Р Вµ РЎв‚¬Р С‘РЎвЂћРЎР‚Р С•Р Р†Р В°Р Р…Р С‘Р Вµ (Р Т‘Р В»РЎРЏ Р С—Р С•Р Р†РЎвЂ№РЎв‚¬Р ВµР Р…Р Р…Р С•Р в„– Р В±Р ВµР В·Р С•Р С—Р В°РЎРѓР Р…Р С•РЎРѓРЎвЂљР С‘)
      */
     async doubleEncrypt(content: string, secondPassword: string): Promise<EncryptedData> {
-        // РџРµСЂРІС‹Р№ СѓСЂРѕРІРµРЅСЊ
+        // Р СџР ВµРЎР‚Р Р†РЎвЂ№Р в„– РЎС“РЎР‚Р С•Р Р†Р ВµР Р…РЎРЉ
         const first = await this.encryptMessage(content);
         
-        // Р’С‚РѕСЂРѕР№ СѓСЂРѕРІРµРЅСЊ СЃ РґСЂСѓРіРёРј РїР°СЂРѕР»РµРј
+        // Р вЂ™РЎвЂљР С•РЎР‚Р С•Р в„– РЎС“РЎР‚Р С•Р Р†Р ВµР Р…РЎРЉ РЎРѓ Р Т‘РЎР‚РЎС“Р С–Р С‘Р С Р С—Р В°РЎР‚Р С•Р В»Р ВµР С
         await this.generateKey(secondPassword);
         const second = await this.encryptMessage(first.encrypted);
         
@@ -145,7 +145,7 @@ export class NexoCrypto {
     }
 
     /**
-     * РҐСЌС€РёСЂРѕРІР°РЅРёРµ РїР°СЂРѕР»СЏ (РґР»СЏ С…СЂР°РЅРµРЅРёСЏ)
+     * Р ТђРЎРЊРЎв‚¬Р С‘РЎР‚Р С•Р Р†Р В°Р Р…Р С‘Р Вµ Р С—Р В°РЎР‚Р С•Р В»РЎРЏ (Р Т‘Р В»РЎРЏ РЎвЂ¦РЎР‚Р В°Р Р…Р ВµР Р…Р С‘РЎРЏ)
      */
     async hashPassword(password: string): Promise<string> {
         const encoder = new TextEncoder();
@@ -155,7 +155,7 @@ export class NexoCrypto {
     }
 
     /**
-     * Р“РµРЅРµСЂР°С†РёСЏ СЃР»СѓС‡Р°Р№РЅРѕРіРѕ РєР»СЋС‡Р°
+     * Р вЂњР ВµР Р…Р ВµРЎР‚Р В°РЎвЂ Р С‘РЎРЏ РЎРѓР В»РЎС“РЎвЂЎР В°Р в„–Р Р…Р С•Р С–Р С• Р С”Р В»РЎР‹РЎвЂЎР В°
      */
     generateRandomKey(length: number = 32): string {
         const array = new Uint8Array(length);
@@ -164,7 +164,7 @@ export class NexoCrypto {
     }
 
     /**
-     * РџСЂРѕРІРµСЂРєР° С†РµР»РѕСЃС‚РЅРѕСЃС‚Рё РґР°РЅРЅС‹С… (HMAC)
+     * Р СџРЎР‚Р С•Р Р†Р ВµРЎР‚Р С”Р В° РЎвЂ Р ВµР В»Р С•РЎРѓРЎвЂљР Р…Р С•РЎРѓРЎвЂљР С‘ Р Т‘Р В°Р Р…Р Р…РЎвЂ№РЎвЂ¦ (HMAC)
      */
     async generateHMAC(data: string, key: string): Promise<string> {
         const encoder = new TextEncoder();
@@ -188,7 +188,7 @@ export class NexoCrypto {
     }
 
     /**
-     * РџСЂРѕРІРµСЂРєР° HMAC
+     * Р СџРЎР‚Р С•Р Р†Р ВµРЎР‚Р С”Р В° HMAC
      */
     async verifyHMAC(data: string, signature: string, key: string): Promise<boolean> {
         const expected = await this.generateHMAC(data, key);
@@ -211,7 +211,7 @@ export class NexoCrypto {
     }
 
     /**
-     * РЈСЃС‚Р°РЅРѕРІРєР° РїР°СЂР°РјРµС‚СЂРѕРІ С€РёС„СЂРѕРІР°РЅРёСЏ
+     * Р Р€РЎРѓРЎвЂљР В°Р Р…Р С•Р Р†Р С”Р В° Р С—Р В°РЎР‚Р В°Р СР ВµРЎвЂљРЎР‚Р С•Р Р† РЎв‚¬Р С‘РЎвЂћРЎР‚Р С•Р Р†Р В°Р Р…Р С‘РЎРЏ
      */
     setSecurityLevel(level: 'low' | 'medium' | 'high' | 'maximum'): void {
         switch (level) {
@@ -236,7 +236,7 @@ export class NexoCrypto {
 }
 
 /**
- * Nexo Client СЃ СѓР»СѓС‡С€РµРЅРЅС‹Рј С€РёС„СЂРѕРІР°РЅРёРµРј
+ * Nexo Client РЎРѓ РЎС“Р В»РЎС“РЎвЂЎРЎв‚¬Р ВµР Р…Р Р…РЎвЂ№Р С РЎв‚¬Р С‘РЎвЂћРЎР‚Р С•Р Р†Р В°Р Р…Р С‘Р ВµР С
  */
 export class NexoClient {
     private config: NexoConfig;
@@ -248,20 +248,20 @@ export class NexoClient {
     }
 
     /**
-     * РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ С€РёС„СЂРѕРІР°РЅРёСЏ
+     * Р ВР Р…Р С‘РЎвЂ Р С‘Р В°Р В»Р С‘Р В·Р В°РЎвЂ Р С‘РЎРЏ РЎв‚¬Р С‘РЎвЂћРЎР‚Р С•Р Р†Р В°Р Р…Р С‘РЎРЏ
      */
     async initEncryption(password: string): Promise<void> {
         await this.crypto.generateKey(password);
     }
 
     /**
-     * РћС‚РїСЂР°РІРєР° Р·Р°С€РёС„СЂРѕРІР°РЅРЅРѕРіРѕ СЃРѕРѕР±С‰РµРЅРёСЏ
+     * Р С›РЎвЂљР С—РЎР‚Р В°Р Р†Р С”Р В° Р В·Р В°РЎв‚¬Р С‘РЎвЂћРЎР‚Р С•Р Р†Р В°Р Р…Р Р…Р С•Р С–Р С• РЎРѓР С•Р С•Р В±РЎвЂ°Р ВµР Р…Р С‘РЎРЏ
      */
     async sendMessage(chatId: number, content: string, password?: string): Promise<any> {
         let encrypted: EncryptedData;
         
         if (password) {
-            // Р”РІСѓС…С„Р°РєС‚РѕСЂРЅРѕРµ С€РёС„СЂРѕРІР°РЅРёРµ
+            // Р вЂќР Р†РЎС“РЎвЂ¦РЎвЂћР В°Р С”РЎвЂљР С•РЎР‚Р Р…Р С•Р Вµ РЎв‚¬Р С‘РЎвЂћРЎР‚Р С•Р Р†Р В°Р Р…Р С‘Р Вµ
             encrypted = await this.crypto.doubleEncrypt(content, password);
         } else {
             encrypted = await this.crypto.encryptMessage(content);
@@ -283,14 +283,14 @@ export class NexoClient {
     }
 
     /**
-     * РџРѕР»СѓС‡РµРЅРёРµ Рё СЂР°СЃС€РёС„СЂРѕРІРєР° СЃРѕРѕР±С‰РµРЅРёСЏ
+     * Р СџР С•Р В»РЎС“РЎвЂЎР ВµР Р…Р С‘Р Вµ Р С‘ РЎР‚Р В°РЎРѓРЎв‚¬Р С‘РЎвЂћРЎР‚Р С•Р Р†Р С”Р В° РЎРѓР С•Р С•Р В±РЎвЂ°Р ВµР Р…Р С‘РЎРЏ
      */
     async receiveMessage(encryptedData: EncryptedData): Promise<string> {
         return await this.crypto.decryptMessage(encryptedData);
     }
 
     /**
-     * Р—Р°РіСЂСѓР·РєР° С„Р°Р№Р»Р° СЃ С€РёС„СЂРѕРІР°РЅРёРµРј
+     * Р вЂ”Р В°Р С–РЎР‚РЎС“Р В·Р С”Р В° РЎвЂћР В°Р в„–Р В»Р В° РЎРѓ РЎв‚¬Р С‘РЎвЂћРЎР‚Р С•Р Р†Р В°Р Р…Р С‘Р ВµР С
      */
     async uploadFile(file: File, encrypt: boolean = true): Promise<{ fileId: string; fileName: string; size: number }> {
         let fileToUpload: File | Blob = file;
@@ -317,7 +317,7 @@ export class NexoClient {
     }
 
     /**
-     * РЎРєР°С‡РёРІР°РЅРёРµ Рё СЂР°СЃС€РёС„СЂРѕРІРєР° С„Р°Р№Р»Р°
+     * Р РЋР С”Р В°РЎвЂЎР С‘Р Р†Р В°Р Р…Р С‘Р Вµ Р С‘ РЎР‚Р В°РЎРѓРЎв‚¬Р С‘РЎвЂћРЎР‚Р С•Р Р†Р С”Р В° РЎвЂћР В°Р в„–Р В»Р В°
      */
     async downloadFile(fileId: string, fileName: string, encrypted: boolean = false): Promise<Blob> {
         const response = await fetch(`${this.config.storageUrl || this.config.serverUrl}/api/storage/download/${fileId}`);
@@ -338,7 +338,7 @@ export class NexoClient {
     }
 
     /**
-     * РџСЂРѕРІРµСЂРєР° СЃРѕРµРґРёРЅРµРЅРёСЏ
+     * Р СџРЎР‚Р С•Р Р†Р ВµРЎР‚Р С”Р В° РЎРѓР С•Р ВµР Т‘Р С‘Р Р…Р ВµР Р…Р С‘РЎРЏ
      */
     async checkConnection(): Promise<{ status: string; server: string; latency: number }> {
         const start = Date.now();
@@ -356,7 +356,7 @@ export class NexoClient {
     }
 
     /**
-     * Р“РµРЅРµСЂР°С†РёСЏ РѕС‚С‡С‘С‚Р° Рѕ Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё
+     * Р вЂњР ВµР Р…Р ВµРЎР‚Р В°РЎвЂ Р С‘РЎРЏ Р С•РЎвЂљРЎвЂЎРЎвЂРЎвЂљР В° Р С• Р В±Р ВµР В·Р С•Р С—Р В°РЎРѓР Р…Р С•РЎРѓРЎвЂљР С‘
      */
     generateSecurityReport(): {
         keySet: boolean;
@@ -367,10 +367,10 @@ export class NexoClient {
         const iterations = this.crypto['iterations'];
         let crackTime = '';
         
-        if (iterations >= 500000) crackTime = '> 1000 Р»РµС‚';
-        else if (iterations >= 100000) crackTime = '~ 100 Р»РµС‚';
-        else if (iterations >= 50000) crackTime = '~ 10 Р»РµС‚';
-        else crackTime = '< 1 РіРѕРґР°';
+        if (iterations >= 500000) crackTime = '> 1000 Р В»Р ВµРЎвЂљ';
+        else if (iterations >= 100000) crackTime = '~ 100 Р В»Р ВµРЎвЂљ';
+        else if (iterations >= 50000) crackTime = '~ 10 Р В»Р ВµРЎвЂљ';
+        else crackTime = '< 1 Р С–Р С•Р Т‘Р В°';
 
         return {
             keySet: this.crypto['encryptionKey'] !== null,
@@ -382,17 +382,17 @@ export class NexoClient {
 }
 
 /**
- * РЎРѕР·РґР°РЅРёРµ РєР»РёРµРЅС‚Р°
+ * Р РЋР С•Р В·Р Т‘Р В°Р Р…Р С‘Р Вµ Р С”Р В»Р С‘Р ВµР Р…РЎвЂљР В°
  */
 export function createNexoClient(serverUrl: string, storageUrl?: string): NexoClient {
     return new NexoClient({ serverUrl, storageUrl });
 }
 
 /**
- * Глобальная конфигурация
+ * Р“Р»РѕР±Р°Р»СЊРЅР°СЏ РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ
  */
 export const Nexo_CONFIG = {
-    SERVER_URL: import.meta.env.VITE_API_URL || 'https://nimbus-msg.onrender.com',
+    SERVER_URL: import.meta.env.VITE_API_URL || 'https://Nexo-msg.onrender.com',
     STORAGE_URL: import.meta.env.VITE_STORAGE_URL || undefined,
     PROTOCOL_VERSION: '3.0.0',
     AUTHOR: 'Dark Heavens',

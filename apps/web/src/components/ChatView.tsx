@@ -83,7 +83,7 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
   const chatMessages = activeChat ? messages[activeChat] || [] : [];
   const pinnedMsg = activeChat ? pinnedMessages[activeChat] : null;
 
-  // Количество непрочитанных сообщений (для бейджика)
+  // РљРѕР»РёС‡РµСЃС‚РІРѕ РЅРµРїСЂРѕС‡РёС‚Р°РЅРЅС‹С… СЃРѕРѕР±С‰РµРЅРёР№ (РґР»СЏ Р±РµР№РґР¶РёРєР°)
   const unreadCount = chatMessages.filter(
     (m) => m.senderId !== user?.id && !m.readBy?.some((r) => r.userId === user?.id)
   ).length;
@@ -161,12 +161,12 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
     };
   }, [showDeleteMenu]);
 
-  // Прокрутка вниз
+  // РџСЂРѕРєСЂСѓС‚РєР° РІРЅРёР·
   const scrollToBottom = useCallback((smooth = true) => {
     messagesEndRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'instant', block: 'end' });
   }, []);
 
-  // Первичная прокрутка при открытии чата или после загрузки (layout effect — до отрисовки)
+  // РџРµСЂРІРёС‡РЅР°СЏ РїСЂРѕРєСЂСѓС‚РєР° РїСЂРё РѕС‚РєСЂС‹С‚РёРё С‡Р°С‚Р° РёР»Рё РїРѕСЃР»Рµ Р·Р°РіСЂСѓР·РєРё (layout effect вЂ” РґРѕ РѕС‚СЂРёСЃРѕРІРєРё)
   useLayoutEffect(() => {
     if (!isLoadingMessages && messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
@@ -181,7 +181,7 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
       if (lastMsg.senderId === user?.id) {
         setTimeout(() => scrollToBottom(true), 50);
       } else {
-        // Если пользователь внизу — прокрутить
+        // Р•СЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РІРЅРёР·Сѓ вЂ” РїСЂРѕРєСЂСѓС‚РёС‚СЊ
         const container = messagesContainerRef.current;
         if (container) {
           const isNearBottom =
@@ -192,7 +192,7 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
     }
   }, [chatMessages.length, user?.id, scrollToBottom]);
 
-  // Read receipts — debounced via ref to avoid excessive emits
+  // Read receipts вЂ” debounced via ref to avoid excessive emits
   const sentReadIdsRef = useRef<Set<string>>(new Set());
   useEffect(() => {
     if (!activeChat || !user?.id) return;
@@ -236,7 +236,7 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
     chatViewRef.current.style.setProperty('--mouse-y', `${e.clientY - top}px`);
   };
 
-  // Поиск сообщений
+  // РџРѕРёСЃРє СЃРѕРѕР±С‰РµРЅРёР№
   useEffect(() => {
     if (!searchText.trim() || !activeChat) {
       setSearchResults([]);
@@ -264,7 +264,7 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
       <div className="flex-1 flex items-center justify-center bg-surface-secondary/50 rounded-[2rem] overflow-hidden border border-white/5 shadow-2xl relative z-0 backdrop-blur-3xl group">
         {/* Slowly pulsing purple background as requested */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden transition-opacity duration-[10000ms]">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[800px] max-h-[800px] bg-Nimbus-600/10 rounded-full blur-[120px] animate-[pulse_8s_ease-in-out_infinite]" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[800px] max-h-[800px] bg-Nexo-600/10 rounded-full blur-[120px] animate-[pulse_8s_ease-in-out_infinite]" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40vw] h-[40vw] max-w-[500px] max-h-[500px] bg-purple-600/15 rounded-full blur-[100px] animate-[pulse_12s_ease-in-out_infinite_reverse]" />
         </div>
 
@@ -275,18 +275,18 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="w-28 h-28 mx-auto mb-8 rounded-[2rem] bg-gradient-to-br from-Nimbus-500/20 to-purple-600/20 flex items-center justify-center shadow-[0_0_60px_-15px_var(--color-accent)] ring-1 ring-white/10 backdrop-blur-2xl relative"
+            className="w-28 h-28 mx-auto mb-8 rounded-[2rem] bg-gradient-to-br from-Nexo-500/20 to-purple-600/20 flex items-center justify-center shadow-[0_0_60px_-15px_var(--color-accent)] ring-1 ring-white/10 backdrop-blur-2xl relative"
           >
             <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-white/[0.05] to-transparent pointer-events-none" />
-            <img src="/logo.png" alt="Nimbus" className="w-16 h-16 rounded-2xl object-cover shadow-2xl transform hover:scale-105 transition-transform" />
+            <img src="/logo.png" alt="Nexo" className="w-16 h-16 rounded-2xl object-cover shadow-2xl transform hover:scale-105 transition-transform" />
           </motion.div>
           <motion.h2
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-Nimbus-400 via-fuchsia-400 to-indigo-400 mb-4 drop-shadow-lg tracking-tight"
+            className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-Nexo-400 via-fuchsia-400 to-indigo-400 mb-4 drop-shadow-lg tracking-tight"
           >
-            Nimbus Messenger
+            Nexo Messenger
           </motion.h2>
           <motion.p
             initial={{ y: 20, opacity: 0 }}
@@ -379,17 +379,17 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
       onMouseMove={handleMouseMove}
       className={`flex-1 flex flex-col h-full rounded-3xl overflow-hidden shadow-[0_0_120px_-20px_rgba(0,0,0,0.5)] border border-border/50 relative z-0 chat-theme-${chatTheme} transition-colors duration-500`}
     >
-      {/* Шапка чата */}
+      {/* РЁР°РїРєР° С‡Р°С‚Р° */}
       {selectionMode ? (
         <div className="h-[76px] flex items-center justify-between px-6 border-b border-border/40 bg-surface-secondary/80 backdrop-blur-xl z-20 flex-shrink-0 animate-in slide-in-from-top-2">
           <div className="flex items-center gap-4 text-white">
             <button onClick={() => { setSelectionMode(false); setSelectedMessages(new Set()); }} className="p-2 -ml-2 rounded-full hover:bg-white/10 transition">
               <X size={20} className="text-zinc-300" />
             </button>
-            <span className="font-medium text-[15px]">{selectedMessages.size} {t('selected') || 'выбрано'}</span>
+            <span className="font-medium text-[15px]">{selectedMessages.size} {t('selected') || 'РІС‹Р±СЂР°РЅРѕ'}</span>
           </div>
           <div className="flex items-center gap-3">
-            {/* Кнопка удаления с выпадающим меню */}
+            {/* РљРЅРѕРїРєР° СѓРґР°Р»РµРЅРёСЏ СЃ РІС‹РїР°РґР°СЋС‰РёРј РјРµРЅСЋ */}
             <div className="relative" ref={deleteMenuRef}>
               <button
                 disabled={selectedMessages.size === 0}
@@ -495,7 +495,7 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
           </button>
 
           <div className="flex items-center gap-1.5 ml-4">
-            {/* Поиск */}
+            {/* РџРѕРёСЃРє */}
             <AnimatePresence>
               {showSearch && (
                 <motion.div
@@ -533,7 +533,7 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
 
             {!isFavorites && (
               <>
-                {/* Кнопки звонков только для personal и group */}
+                {/* РљРЅРѕРїРєРё Р·РІРѕРЅРєРѕРІ С‚РѕР»СЊРєРѕ РґР»СЏ personal Рё group */}
                 {(chat.type === 'personal' || chat.type === 'group') && (
                   <>
                     <button
@@ -561,7 +561,7 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
                   </>
                 )}
 
-                {/* Кнопка трансляции только для каналов */}
+                {/* РљРЅРѕРїРєР° С‚СЂР°РЅСЃР»СЏС†РёРё С‚РѕР»СЊРєРѕ РґР»СЏ РєР°РЅР°Р»РѕРІ */}
                 {chat.type === 'channel' && (
                   <button
                     onClick={() => {
@@ -571,7 +571,7 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
                       }
                     }}
                     className="p-2 rounded-lg hover:bg-surface-hover transition-colors text-zinc-400 hover:text-white" 
-                    title="Начать трансляцию"
+                    title="РќР°С‡Р°С‚СЊ С‚СЂР°РЅСЃР»СЏС†РёСЋ"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M6 12h.01M18 12h.01M12 12h.01M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
@@ -583,7 +583,7 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
               </>
             )}
 
-            {/* Меню */}
+            {/* РњРµРЅСЋ */}
             <div className="relative" ref={topMenuRef}>
               <button
                 onClick={() => setShowTopMenu(!showTopMenu)}
@@ -696,7 +696,7 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
         </div>
       )}
 
-      {/* Результаты поиска */}
+      {/* Р РµР·СѓР»СЊС‚Р°С‚С‹ РїРѕРёСЃРєР° */}
       <AnimatePresence>
         {showSearch && searchResults.length > 0 && (
           <motion.div
@@ -714,8 +714,8 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
                   const el = document.getElementById(`msg-${msg.id}`);
                   if (el) {
                     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    el.classList.add('bg-Nimbus-500/20');
-                    setTimeout(() => el.classList.remove('bg-Nimbus-500/20'), 2000);
+                    el.classList.add('bg-Nexo-500/20');
+                    setTimeout(() => el.classList.remove('bg-Nexo-500/20'), 2000);
                   }
                   setShowSearch(false);
                   setSearchText('');
@@ -723,7 +723,7 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
                 }}
               >
                 <div className="flex items-center gap-2 mb-0.5">
-                  <span className="text-xs font-medium text-Nimbus-400">
+                  <span className="text-xs font-medium text-Nexo-400">
                     {msg.sender?.displayName || msg.sender?.username}
                   </span>
                   <span className="text-xs text-zinc-600">
@@ -737,7 +737,7 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
         )}
       </AnimatePresence>
 
-      {/* Закреплённое сообщение */}
+      {/* Р—Р°РєСЂРµРїР»С‘РЅРЅРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ */}
       {/* Active group call banner */}
       {chat?.type === 'group' && activeGroupCallParticipants.length > 0 && (
         <button
@@ -761,15 +761,15 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
             const el = document.getElementById(`msg-${pinnedMsg.id}`);
             if (el) {
               el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              el.classList.add('bg-Nimbus-500/20');
-              setTimeout(() => el.classList.remove('bg-Nimbus-500/20'), 2000);
+              el.classList.add('bg-Nexo-500/20');
+              setTimeout(() => el.classList.remove('bg-Nexo-500/20'), 2000);
             }
           }}
           className="flex items-center gap-3 px-4 py-2 border-b border-border bg-surface-secondary/60 hover:bg-surface-hover transition-colors text-left w-full flex-shrink-0"
         >
-          <Pin size={16} className="text-Nimbus-400 flex-shrink-0 rotate-45" />
+          <Pin size={16} className="text-Nexo-400 flex-shrink-0 rotate-45" />
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-medium text-Nimbus-400">{t('pinnedMessage')}</p>
+            <p className="text-xs font-medium text-Nexo-400">{t('pinnedMessage')}</p>
             <p className="text-sm text-zinc-300 truncate">
               {pinnedMsg.content || (pinnedMsg.media?.length > 0 ? t('media') : '...')}
             </p>
@@ -788,7 +788,7 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
         </button>
       )}
 
-      {/* Сообщения */}
+      {/* РЎРѕРѕР±С‰РµРЅРёСЏ */}
       <div
         ref={messagesContainerRef}
         onScroll={handleScroll}
@@ -796,7 +796,7 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
       >
         {isLoadingMessages ? (
           <div className="flex justify-center py-8">
-            <div className="w-6 h-6 border-2 border-Nimbus-500 border-t-transparent rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-Nexo-500 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : chatMessages.length === 0 ? (
           <div className="flex items-center justify-center h-full">
@@ -841,7 +841,7 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
         )}
       </div>
 
-      {/* Кнопка прокрутки вниз */}
+      {/* РљРЅРѕРїРєР° РїСЂРѕРєСЂСѓС‚РєРё РІРЅРёР· */}
       <AnimatePresence>
         {showScrollDown && (
           <motion.button
@@ -865,17 +865,17 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
         )}
       </AnimatePresence>
 
-      {/* Typing индикатор */}
+      {/* Typing РёРЅРґРёРєР°С‚РѕСЂ */}
       {typingInChat.length > 0 && (
         <div className="px-4 pb-1">
           <TypingIndicator />
         </div>
       )}
 
-      {/* Ввод сообщения */}
+      {/* Р’РІРѕРґ СЃРѕРѕР±С‰РµРЅРёСЏ */}
       <MessageInput chatId={activeChat} />
 
-      {/* Профиль пользователя */}
+      {/* РџСЂРѕС„РёР»СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ */}
       <AnimatePresence>
         {profileUserId && (
           <UserProfile
@@ -894,7 +894,7 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
         )}
       </AnimatePresence>
 
-      {/* Настройки группы */}
+      {/* РќР°СЃС‚СЂРѕР№РєРё РіСЂСѓРїРїС‹ */}
       <AnimatePresence>
         {showGroupSettings && chat && chat.type === 'group' && (
           <GroupSettings

@@ -3,17 +3,17 @@
 @theme {
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 
-  --color-Nimbus-50: #eef2ff;
-  --color-Nimbus-100: #e0e7ff;
-  --color-Nimbus-200: #c7d2fe;
-  --color-Nimbus-300: #a5b4fc;
-  --color-Nimbus-400: #818cf8;
-  --color-Nimbus-500: #6366f1;
-  --color-Nimbus-600: #4f46e5;
-  --color-Nimbus-700: #4338ca;
-  --color-Nimbus-800: #3730a3;
-  --color-Nimbus-900: #312e81;
-  --color-Nimbus-950: #1e1b4b;
+  --color-Nexo-50: #eef2ff;
+  --color-Nexo-100: #e0e7ff;
+  --color-Nexo-200: #c7d2fe;
+  --color-Nexo-300: #a5b4fc;
+  --color-Nexo-400: #818cf8;
+  --color-Nexo-500: #6366f1;
+  --color-Nexo-600: #4f46e5;
+  --color-Nexo-700: #4338ca;
+  --color-Nexo-800: #3730a3;
+  --color-Nexo-900: #312e81;
+  --color-Nexo-950: #1e1b4b;
 
   --color-surface: #09090b;
   --color-surface-secondary: #111113;
@@ -27,7 +27,7 @@
   --color-accent-light: rgba(99, 102, 241, 0.15);
 }
 
-/* Запрет выделения для логотипов и текста бренда */
+/* Р—Р°РїСЂРµС‚ РІС‹РґРµР»РµРЅРёСЏ РґР»СЏ Р»РѕРіРѕС‚РёРїРѕРІ Рё С‚РµРєСЃС‚Р° Р±СЂРµРЅРґР° */
 .no-select {
   user-select: none;
   -webkit-user-select: none;
@@ -315,7 +315,7 @@ em-emoji-picker {
   border: none !important;
 }
 
-/* ─── Responsive Design ─────────────────────────────────────────────── */
+/* в”Ђв”Ђв”Ђ Responsive Design в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
 
 /* Mobile phones (portrait) - up to 480px */
 @media (max-width: 480px) {

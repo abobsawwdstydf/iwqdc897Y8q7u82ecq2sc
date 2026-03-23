@@ -15,7 +15,7 @@ export const useThemeStore = create<ThemeState>()(
             setChatTheme: (theme) => set({ chatTheme: theme }),
         }),
         {
-            name: 'Nimbus-theme-storage',
+            name: 'Nexo-theme-storage',
         }
     )
 );
