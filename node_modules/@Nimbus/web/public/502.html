@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>502 - Сервер недоступен | Nimbus</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+        .container {
+            text-align: center;
+            padding: 40px;
+        }
+        h1 {
+            font-size: 120px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+        p {
+            color: #a0aec0;
+            font-size: 18px;
+            margin-bottom: 32px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        .status {
+            margin-top: 32px;
+            padding: 16px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">📡</div>
+        <h1>502</h1>
+        <h2>Сервер недоступен</h2>
+        <p>Сервер временно недоступен. Мы уже работаем над этим</p>
+        <a href="/" class="btn">Попробовать снова</a>
+        <div class="status">
+            <p style="margin:0; font-size: 14px;">Статус: <span id="status">Проверка...</span></p>
+        </div>
+    </div>
+    <script>
+        fetch('/api/health')
+            .then(r => r.json())
+            .then(d => document.getElementById('status').textContent = 'Сервер работает!')
+            .catch(() => document.getElementById('status').textContent = 'Сервер недоступен');
+    </script>
+</body>
+</html>

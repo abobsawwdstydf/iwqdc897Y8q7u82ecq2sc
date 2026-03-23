@@ -146,7 +146,7 @@ const ALLOWED_VIDEO_EXTENSIONS = new Set(['.mp4', '.webm', '.mov', '.avi', '.mkv
 /** Allowed document extensions for explicit document file support. */
 const ALLOWED_DOCUMENT_EXTENSIONS = new Set(['.pdf', '.doc', '.docx', '.txt', '.rtf', '.odt', '.xls', '.xlsx', '.ppt', '.pptx', '.zip', '.rar', '.7z', '.tar', '.gz', '.html', '.htm', '.xml', '.xhtml', '.csv', '.json', '.md', '.epub', '.mobi', '.azw', '.azw3', '.djvu', '.xps', '.oxps', '.fb2', '.fb2.zip']);
 
-/** Multer middleware for general file uploads (max 20GB). */
+/** Multer middleware for general file uploads (max 50GB for server, 20GB for users). */
 export const uploadFile = multer({
   storage: multer.diskStorage({
     destination: (_req: Request, _file: MulterFile, cb: (error: Error | null, destination: string) => void) => cb(null, uploadsRoot),
@@ -155,7 +155,7 @@ export const uploadFile = multer({
       cb(null, `${uuidv4()}${ext}`);
     },
   }),
-  limits: { fileSize: 20 * 1024 * 1024 * 1024 },
+  limits: { fileSize: 50 * 1024 * 1024 * 1024 }, // 50GB for server
   fileFilter: (_req: Request, file: MulterFile, cb: (error: Error | null, acceptFile?: boolean) => void) => {
     const ext = path.extname(file.originalname).toLowerCase();
 

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель | Nimbus</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .login-box {
+            background: rgba(255,255,255,0.05);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+        }
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover { transform: translateY(-2px); }
+        .admin-panel { display: none; padding: 20px; }
+        .admin-panel.active { display: block; }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .stat-card h3 {
+            color: #a0aec0;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .stat-card .value {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .section {
+            background: rgba(255,255,255,0.05);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .user-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .btn-ban { background: #e53e3e; color: white; }
+        .btn-unban { background: #38a169; color: white; }
+        .btn-delete { background: #e53e3e; color: white; }
+        .btn-warning { background: #dd6b20; color: white; }
+        .file-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .file-item {
+            padding: 15px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .file-info {
+            flex: 1;
+        }
+        .file-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .file-meta {
+            font-size: 13px;
+            color: #a0aec0;
+        }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: rgba(56, 161, 105, 0.9);
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .toast.error {
+            background: rgba(229, 62, 62, 0.9);
+        }
+    </style>
+</head>
+<body>
+    <!-- Login -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-box">
+            <h1>🔐 Админ-панель</h1>
+            <input type="password" id="passwordInput" placeholder="Введите пароль администратора" />
+            <button onclick="login()">Войти</button>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="header">
+            <h1>🛡️ Админ-панель Nimbus</h1>
+            <button onclick="logout()" class="btn" style="background: rgba(255,255,255,0.1);">Выйти</button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-card">
+                <h3>Пользователей</h3>
+                <div class="value" id="userCount">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Сообщений</h3>
+                <div class="value" id="messageCount">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Файлов в хранилище</h3>
+                <div class="value" id="fileCount">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Файлов удалено</h3>
+                <div class="value" id="deletedCount">0</div>
+            </div>
+        </div>
+
+        <!-- Users Management -->
+        <div class="section">
+            <h2>👥 Управление пользователями</h2>
+            <div class="user-list" id="userList">
+                <p style="text-align: center; color: #a0aec0;">Загрузка...</p>
+            </div>
+        </div>
+
+        <!-- Files Management -->
+        <div class="section">
+            <h2>📦 Файловое хранилище</h2>
+            <div class="file-list" id="fileList">
+                <p style="text-align: center; color: #a0aec0;">Загрузка...</p>
+            </div>
+        </div>
+
+        <!-- System -->
+        <div class="section">
+            <h2>⚙️ Система</h2>
+            <div style="display: grid; gap: 15px;">
+                <button class="btn btn-warning" onclick="clearCache()">Очистить кэш</button>
+                <button class="btn btn-warning" onclick="restartServer()">Перезапустить сервер</button>
+                <button class="btn btn-delete" onclick="wipeAllData()" style="background: #c53030;">⚠️ Удалить ВСЕ данные</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const ADMIN_PASSWORD = 'qwertyuiopasd';
+        const API_URL = window.location.origin;
+
+        // Check auth
+        if (localStorage.getItem('adminAuth') === 'true') {
+            showPanel();
+        }
+
+        function login() {
+            const password = document.getElementById('passwordInput').value;
+            if (password === ADMIN_PASSWORD) {
+                localStorage.setItem('adminAuth', 'true');
+                showPanel();
+                showToast('✓ Вход выполнен');
+            } else {
+                showToast('✗ Неверный пароль', true);
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('adminAuth');
+            location.reload();
+        }
+
+        function showPanel() {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('adminPanel').classList.add('active');
+            loadStats();
+            loadUsers();
+            loadFiles();
+        }
+
+        async function loadStats() {
+            try {
+                const [users, messages, files] = await Promise.all([
+                    fetch(`${API_URL}/api/admin/users`).then(r => r.json()),
+                    fetch(`${API_URL}/api/admin/messages`).then(r => r.json()),
+                    fetch(`${API_URL}/api/storage/health`).then(r => r.json())
+                ]);
+                document.getElementById('userCount').textContent = users.length || 0;
+                document.getElementById('messageCount').textContent = messages.count || 0;
+                document.getElementById('fileCount').textContent = files.totalResources || 0;
+                document.getElementById('deletedCount').textContent = '0';
+            } catch (e) {
+                console.error('Stats error:', e);
+            }
+        }
+
+        async function loadUsers() {
+            try {
+                const users = await fetch(`${API_URL}/api/admin/users`).then(r => r.json());
+                const container = document.getElementById('userList');
+                if (users.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: #a0aec0;">Нет пользователей</p>';
+                    return;
+                }
+                container.innerHTML = users.map(u => `
+                    <div class="user-item">
+                        <div class="user-info">
+                            <div class="avatar">${(u.displayName || u.username || '?')[0].toUpperCase()}</div>
+                            <div>
+                                <div style="font-weight: 600;">${u.displayName || u.username || 'Unknown'}</div>
+                                <div style="font-size: 13px; color: #a0aec0;">@${u.username || 'no-username'}</div>
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <button class="btn ${u.banned ? 'btn-unban' : 'btn-ban'}" onclick="toggleBan(${u.id}, ${!u.banned})">
+                                ${u.banned ? 'Разбанить' : 'Забанить'}
+                            </button>
+                            <button class="btn btn-delete" onclick="deleteUser(${u.id})">Удалить</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                document.getElementById('userList').innerHTML = '<p style="text-align: center; color: #e53e3e;">Ошибка загрузки</p>';
+            }
+        }
+
+        async function loadFiles() {
+            try {
+                const files = await fetch(`${API_URL}/api/admin/files`).then(r => r.json());
+                const container = document.getElementById('fileList');
+                if (files.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: #a0aec0;">Нет файлов</p>';
+                    return;
+                }
+                container.innerHTML = files.map(f => `
+                    <div class="file-item">
+                        <div class="file-info">
+                            <div class="file-name">${f.name}</div>
+                            <div class="file-meta">${(f.size / 1024 / 1024).toFixed(2)} MB • ${f.chunks} чанков</div>
+                        </div>
+                        <div class="actions">
+                            <button class="btn" onclick="downloadFile('${f.id}')">Скачать</button>
+                            <button class="btn btn-delete" onclick="deleteFile('${f.id}')">Удалить</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                document.getElementById('fileList').innerHTML = '<p style="text-align: center; color: #e53e3e;">Ошибка загрузки</p>';
+            }
+        }
+
+        async function toggleBan(userId, ban) {
+            try {
+                await fetch(`${API_URL}/api/admin/users/${userId}/ban`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ banned: ban })
+                });
+                showToast(`✓ Пользователь ${ban ? 'забанен' : 'разбанен'}`);
+                loadUsers();
+            } catch (e) {
+                showToast('✗ Ошибка', true);
+            }
+        }
+
+        async function deleteUser(userId) {
+            if (!confirm('Удалить пользователя навсегда?')) return;
+            try {
+                await fetch(`${API_URL}/api/admin/users/${userId}`, { method: 'DELETE' });
+                showToast('✓ Пользователь удалён');
+                loadUsers();
+            } catch (e) {
+                showToast('✗ Ошибка', true);
+            }
+        }
+
+        async function deleteFile(fileId) {
+            if (!confirm('Удалить файл из хранилища?')) return;
+            try {
+                await fetch(`${API_URL}/api/storage/delete/${fileId}`, { method: 'DELETE' });
+                showToast('✓ Файл удалён');
+                loadFiles();
+            } catch (e) {
+                showToast('✗ Ошибка', true);
+            }
+        }
+
+        async function downloadFile(fileId) {
+            window.open(`${API_URL}/api/storage/download/${fileId}`, '_blank');
+        }
+
+        function clearCache() {
+            localStorage.clear();
+            showToast('✓ Кэш очищен');
+        }
+
+        function restartServer() {
+            if (!confirm('Перезапустить сервер?')) return;
+            fetch(`${API_URL}/api/admin/restart`, { method: 'POST' });
+            showToast('✓ Сервер перезапускается...');
+        }
+
+        function wipeAllData() {
+            if (!confirm('ВЫ УВЕРЕНЫ? ВСЕ ДАННЫЕ БУДУТ УДАЛЕНЫ НАВСЕГДА!')) return;
+            if (!confirm('ПОСЛЕДНЕЕ ПРЕДУПРЕЖДЕНИЕ!')) return;
+            fetch(`${API_URL}/api/admin/wipe-all`, { method: 'POST' });
+            showToast('✓ Данные удаляются...', true);
+        }
+
+        function showToast(message, error = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast' + (error ? ' error' : '');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Enter key login
+        document.getElementById('passwordInput')?.addEventListener('keypress', e => {
+            if (e.key === 'Enter') login();
+        });
+    </script>
+</body>
+</html>

@@ -15,6 +15,7 @@ import chatRoutes from './routes/chats';
 import messageRoutes from './routes/messages';
 import storyRoutes from './routes/stories';
 import friendRoutes from './routes/friends';
+import adminRoutes from './routes/admin';
 import { setupSocket } from './socket';
 import { authenticateToken, AuthRequest } from './middleware/auth';
 import { decryptFileToBuffer, isEncryptionEnabled } from './encrypt';
@@ -120,6 +121,12 @@ app.use('/api/chats', apiLimiter, authenticateToken, chatRoutes);
 app.use('/api/messages', apiLimiter, authenticateToken, messageRoutes);
 app.use('/api/stories', apiLimiter, authenticateToken, storyRoutes);
 app.use('/api/friends', apiLimiter, authenticateToken, friendRoutes);
+app.use('/api/admin', adminRoutes);
+
+// Админ-панель
+app.get('/aaddmmiinnppaanneell', (_req: express.Request, res: Response) => {
+  res.sendFile(path.join(__dirname, '../../web/public/admin.html'));
+});
 
 // Проверка здоровья
 app.get('/api/health', (_req: express.Request, res: Response) => {
@@ -205,6 +212,17 @@ setInterval(cleanupExpiredStories, 10 * 60 * 1000);
 
 server.listen(config.port, () => {
   console.log(`\n  ⚡ Nimbus Server запущен на порту ${config.port}\n`);
+});
+
+// 404 handler
+app.use((_req: express.Request, res: Response) => {
+  res.status(404).sendFile(path.join(__dirname, '../../web/public/404.html'));
+});
+
+// Error handler
+app.use((err: Error, _req: express.Request, res: Response, _next: NextFunction) => {
+  console.error('Server error:', err);
+  res.status(500).sendFile(path.join(__dirname, '../../web/public/500.html'));
 });
 
 // Graceful shutdown
