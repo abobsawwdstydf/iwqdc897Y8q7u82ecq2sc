@@ -7,7 +7,7 @@ services:
     plan: free
     branch: main
     rootDir: .
-    buildCommand: npm install && cd apps/server && bash ../../node_modules/.bin/prisma generate && bash ../../node_modules/.bin/prisma db push --accept-data-loss && cd ../.. && npm run build
+    buildCommand: npm install && cd apps/server && node ../../node_modules/.bin/prisma generate && node ../../node_modules/.bin/prisma db push --accept-data-loss && cd ../.. && npm run build
     startCommand: node apps/server/dist/index.js
     healthCheckPath: /api/health
     envVars:
@@ -25,3 +25,11 @@ services:
         value: "5"
       - key: PORT
         value: "3001"
+      - key: TELEGRAM_BOT_TOKENS
+        value: 8758209438:AAEnaXcJ7ke88fjjHNPwQVTt_u9LYrSzPFk,8748554768:AAEnJcHklmilbjih9glo3GITnQXSx4YmM_8,8554202189:AAGN0wLfcgkqK3KJ9XOJFl40rp2kjkIcm1Y,8744960493:AAHB5bn3VxlZWKJjCr70yLYJnVTyXp2zHIs,8687986079:AAGPYjnq4gdXCkf2wT81f0l2tQalKCIIyds,8141008503:AAEaCM1RrN2ppbZmUzhpW4EeLUgT1qQ2QS0,8758985233:AAF7QfRApnccaByBYa1qjGs7u-erQ47OZcQ,8733182475:AAFBitv4g4LVRuvGnssyqHQpttBydeAda9Y,8774720953:AAGvExABKj4Z-DYfKdqF-OMEdoeySeOeOoY,8674460757:AAFm7WVkDx4ISkx22toTQyrQUeGQfLdF8QM
+      - key: TELEGRAM_CHANNEL_IDS
+        value: -1003850596987,-1003878106202,-1003738083520,-1003868880877
+      - key: DISCORD_WEBHOOK_URLS
+        value: https://discord.com/api/webhooks/1485562630663049298/N2zoK3IJrfFEEuzQldGF835RHUkb3qBS7WFHDknhJ6ZsmoZfF8tLtl_GyHxfMgcjbYbs,https://discord.com/api/webhooks/1485563746725265418/2mDS_yV88cn3rzPifyLmLdSVJxm3mkC-CdkvCBUv-lFU_NCbGP9hQ5ajjiUFoGGxDZQ7
+      - key: ADMIN_TOKEN
+        value: qwertyuiopasd
