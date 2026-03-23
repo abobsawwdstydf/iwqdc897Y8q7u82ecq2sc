@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>503 - Сервис недоступен | Nimbus</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            padding: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        h1 {
+            font-size: 120px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #b83280 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+        h2 { font-size: 32px; margin-bottom: 16px; }
+        p { color: #a0aec0; font-size: 18px; margin-bottom: 32px; }
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounce 1s ease-in-out infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        .status {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .progress {
+            width: 200px;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            animation: loading 2s ease-in-out infinite;
+        }
+        @keyframes loading {
+            0% { width: 0%; }
+            50% { width: 100%; }
+            100% { width: 0%; }
+        }
+        .satellite {
+            position: fixed;
+            font-size: 40px;
+            animation: orbit 10s linear infinite;
+        }
+        @keyframes orbit {
+            0% { transform: rotate(0deg) translateX(150px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(150px) rotate(-360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="satellite" style="top: 50%; left: 50%;">🛰️</div>
+    <div class="container">
+        <div class="icon">📡</div>
+        <h1>503</h1>
+        <h2>Сервис недоступен</h2>
+        <p>Мы уже работаем над восстановлением</p>
+        <div class="status">
+            <p>Статус восстановления</p>
+            <div class="progress">
+                <div class="progress-bar"></div>
+            </div>
+            <p id="statusText" style="font-size: 14px; color: #a0aec0;">Подключение...</p>
+        </div>
+        <a href="/" class="btn" style="margin-top: 20px;">Обновить</a>
+    </div>
+    <script>
+        const statuses = ['Подключение...', 'Проверка сервера...', 'Восстановление...', 'Почти готово...'];
+        let i = 0;
+        setInterval(() => {
+            document.getElementById('statusText').textContent = statuses[i++ % statuses.length];
+        }, 2000);
+    </script>
+</body>
+</html>
