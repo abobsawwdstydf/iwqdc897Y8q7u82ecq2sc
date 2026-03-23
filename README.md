@@ -45,12 +45,35 @@ npm run prod
 
 Всё уже настроено в `.env`:
 
+- ✅ **Neon PostgreSQL**: основная база данных
 - ✅ **Telegram**: 10 ботов, 4 канала
 - ✅ **Discord**: 2 вебхука
-- ✅ **База данных**: PostgreSQL от Render
+- ✅ **Шифрование**: AES-256-GCM включено
 - ✅ **Ключи шифрования**: сгенерированы
 
 **Менять ничего не нужно!**
+
+---
+
+## 🗄️ Базы данных
+
+### Основная база (Neon PostgreSQL)
+```
+postgresql://neondb_owner:npg_DOzU4jR8arce@ep-wandering-dawn-an3qfdn4-pooler.c-6.us-east-1.aws.neon.tech/neondb?sslmode=require
+```
+
+### Несколько баз (опционально)
+```env
+SECONDARY_DATABASES=postgresql://user:pass@host2:5432/db2,postgresql://user:pass@host3:5432/db3
+```
+
+### Шифрование
+```env
+DB_ENCRYPTION_ENABLED=true
+ENCRYPTION_KEY=36427af4278b7198dc850c7235c4c85feda7275d89fe3d360c79a1af94579765
+```
+
+**Данные в базе шифруются перед записью!**
 
 ---
 
