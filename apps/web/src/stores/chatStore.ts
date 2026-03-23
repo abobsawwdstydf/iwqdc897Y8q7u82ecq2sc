@@ -134,12 +134,27 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
   addMessage: (message) => {
     const userId = useAuthStore.getState().user?.id;
-    // Normalize media array - fix for backend sending null or object
+    
+    // Normalize message data - fix for backend sending wrong types
     if (!message.media || !Array.isArray(message.media)) {
       message.media = [];
     }
-    // Also normalize media items
-    message.media = message.media.filter(m => m && typeof m === 'object' && m.url);
+    // Filter media items - ensure each item is valid object with url string
+    message.media = message.media.filter(m => {
+      if (!m || typeof m !== 'object') return false;
+      if (!m.url || typeof m.url !== 'string') return false;
+      return true;
+    });
+
+    // Ensure sender has valid avatar
+    if (message.sender && message.sender.avatar !== undefined && typeof message.sender.avatar !== 'string') {
+      message.sender.avatar = null;
+    }
+
+    // Ensure content is string or null
+    if (message.content !== null && message.content !== undefined && typeof message.content !== 'string') {
+      message.content = String(message.content);
+    }
 
     set((state) => {
       const chatMessages = state.messages[message.chatId] || [];
