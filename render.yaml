@@ -7,7 +7,7 @@ services:
     plan: free
     branch: main
     rootDir: .
-    buildCommand: npm install && cd apps/server && node ../../node_modules/prisma/build/index.js generate --schema=./prisma/schema.prisma && node ../../node_modules/prisma/build/index.js db push --accept-data-loss --schema=./prisma/schema.prisma && cd ../.. && npm run build
+    buildCommand: npm install && cd apps/server && node ../../node_modules/prisma/build/index.js generate --schema=./prisma/schema.prisma && node ../../node_modules/prisma/build/index.js db push --accept-data-loss --force-reset --schema=./prisma/schema.prisma && cd ../.. && npm run build
     startCommand: node apps/server/dist/index.js
     healthCheckPath: /api/health
     envVars:
