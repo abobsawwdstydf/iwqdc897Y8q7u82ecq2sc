@@ -35,9 +35,25 @@ async function initDB() {
     
     if (!tableExists) {
       console.log('📝 Таблицы не найдены, создаём...');
-      // Запускаем prisma через node_modules/.bin
-      const prismaPath = path.join(__dirname, '../../node_modules/.bin/prisma');
-      execSync(`${prismaPath} db push`, { 
+      // Запускаем prisma через node_modules/.bin (ищем в нескольких местах)
+      const prismaPaths = [
+        path.join(__dirname, '../../node_modules/.bin/prisma'),
+        path.join(__dirname, '../../../../node_modules/.bin/prisma'),
+        'npx prisma'
+      ];
+      let prismaCmd = null;
+      for (const p of prismaPaths) {
+        try {
+          const testPath = p.split(' ')[0];
+          if (require('fs').existsSync(testPath)) {
+            prismaCmd = p;
+            break;
+          }
+        } catch {}
+      }
+      prismaCmd = prismaCmd || 'npx prisma';
+      
+      execSync(`${prismaCmd} db push`, { 
         stdio: 'inherit',
         cwd: __dirname
       });
@@ -48,7 +64,7 @@ async function initDB() {
     
     // Генерируем Prisma Client
     console.log('🔧 Генерация Prisma Client...');
-    execSync(`${prismaPath} generate`, {
+    execSync(`${prismaCmd} generate`, {
       stdio: 'inherit',
       cwd: __dirname
     });
