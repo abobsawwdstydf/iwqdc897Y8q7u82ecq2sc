@@ -186,11 +186,12 @@ export default function AuthPage() {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder={t('passwordPlaceholder')}
+                  placeholder={isLogin ? t('passwordPlaceholder') : 'Минимум 8 символов, латиница'}
                   className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-zinc-600 focus:border-Nexo-500/50 focus:ring-1 focus:ring-Nexo-500/25 transition-all pr-12"
                   required
                   autoComplete={isLogin ? 'current-password' : 'new-password'}
-                  minLength={6}
+                  minLength={isLogin ? 1 : 8}
+                  pattern={isLogin ? undefined : '^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?]+$'}
                 />
                 <button
                   type="button"
@@ -200,6 +201,9 @@ export default function AuthPage() {
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
+              {!isLogin && password.length > 0 && password.length < 8 && (
+                <p className="text-xs text-red-400 mt-1">Пароль должен быть минимум 8 символов</p>
+              )}
             </div>
 
             <AnimatePresence>

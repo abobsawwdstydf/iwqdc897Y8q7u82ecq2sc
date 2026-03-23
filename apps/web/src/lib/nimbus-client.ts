@@ -389,10 +389,10 @@ export function createNexoClient(serverUrl: string, storageUrl?: string): NexoCl
 }
 
 /**
- * Р“Р»РѕР±Р°Р»СЊРЅР°СЏ РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ
+ * Глобальная конфигурация
  */
 export const Nexo_CONFIG = {
-    SERVER_URL: import.meta.env.VITE_API_URL || 'https://Nexo-msg.onrender.com',
+    SERVER_URL: import.meta.env.VITE_API_URL || 'https://nimbus-msg.onrender.com',
     STORAGE_URL: import.meta.env.VITE_STORAGE_URL || undefined,
     PROTOCOL_VERSION: '3.0.0',
     AUTHOR: 'Dark Heavens',
