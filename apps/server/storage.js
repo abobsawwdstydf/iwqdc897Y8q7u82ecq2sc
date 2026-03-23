@@ -1,7 +1,7 @@
 /**
  * Nexo Storage Server
- * Хранение файлов в Telegram/Discord с шифрованием
- * Автор: haker_one
+ * Хранение файлов ТОЛЬКО в Telegram/Discord
+ * Никаких локальных файлов!
  */
 
 require('dotenv').config();
@@ -13,12 +13,9 @@ const { WebhookClient } = require('discord.js');
 const Queue = require('bull');
 const Redis = require('ioredis');
 const crypto = require('crypto');
-const fs = require('fs');
-const path = require('path');
 const cors = require('cors');
 
 const app = express();
-const upload = multer({ dest: 'uploads/' });
 
 // ============================================
 // 🔧 КОНФИГУРАЦИЯ
@@ -27,7 +24,7 @@ const upload = multer({ dest: 'uploads/' });
 const DB_URL = process.env.DATABASE_URL;
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 const MASTER_KEY = process.env.MASTER_KEY ? Buffer.from(process.env.MASTER_KEY, 'hex') : crypto.randomBytes(32);
-const PORT = process.env.STORAGE_PORT || process.env.PORT || 3001;
+const PORT = process.env.PORT || 3001;
 
 // ============================================
 // 🗄️ БАЗА ДАННЫХ & REDIS
@@ -43,23 +40,6 @@ const redis = new Redis(REDIS_URL);
 // ============================================
 // 🔐 ШИФРОВАНИЕ
 // ============================================
-
-function encrypt(text, key) {
-    const iv = crypto.randomBytes(12);
-    const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
-    let enc = cipher.update(text, 'utf8', 'hex');
-    enc += cipher.final('hex');
-    return `${iv.toString('hex')}:${cipher.getAuthTag().toString('hex')}:${enc}`;
-}
-
-function decrypt(encrypted, key) {
-    const [ivHex, tagHex, data] = encrypted.split(':');
-    const decipher = crypto.createDecipheriv('aes-256-gcm', key, Buffer.from(ivHex, 'hex'));
-    decipher.setAuthTag(Buffer.from(tagHex, 'hex'));
-    let dec = decipher.update(data, 'hex', 'utf8');
-    dec += decipher.final('utf8');
-    return dec;
-}
 
 function encryptKey(key) {
     const iv = crypto.randomBytes(12);
@@ -91,38 +71,28 @@ const CRYPTO_METHODS = [
 ];
 
 function encryptChunk(data, method, key) {
-    try {
-        const authModes = ['gcm', 'ccm', 'poly1305'];
-        const needsAuth = authModes.some(m => method.includes(m));
-        const ivLength = needsAuth ? 12 : 16;
-        const iv = crypto.randomBytes(ivLength);
-        const cipher = crypto.createCipheriv(method, key, iv);
-        let encrypted = Buffer.concat([cipher.update(data), cipher.final()]);
-        if (needsAuth) {
-            const authTag = cipher.getAuthTag();
-            return { data: encrypted, iv, authTag };
-        }
-        return { data: encrypted, iv };
-    } catch (err) {
-        console.error(`[ERROR] Encryption failed for ${method}:`, err.message);
-        throw err;
+    const authModes = ['gcm', 'ccm', 'poly1305'];
+    const needsAuth = authModes.some(m => method.includes(m));
+    const ivLength = needsAuth ? 12 : 16;
+    const iv = crypto.randomBytes(ivLength);
+    const cipher = crypto.createCipheriv(method, key, iv);
+    let encrypted = Buffer.concat([cipher.update(data), cipher.final()]);
+    if (needsAuth) {
+        const authTag = cipher.getAuthTag();
+        return { data: encrypted, iv, authTag };
     }
+    return { data: encrypted, iv };
 }
 
 function decryptChunk(data, method, key, iv, authTag = null) {
-    try {
-        const needsAuth = authTag && (method.includes('gcm') || method.includes('ccm') || method.includes('poly1305'));
-        const decipher = crypto.createDecipheriv(method, key, iv);
-        if (needsAuth) decipher.setAuthTag(authTag);
-        return Buffer.concat([decipher.update(data), decipher.final()]);
-    } catch (err) {
-        console.error(`[ERROR] Decryption failed for ${method}:`, err.message);
-        throw err;
-    }
+    const needsAuth = authTag && (method.includes('gcm') || method.includes('ccm') || method.includes('poly1305'));
+    const decipher = crypto.createDecipheriv(method, key, iv);
+    if (needsAuth) decipher.setAuthTag(authTag);
+    return Buffer.concat([decipher.update(data), decipher.final()]);
 }
 
 // ============================================
-// 📱 РЕСУРСЫ (Telegram боты, Discord вебхуки)
+// 📱 РЕСУРСЫ
 // ============================================
 
 let tgBots = [];
@@ -135,7 +105,7 @@ async function loadResources() {
         const bots = await db.query('SELECT id, token FROM telegram_bots');
         for (const b of bots.rows) {
             try {
-                const token = decrypt(b.token, MASTER_KEY);
+                const token = decryptKey(b.token);
                 tgBots.push({ id: b.id, bot: new TelegramBot(token, { polling: false }) });
             } catch (err) {
                 console.error(`Failed to load bot ${b.id}:`, err.message);
@@ -152,24 +122,20 @@ async function loadResources() {
         const whs = await db.query('SELECT id, url FROM discord_webhooks');
         for (const w of whs.rows) {
             try {
-                const url = decrypt(w.url, MASTER_KEY);
+                const url = decryptKey(w.url);
                 dcWebhooks.push({ id: w.id, webhook: new WebhookClient({ url }) });
             } catch (err) {
                 console.error(`Failed to load webhook ${w.id}:`, err.message);
             }
         }
         console.log(`✅ Загружено вебхуков Discord: ${dcWebhooks.length}`);
-
-        if (tgBots.length === 0 && dcWebhooks.length === 0) {
-            console.warn('⚠️ ВНИМАНИЕ: Нет доступных ресурсов для хранения!');
-        }
     } catch (err) {
         console.error('❌ Ошибка загрузки ресурсов:', err.message);
     }
 }
 
 // ============================================
-// ⚖️ УМНОЕ РАСПРЕДЕЛЕНИЕ НАГРУЗКИ
+// ⚖️ БАЛАНСИРОВКА
 // ============================================
 
 async function getLeastLoaded() {
@@ -195,7 +161,7 @@ async function getLeastLoaded() {
 }
 
 // ============================================
-// 📦 ОЧЕРЕДЬ ОТПРАВКИ
+// 📦 ОЧЕРЕДЬ
 // ============================================
 
 const sendQueue = new Queue('send', { 
@@ -274,6 +240,10 @@ sendQueue.process(async (job) => {
 app.use(cors());
 app.use(express.json());
 
+// Memory storage - НИКАКИХ ЛОКАЛЬНЫХ ФАЙЛОВ!
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
 // Health check
 app.get('/health', (req, res) => {
     res.json({ 
@@ -308,9 +278,10 @@ app.post('/upload', upload.single('file'), async (req, res) => {
         await redis.hset(`file:${fileId}`, 'chunks', totalChunks);
         
         let idx = 0;
-        const stream = fs.createReadStream(req.file.path);
+        const buffer = req.file.buffer;
         
-        for await (const chunk of streamChunks(stream, chunkSize)) {
+        for (let i = 0; i < buffer.length; i += chunkSize) {
+            const chunk = buffer.slice(i, i + chunkSize);
             const resource = await getLeastLoaded();
             await redis.incr(`load:${resource.type === 'telegram' ? 'tg' : 'dc'}:${resource.id}`);
             
@@ -323,7 +294,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
             idx++;
         }
         
-        fs.unlinkSync(req.file.path);
+        // Файл НЕ сохраняется локально - только в памяти!
         
         console.log(`📤 Файл ${fileId} (${req.file.originalname}) поставлен в очередь (${totalChunks} чанков)`);
         
@@ -337,14 +308,6 @@ app.post('/upload', upload.single('file'), async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
-
-async function* streamChunks(stream, size) {
-    for await (const buf of stream) {
-        for (let i = 0; i < buf.length; i += size) {
-            yield buf.slice(i, i + size);
-        }
-    }
-}
 
 // Скачивание файла
 app.get('/download/:fileId', async (req, res) => {
@@ -452,11 +415,9 @@ app.get('/status/:fileId', async (req, res) => {
 
 async function start() {
     try {
-        // Проверка подключения к БД
         await db.query('SELECT NOW()');
         console.log('✅ Подключение к базе данных');
         
-        // Проверка Redis
         await redis.ping();
         console.log('✅ Подключение к Redis');
         
@@ -516,15 +477,14 @@ async function start() {
         
         console.log('✅ Таблицы созданы');
         
-        // Загрузка ресурсов
         await loadResources();
         
-        // Инициализация ресурсов из ENV (если БД пуста)
+        // Инициализация из ENV
         if (tgBots.length === 0 && process.env.TELEGRAM_BOT_TOKENS) {
             const tokens = process.env.TELEGRAM_BOT_TOKENS.split(',');
             for (const token of tokens) {
                 try {
-                    const encrypted = encrypt(token.trim(), MASTER_KEY);
+                    const encrypted = encryptKey(token.trim());
                     const result = await db.query(
                         'INSERT INTO telegram_bots (token) VALUES ($1) RETURNING id',
                         [encrypted]
@@ -559,7 +519,7 @@ async function start() {
             const urls = process.env.DISCORD_WEBHOOK_URLS.split(',');
             for (const url of urls) {
                 try {
-                    const encrypted = encrypt(url.trim(), MASTER_KEY);
+                    const encrypted = encryptKey(url.trim());
                     const result = await db.query(
                         'INSERT INTO discord_webhooks (url) VALUES ($1) RETURNING id',
                         [encrypted]
@@ -574,11 +534,10 @@ async function start() {
             }
         }
         
-        // Запуск сервера
         app.listen(PORT, () => {
             console.log(`
 ╔═══════════════════════════════════════════════════════════╗
-║                    NEXO STORAGE SERVER                    ║
+║              NEXO STORAGE SERVER (NO LOCAL FILES)         ║
 ╠═══════════════════════════════════════════════════════════╣
 ║  Порт: ${PORT.toString().padEnd(52)}║
 ║  Telegram ботов: ${tgBots.length.toString().padEnd(42)}║
