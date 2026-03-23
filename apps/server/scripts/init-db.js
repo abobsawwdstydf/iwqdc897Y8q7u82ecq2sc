@@ -6,6 +6,7 @@
 require('dotenv').config();
 const { execSync } = require('child_process');
 const { Client } = require('pg');
+const path = require('path');
 
 async function initDB() {
   const databaseUrl = process.env.DATABASE_URL;
@@ -34,7 +35,9 @@ async function initDB() {
     
     if (!tableExists) {
       console.log('📝 Таблицы не найдены, создаём...');
-      execSync('npx prisma db push', { 
+      // Запускаем prisma через node_modules/.bin
+      const prismaPath = path.join(__dirname, '../../node_modules/.bin/prisma');
+      execSync(`${prismaPath} db push`, { 
         stdio: 'inherit',
         cwd: __dirname
       });
@@ -45,7 +48,7 @@ async function initDB() {
     
     // Генерируем Prisma Client
     console.log('🔧 Генерация Prisma Client...');
-    execSync('npx prisma generate', {
+    execSync(`${prismaPath} generate`, {
       stdio: 'inherit',
       cwd: __dirname
     });
