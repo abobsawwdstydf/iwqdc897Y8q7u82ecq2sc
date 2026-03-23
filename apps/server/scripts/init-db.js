@@ -35,39 +35,40 @@ async function initDB() {
     
     if (!tableExists) {
       console.log('📝 Таблицы не найдены, создаём...');
-      // Запускаем prisma через node_modules/.bin (ищем в нескольких местах)
-      const prismaPaths = [
-        path.join(__dirname, '../../node_modules/.bin/prisma'),
-        path.join(__dirname, '../../../../node_modules/.bin/prisma'),
-        'npx prisma'
-      ];
-      let prismaCmd = null;
-      for (const p of prismaPaths) {
-        try {
-          const testPath = p.split(' ')[0];
-          if (require('fs').existsSync(testPath)) {
-            prismaCmd = p;
-            break;
-          }
-        } catch {}
-      }
-      prismaCmd = prismaCmd || 'npx prisma';
+      // Запускаем prisma через node (не через бинарник)
+      const prismaPath = path.join(__dirname, '../../node_modules/prisma/build/index.js');
       
-      execSync(`${prismaCmd} db push`, { 
-        stdio: 'inherit',
-        cwd: __dirname
-      });
-      console.log('✅ Таблицы созданы');
+      try {
+        execSync(`node ${prismaPath} db push`, { 
+          stdio: 'inherit',
+          cwd: __dirname
+        });
+        console.log('✅ Таблицы созданы');
+      } catch (e) {
+        console.error('⚠️  Ошибка создания таблиц, пробуем npx...');
+        execSync(`npx prisma db push`, { 
+          stdio: 'inherit',
+          cwd: __dirname
+        });
+        console.log('✅ Таблицы созданы (через npx)');
+      }
     } else {
       console.log('✅ Таблицы существуют');
     }
     
     // Генерируем Prisma Client
     console.log('🔧 Генерация Prisma Client...');
-    execSync(`${prismaCmd} generate`, {
-      stdio: 'inherit',
-      cwd: __dirname
-    });
+    try {
+      execSync(`node ${prismaPath} generate`, {
+        stdio: 'inherit',
+        cwd: __dirname
+      });
+    } catch (e) {
+      execSync(`npx prisma generate`, {
+        stdio: 'inherit',
+        cwd: __dirname
+      });
+    }
     
   } catch (error) {
     console.error('❌ Ошибка:', error.message);
