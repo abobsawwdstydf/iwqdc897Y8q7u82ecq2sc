@@ -139,6 +139,7 @@
             align-items: center;
             justify-content: center;
             font-weight: 700;
+            font-size: 18px;
         }
         .actions {
             display: flex;
@@ -151,35 +152,14 @@
             cursor: pointer;
             font-size: 13px;
             font-weight: 600;
+            transition: transform 0.2s;
         }
+        .btn:hover { transform: translateY(-1px); }
+        .btn-verify { background: #3b82f6; color: white; }
+        .btn-verified { background: #10b981; color: white; }
         .btn-ban { background: #e53e3e; color: white; }
         .btn-unban { background: #38a169; color: white; }
-        .btn-delete { background: #e53e3e; color: white; }
-        .btn-warning { background: #dd6b20; color: white; }
-        .file-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        .file-item {
-            padding: 15px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 10px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .file-info {
-            flex: 1;
-        }
-        .file-name {
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        .file-meta {
-            font-size: 13px;
-            color: #a0aec0;
-        }
+        .btn-delete { background: #c53030; color: white; }
         .toast {
             position: fixed;
             bottom: 20px;
@@ -200,6 +180,11 @@
         .toast.error {
             background: rgba(229, 62, 62, 0.9);
         }
+        .verified-badge {
+            color: #3b82f6;
+            margin-left: 5px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -209,7 +194,7 @@
             <h1>🔐 Админ-панель</h1>
             <input type="password" id="passwordInput" placeholder="Введите пароль администратора" />
             <button onclick="login()">Войти</button>
-            <div class="author">by Dark Heavens</div>
+            <div class="author">by haker_one</div>
         </div>
     </div>
 
@@ -217,7 +202,7 @@
     <div class="admin-panel" id="adminPanel">
         <div class="header">
             <h1>🛡️ Админ-панель Nimbus</h1>
-            <button onclick="logout()" class="btn" style="background: rgba(255,255,255,0.1);">Выйти</button>
+            <button onclick="logout()" class="btn" style="background: rgba(255,255,255,0.1); width: auto;">Выйти</button>
         </div>
 
         <!-- Stats -->
@@ -231,12 +216,8 @@
                 <div class="value" id="messageCount">0</div>
             </div>
             <div class="stat-card">
-                <h3>Файлов в хранилище</h3>
-                <div class="value" id="fileCount">0</div>
-            </div>
-            <div class="stat-card">
-                <h3>Файлов удалено</h3>
-                <div class="value" id="deletedCount">0</div>
+                <h3>Чатов</h3>
+                <div class="value" id="chatCount">0</div>
             </div>
         </div>
 
@@ -245,24 +226,6 @@
             <h2>👥 Управление пользователями</h2>
             <div class="user-list" id="userList">
                 <p style="text-align: center; color: #a0aec0;">Загрузка...</p>
-            </div>
-        </div>
-
-        <!-- Files Management -->
-        <div class="section">
-            <h2>📦 Файловое хранилище</h2>
-            <div class="file-list" id="fileList">
-                <p style="text-align: center; color: #a0aec0;">Загрузка...</p>
-            </div>
-        </div>
-
-        <!-- System -->
-        <div class="section">
-            <h2>⚙️ Система</h2>
-            <div style="display: grid; gap: 15px;">
-                <button class="btn btn-warning" onclick="clearCache()">Очистить кэш</button>
-                <button class="btn btn-warning" onclick="restartServer()">Перезапустить сервер</button>
-                <button class="btn btn-delete" onclick="wipeAllData()" style="background: #c53030;">⚠️ Удалить ВСЕ данные</button>
             </div>
         </div>
     </div>
@@ -299,20 +262,17 @@
             document.getElementById('adminPanel').classList.add('active');
             loadStats();
             loadUsers();
-            loadFiles();
         }
 
         async function loadStats() {
             try {
-                const [users, messages, files] = await Promise.all([
+                const [users, messages] = await Promise.all([
                     fetch(`${API_URL}/api/admin/users`).then(r => r.json()),
-                    fetch(`${API_URL}/api/admin/messages`).then(r => r.json()),
-                    fetch(`${API_URL}/api/storage/health`).then(r => r.json())
+                    fetch(`${API_URL}/api/admin/messages`).then(r => r.json())
                 ]);
                 document.getElementById('userCount').textContent = users.length || 0;
                 document.getElementById('messageCount').textContent = messages.count || 0;
-                document.getElementById('fileCount').textContent = files.totalResources || 0;
-                document.getElementById('deletedCount').textContent = '0';
+                document.getElementById('chatCount').textContent = '—';
             } catch (e) {
                 console.error('Stats error:', e);
             }
@@ -333,17 +293,14 @@
                             <div>
                                 <div style="font-weight: 600;">
                                     ${u.displayName || u.username || 'Unknown'}
-                                    ${u.isVerified ? '<span style="color: #3b82f6; margin-left: 5px;">✓</span>' : ''}
+                                    ${u.isVerified ? '<span class="verified-badge">✓</span>' : ''}
                                 </div>
                                 <div style="font-size: 13px; color: #a0aec0;">@${u.username || 'no-username'}</div>
                             </div>
                         </div>
                         <div class="actions">
-                            <button class="btn ${u.isVerified ? 'btn-unban' : 'btn-ban'}" onclick="toggleVerify(${u.id}, ${!u.isVerified})" style="background: ${u.isVerified ? '#38a169' : '#3b82f6'};">
+                            <button class="btn ${u.isVerified ? 'btn-verified' : 'btn-verify'}" onclick="toggleVerify(${u.id}, ${!u.isVerified})">
                                 ${u.isVerified ? '✓ Верифицирован' : 'Верифицировать'}
-                            </button>
-                            <button class="btn ${u.banned ? 'btn-unban' : 'btn-ban'}" onclick="toggleBan(${u.id}, ${!u.banned})">
-                                ${u.banned ? 'Разбанить' : 'Забанить'}
                             </button>
                             <button class="btn btn-delete" onclick="deleteUser(${u.id})">Удалить</button>
                         </div>
@@ -368,45 +325,6 @@
             }
         }
 
-        async function loadFiles() {
-            try {
-                const files = await fetch(`${API_URL}/api/admin/files`).then(r => r.json());
-                const container = document.getElementById('fileList');
-                if (files.length === 0) {
-                    container.innerHTML = '<p style="text-align: center; color: #a0aec0;">Нет файлов</p>';
-                    return;
-                }
-                container.innerHTML = files.map(f => `
-                    <div class="file-item">
-                        <div class="file-info">
-                            <div class="file-name">${f.name}</div>
-                            <div class="file-meta">${(f.size / 1024 / 1024).toFixed(2)} MB • ${f.chunks} чанков</div>
-                        </div>
-                        <div class="actions">
-                            <button class="btn" onclick="downloadFile('${f.id}')">Скачать</button>
-                            <button class="btn btn-delete" onclick="deleteFile('${f.id}')">Удалить</button>
-                        </div>
-                    </div>
-                `).join('');
-            } catch (e) {
-                document.getElementById('fileList').innerHTML = '<p style="text-align: center; color: #e53e3e;">Ошибка загрузки</p>';
-            }
-        }
-
-        async function toggleBan(userId, ban) {
-            try {
-                await fetch(`${API_URL}/api/admin/users/${userId}/ban`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ banned: ban })
-                });
-                showToast(`✓ Пользователь ${ban ? 'забанен' : 'разбанен'}`);
-                loadUsers();
-            } catch (e) {
-                showToast('✗ Ошибка', true);
-            }
-        }
-
         async function deleteUser(userId) {
             if (!confirm('Удалить пользователя навсегда?')) return;
             try {
@@ -416,41 +334,6 @@
             } catch (e) {
                 showToast('✗ Ошибка', true);
             }
-        }
-
-        async function deleteFile(fileId) {
-            if (!confirm('Удалить файл из хранилища?')) return;
-            try {
-                await fetch(`${API_URL}/api/storage/delete/${fileId}`, { method: 'DELETE' });
-                showToast('✓ Файл удалён');
-                loadFiles();
-            } catch (e) {
-                showToast('✗ Ошибка', true);
-            }
-        }
-
-        async function downloadFile(fileId) {
-            window.open(`${API_URL}/api/storage/download/${fileId}`, '_blank');
-        }
-
-        function clearCache() {
-            localStorage.clear();
-            localStorage.setItem('adminAuth', 'true');
-            showToast('✓ Кэш очищен');
-            location.reload();
-        }
-
-        function restartServer() {
-            if (!confirm('Перезапустить сервер?')) return;
-            fetch(`${API_URL}/api/admin/restart`, { method: 'POST' });
-            showToast('✓ Сервер перезапускается...');
-        }
-
-        function wipeAllData() {
-            if (!confirm('ВЫ УВЕРЕНЫ? ВСЕ ДАННЫЕ БУДУТ УДАЛЕНЫ НАВСЕГДА!')) return;
-            if (!confirm('ПОСЛЕДНЕЕ ПРЕДУПРЕЖДЕНИЕ!')) return;
-            fetch(`${API_URL}/api/admin/wipe-all`, { method: 'POST' });
-            showToast('✓ Данные удаляются...', true);
         }
 
         function showToast(message, error = false) {

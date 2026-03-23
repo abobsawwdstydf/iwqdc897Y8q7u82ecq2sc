@@ -134,10 +134,12 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
   addMessage: (message) => {
     const userId = useAuthStore.getState().user?.id;
-    // Normalize media array
-    if (!Array.isArray(message.media)) {
+    // Normalize media array - fix for backend sending null or object
+    if (!message.media || !Array.isArray(message.media)) {
       message.media = [];
     }
+    // Also normalize media items
+    message.media = message.media.filter(m => m && typeof m === 'object' && m.url);
 
     set((state) => {
       const chatMessages = state.messages[message.chatId] || [];
