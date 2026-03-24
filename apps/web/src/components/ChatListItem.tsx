@@ -26,26 +26,33 @@ function ChatListItem({ chat, isActive, onChatSelect }: ChatListItemProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const ctxRef = useRef<HTMLDivElement>(null);
 
-  const myMember = chat.members.find((m) => m.user.id === user?.id);
+  // Если chat undefined - не рендерим
+  if (!chat || !chat.id) {
+    return null;
+  }
+
+  // Безопасная работа с members
+  const members = chat.members || [];
+  const myMember = members.find((m) => m?.user?.id === user?.id);
   const isPinned = myMember?.isPinned ?? false;
 
   const draft = drafts[chat.id] || '';
 
-  const otherMember = chat.members.find((m) => m.user.id !== user?.id);
+  const otherMember = members.find((m) => m?.user?.id !== user?.id);
   const isFavorites = chat.type === 'favorites';
   const chatName = isFavorites
     ? t('favorites')
     : chat.type === 'personal'
-      ? otherMember?.user.displayName || otherMember?.user.username || t('chat')
+      ? otherMember?.user?.displayName || otherMember?.user?.username || t('chat')
       : chat.name || t('group');
 
   const chatAvatar = isFavorites
     ? null
     : chat.type === 'personal'
-      ? otherMember?.user.avatar
+      ? otherMember?.user?.avatar
       : chat.avatar;
 
-  const isOnline = chat.type === 'personal' && otherMember?.user.isOnline;
+  const isOnline = chat.type === 'personal' && otherMember?.user?.isOnline;
 
   // Check if someone is typing in this chat
   const typingInChat = typingUsers.filter((t) => t.chatId === chat.id && t.userId !== user?.id);
