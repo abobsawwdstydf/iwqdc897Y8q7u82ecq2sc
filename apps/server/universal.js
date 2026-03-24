@@ -581,6 +581,130 @@ app.get('/api/auth/me', authenticateToken, async (req, res) => {
 });
 
 // ============================================
+// API: CHATS
+// ============================================
+
+app.get('/api/chats', authenticateToken, async (req, res) => {
+  try {
+    const chats = await db.query(
+      `SELECT c.*, 
+              json_build_object(
+                'id', cm.id,
+                'userId', cm."userId",
+                'role', cm.role,
+                'isPinned', cm."isPinned",
+                'isMuted', cm."isMuted"
+              ) as "myMember",
+              json_agg(
+                json_build_object(
+                  'id', u.id,
+                  'username', u.username,
+                  'displayName', u."displayName",
+                  'avatar', u.avatar,
+                  'isOnline', u."isOnline",
+                  'lastSeen', u."lastSeen"
+                )
+              ) as members
+       FROM "Chat" c
+       JOIN "ChatMember" cm ON c.id = cm."chatId"
+       JOIN "User" u ON cm."userId" = u.id
+       WHERE cm."userId" = $1
+       GROUP BY c.id, cm.id
+       ORDER BY cm."isPinned" DESC, c."createdAt" DESC`,
+      [req.userId]
+    );
+    
+    res.json(chats.rows);
+  } catch (err) {
+    console.error('Get chats error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/chats/favorites', authenticateToken, async (req, res) => {
+  try {
+    // Проверяем есть ли уже избранное
+    const existing = await db.query('SELECT id FROM "Chat" WHERE type = $1 AND "ownerId" = $2', ['favorites', req.userId]);
+    
+    if (existing.rows.length > 0) {
+      return res.json(existing.rows[0]);
+    }
+    
+    // Создаём избранное
+    const newChat = await db.query(
+      `INSERT INTO "Chat" (type, name, "ownerId", "createdAt")
+       VALUES ($1, $2, $3, NOW())
+       RETURNING *`,
+      ['favorites', 'Избранное', req.userId]
+    );
+    
+    res.json(newChat.rows[0]);
+  } catch (err) {
+    console.error('Create favorites error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ============================================
+// API: STORIES
+// ============================================
+
+app.get('/api/stories', authenticateToken, async (req, res) => {
+  try {
+    const stories = await db.query(
+      `SELECT s.*, 
+              json_build_object(
+                'id', u.id,
+                'username', u.username,
+                'displayName', u."displayName",
+                'avatar', u.avatar
+              ) as user
+       FROM "Story" s
+       JOIN "User" u ON s."userId" = u.id
+       WHERE s."expiresAt" > NOW()
+       ORDER BY s."createdAt" DESC`,
+      [req.userId]
+    );
+    
+    res.json(stories.rows);
+  } catch (err) {
+    console.error('Get stories error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ============================================
+// API: FOLDERS
+// ============================================
+
+app.get('/api/folders', authenticateToken, async (req, res) => {
+  try {
+    const folders = await db.query(
+      `SELECT f.*, 
+              json_agg(
+                json_build_object(
+                  'id', fc.id,
+                  'folderId', fc."folderId",
+                  'chatId', fc."chatId",
+                  'position', fc.position
+                )
+              ) as chats
+       FROM "ChatFolder" f
+       LEFT JOIN "ChatFolderChat" fc ON f.id = fc."folderId"
+       WHERE f."userId" = $1
+       GROUP BY f.id
+       ORDER BY f.position`,
+      [req.userId]
+    );
+    
+    res.json(folders.rows);
+  } catch (err) {
+    console.error('Get folders error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ============================================
 // MIDDLEWARE
 // ============================================
 
