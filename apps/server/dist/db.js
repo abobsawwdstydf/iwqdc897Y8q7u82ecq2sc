@@ -4,7 +4,7 @@ exports.prisma = void 0;
 const client_1 = require("@prisma/client");
 const encrypt_1 = require("./encrypt");
 const basePrisma = new client_1.PrismaClient();
-// ─── Prisma extension: transparent message encryption ───────────────
+// в”Ђв”Ђв”Ђ Prisma extension: transparent message encryption в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 // Encrypts `content` and `quote` before writing to DB,
 // decrypts them after reading. This way the DB never stores plaintext.
 exports.prisma = basePrisma.$extends({

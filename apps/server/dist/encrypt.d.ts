@@ -1,4 +1,4 @@
-﻿/** Initialise encryption with a 64-char hex key (32 bytes). */
+/** Initialise encryption with a 64-char hex key (32 bytes). */
 export declare function initEncryption(hexKey: string): void;
 /** Returns true if encryption is enabled (key configured). */
 export declare function isEncryptionEnabled(): boolean;

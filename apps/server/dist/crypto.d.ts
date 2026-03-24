@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Nexo Server-Side Cryptography
  * Multi-layer encryption for server operations
  */

@@ -290,32 +290,39 @@ export default function ChatPage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="h-full w-full flex bg-surface p-2 md:p-3 gap-2 md:gap-3 overflow-hidden"
+      className="h-full w-full flex bg-surface p-0 md:p-2 lg:p-3 gap-0 md:gap-2 lg:gap-3 overflow-hidden"
     >
-      {/* Sidebar - на мобильных на весь экран, на ПК слева */}
+      {/* Sidebar - на мобильных НА ВЕСЬ ЭКРАН */}
       <div className={`
         ${showMobileList ? 'flex' : 'hidden'} 
         md:flex 
         flex-shrink-0 
-        w-full md:w-auto
-        md:min-w-[340px]
+        w-full md:w-[340px] lg:w-[380px]
+        h-full md:h-auto
         absolute md:relative
         inset-0 md:inset-auto
-        z-20 md:z-auto
+        z-50 md:z-auto
+        bg-surface md:bg-transparent
       `}>
-        <Sidebar onChatSelect={() => setShowMobileList(false)} />
+        <Sidebar 
+          onChatSelect={() => setShowMobileList(false)}
+          isOpen={true}
+          onClose={() => setShowMobileList(false)}
+        />
       </div>
 
-      {/* ChatView - на мобильных на весь экран, на ПК справа */}
+      {/* ChatView - на мобильных НА ВЕСЬ ЭКРАН */}
       <div className={`
         ${!showMobileList ? 'flex' : 'hidden'} 
         md:flex 
         flex-1 
         min-w-0
+        w-full md:w-auto
+        h-full md:h-auto
         absolute md:relative
         inset-0 md:inset-auto
-        z-20 md:z-auto
-        w-full md:w-auto
+        z-50 md:z-auto
+        bg-surface md:bg-transparent
       `}>
         <ChatView
           onStartCall={handleStartCall}

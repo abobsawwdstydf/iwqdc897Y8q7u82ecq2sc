@@ -1,4 +1,4 @@
-﻿export declare const config: {
+export declare const config: {
     port: number;
     jwtSecret: string;
     corsOrigins: string[];

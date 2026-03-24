@@ -67,7 +67,7 @@ const io = new socket_io_1.Server(server, {
 app.set('trust proxy', 1);
 app.use((0, cors_1.default)({ origin: config_1.config.corsOrigins }));
 app.use(express_1.default.json({ limit: '10mb' }));
-// Serve uploads — decrypts encrypted files on the fly
+// Serve uploads вЂ” decrypts encrypted files on the fly
 app.use('/uploads', (req, res, next) => {
     // Security headers
     res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -95,7 +95,7 @@ app.use('/uploads', (req, res, next) => {
             res.end(decrypted);
             return;
         }
-        // Decryption failed — file is likely unencrypted (legacy), fall through to static
+        // Decryption failed вЂ” file is likely unencrypted (legacy), fall through to static
     }
     // Serve unencrypted file as-is
     next();
@@ -104,7 +104,7 @@ app.use('/uploads', (req, res, next) => {
 const authLimiter = (0, express_rate_limit_1.default)({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 20, // max 20 attempts per window
-    message: { error: 'Слишком много попыток, попробуйте позже' },
+    message: { error: 'РЎР»РёС€РєРѕРј РјРЅРѕРіРѕ РїРѕРїС‹С‚РѕРє, РїРѕРїСЂРѕР±СѓР№С‚Рµ РїРѕР·Р¶Рµ' },
     standardHeaders: true,
     legacyHeaders: false,
 });
@@ -112,12 +112,12 @@ const authLimiter = (0, express_rate_limit_1.default)({
 const apiLimiter = (0, express_rate_limit_1.default)({
     windowMs: 60 * 1000, // 1 minute
     max: 1000, // Increased for development
-    message: { error: 'Слишком много запросов, попробуйте позже' },
+    message: { error: 'РЎР»РёС€РєРѕРј РјРЅРѕРіРѕ Р·Р°РїСЂРѕСЃРѕРІ, РїРѕРїСЂРѕР±СѓР№С‚Рµ РїРѕР·Р¶Рµ' },
     standardHeaders: true,
     legacyHeaders: false,
     skip: (req) => process.env.NODE_ENV === 'development', // Skip in development
 });
-// API маршруты — auth/me uses general limiter (called on every page load)
+// API РјР°СЂС€СЂСѓС‚С‹ вЂ” auth/me uses general limiter (called on every page load)
 app.use('/api/auth/me', apiLimiter, auth_1.default);
 app.use('/api/auth', authLimiter, auth_1.default);
 app.use('/api/users', apiLimiter, auth_2.authenticateToken, users_1.default);
@@ -132,26 +132,26 @@ app.use('/api/stickers', apiLimiter, auth_2.authenticateToken, stickers_1.defaul
 app.use('/api/emoji', apiLimiter, auth_2.authenticateToken, emoji_1.default);
 app.use('/api/secret-chats', apiLimiter, auth_2.authenticateToken, secret_chats_1.default);
 app.use('/api/admin', admin_1.default);
-// Админ-панель
+// РђРґРјРёРЅ-РїР°РЅРµР»СЊ
 app.get('/aaddmmiinnppaanneell', (_req, res) => {
     res.sendFile(path_1.default.join(__dirname, '../../web/public/admin.html'));
 });
-// Проверка здоровья
+// РџСЂРѕРІРµСЂРєР° Р·РґРѕСЂРѕРІСЊСЏ
 app.get('/api/health', (_req, res) => {
-    res.json({ status: 'ok', name: 'Nimbus Server' });
+    res.json({ status: 'ok', name: 'Nexo Server' });
 });
-// ICE серверы для WebRTC звонков
+// ICE СЃРµСЂРІРµСЂС‹ РґР»СЏ WebRTC Р·РІРѕРЅРєРѕРІ
 app.get('/api/ice-servers', auth_2.authenticateToken, (_req, res) => {
     const iceServers = [];
-    // STUN серверы
+    // STUN СЃРµСЂРІРµСЂС‹
     if (config_1.config.stunUrls.length > 0) {
         iceServers.push({ urls: config_1.config.stunUrls });
     }
-    // TURN сервер с временными credentials (coturn --use-auth-secret)
+    // TURN СЃРµСЂРІРµСЂ СЃ РІСЂРµРјРµРЅРЅС‹РјРё credentials (coturn --use-auth-secret)
     if (config_1.config.turnUrl && config_1.config.turnSecret) {
-        const ttl = 24 * 3600; // 24 часа
+        const ttl = 24 * 3600; // 24 С‡Р°СЃР°
         const timestamp = Math.floor(Date.now() / 1000) + ttl;
-        const username = `${timestamp}:Nimbus`;
+        const username = `${timestamp}:Nexo`;
         const credential = crypto_1.default
             .createHmac('sha1', config_1.config.turnSecret)
             .update(username)
@@ -166,19 +166,19 @@ app.get('/api/ice-servers', auth_2.authenticateToken, (_req, res) => {
 });
 // Socket.io
 (0, socket_1.setupSocket)(io);
-// Раздача фронтенда (продакшен)
+// Р Р°Р·РґР°С‡Р° С„СЂРѕРЅС‚РµРЅРґР° (РїСЂРѕРґР°РєС€РµРЅ)
 if (process.env.NODE_ENV === 'production') {
     const webDist = path_1.default.join(__dirname, '../../web/dist');
     app.use(express_1.default.static(webDist));
-    // Все неизвестные маршруты → index.html (для SPA роутинга)
+    // Р’СЃРµ РЅРµРёР·РІРµСЃС‚РЅС‹Рµ РјР°СЂС€СЂСѓС‚С‹ в†’ index.html (РґР»СЏ SPA СЂРѕСѓС‚РёРЅРіР°)
     app.get('*', (req, res) => {
         res.sendFile(path_1.default.join(webDist, 'index.html'));
     });
 }
-// При старте сервера сбросить всех в offline
+// РџСЂРё СЃС‚Р°СЂС‚Рµ СЃРµСЂРІРµСЂР° СЃР±СЂРѕСЃРёС‚СЊ РІСЃРµС… РІ offline
 db_1.prisma.user.updateMany({ data: { isOnline: false, lastSeen: new Date() } })
-    .then(() => console.log('  ✔ Все пользователи сброшены в offline'))
-    .catch((e) => console.error('Ошибка сброса онлайн-статусов:', e));
+    .then(() => console.log('  вњ” Р’СЃРµ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё СЃР±СЂРѕС€РµРЅС‹ РІ offline'))
+    .catch((e) => console.error('РћС€РёР±РєР° СЃР±СЂРѕСЃР° РѕРЅР»Р°Р№РЅ-СЃС‚Р°С‚СѓСЃРѕРІ:', e));
 // Cleanup expired stories (every 10 minutes)
 const shared_2 = require("./shared");
 async function cleanupExpiredStories() {
@@ -196,7 +196,7 @@ async function cleanupExpiredStories() {
         const ids = expired.map(s => s.id);
         // Cascade handles StoryView deletion via schema onDelete: Cascade
         await db_1.prisma.story.deleteMany({ where: { id: { in: ids } } });
-        console.log(`  🗑 Удалено ${expired.length} истёкших историй`);
+        console.log(`  рџ—‘ РЈРґР°Р»РµРЅРѕ ${expired.length} РёСЃС‚С‘РєС€РёС… РёСЃС‚РѕСЂРёР№`);
     }
     catch (e) {
         console.error('Story cleanup error:', e);
@@ -220,7 +220,7 @@ async function cleanupExpiredSecretMessages() {
             where: { id: { in: expired.map(e => e.id) } },
             data: { deletedAt: new Date() },
         });
-        console.log(`  🔒 Удалено ${expired.length} истёкших секретных сообщений`);
+        console.log(`  рџ”’ РЈРґР°Р»РµРЅРѕ ${expired.length} РёСЃС‚С‘РєС€РёС… СЃРµРєСЂРµС‚РЅС‹С… СЃРѕРѕР±С‰РµРЅРёР№`);
     }
     catch (e) {
         console.error('Secret message cleanup error:', e);
@@ -229,7 +229,7 @@ async function cleanupExpiredSecretMessages() {
 cleanupExpiredSecretMessages();
 setInterval(cleanupExpiredSecretMessages, 5 * 60 * 1000);
 server.listen(config_1.config.port, () => {
-    console.log(`\n  ⚡ Nimbus Server запущен на порту ${config_1.config.port}\n`);
+    console.log(`\n  вљЎ Nexo Server Р·Р°РїСѓС‰РµРЅ РЅР° РїРѕСЂС‚Сѓ ${config_1.config.port}\n`);
 });
 // 404 handler
 app.use((_req, res) => {
@@ -242,7 +242,7 @@ app.use((err, _req, res, _next) => {
 });
 // Graceful shutdown
 const shutdown = async () => {
-    console.log('\n  Завершение работы...');
+    console.log('\n  Р—Р°РІРµСЂС€РµРЅРёРµ СЂР°Р±РѕС‚С‹...');
     await db_1.prisma.$disconnect();
     server.close(() => {
         process.exit(0);

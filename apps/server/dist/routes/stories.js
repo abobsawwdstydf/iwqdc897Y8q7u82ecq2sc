@@ -78,7 +78,7 @@ router.get('/', async (req, res) => {
     }
     catch (error) {
         console.error('Get stories error:', error);
-        res.status(500).json({ error: 'Ошибка получения историй' });
+        res.status(500).json({ error: 'РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РёСЃС‚РѕСЂРёР№' });
     }
 });
 // Create a story
@@ -89,7 +89,7 @@ router.post('/', async (req, res) => {
         // Validate mediaUrl to prevent path traversal
         if (mediaUrl) {
             if (typeof mediaUrl !== 'string' || !mediaUrl.startsWith('/uploads/') || mediaUrl.includes('..')) {
-                res.status(400).json({ error: 'Недопустимый URL медиафайла' });
+                res.status(400).json({ error: 'РќРµРґРѕРїСѓСЃС‚РёРјС‹Р№ URL РјРµРґРёР°С„Р°Р№Р»Р°' });
                 return;
             }
         }
@@ -113,7 +113,7 @@ router.post('/', async (req, res) => {
     }
     catch (error) {
         console.error('Create story error:', error);
-        res.status(500).json({ error: 'Ошибка создания истории' });
+        res.status(500).json({ error: 'РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ РёСЃС‚РѕСЂРёРё' });
     }
 });
 // View a story - 1 view per person per day
@@ -127,7 +127,7 @@ router.post('/:storyId/view', async (req, res) => {
             select: { userId: true, createdAt: true }
         });
         if (!story) {
-            res.status(404).json({ error: 'История не найдена' });
+            res.status(404).json({ error: 'РСЃС‚РѕСЂРёСЏ РЅРµ РЅР°Р№РґРµРЅР°' });
             return;
         }
         if (story.userId !== userId) {
@@ -141,7 +141,7 @@ router.post('/:storyId/view', async (req, res) => {
                 },
             });
             if (!friendship) {
-                res.status(403).json({ error: 'Нет доступа' });
+                res.status(403).json({ error: 'РќРµС‚ РґРѕСЃС‚СѓРїР°' });
                 return;
             }
         }
@@ -165,7 +165,7 @@ router.post('/:storyId/view', async (req, res) => {
     }
     catch (error) {
         console.error('View story error:', error);
-        res.status(500).json({ error: 'Ошибка просмотра истории' });
+        res.status(500).json({ error: 'РћС€РёР±РєР° РїСЂРѕСЃРјРѕС‚СЂР° РёСЃС‚РѕСЂРёРё' });
     }
 });
 // Get story viewers
@@ -175,7 +175,7 @@ router.get('/:storyId/viewers', async (req, res) => {
         const storyId = parseInt(req.params.storyId, 10);
         const story = await db_1.prisma.story.findUnique({ where: { id: storyId }, select: { userId: true } });
         if (!story || story.userId !== userId) {
-            res.status(403).json({ error: 'Только автор может просматривать аудиторию' });
+            res.status(403).json({ error: 'РўРѕР»СЊРєРѕ Р°РІС‚РѕСЂ РјРѕР¶РµС‚ РїСЂРѕСЃРјР°С‚СЂРёРІР°С‚СЊ Р°СѓРґРёС‚РѕСЂРёСЋ' });
             return;
         }
         const views = await db_1.prisma.storyView.findMany({
@@ -200,7 +200,7 @@ router.get('/:storyId/viewers', async (req, res) => {
     }
     catch (error) {
         console.error('Get story viewers error:', error);
-        res.status(500).json({ error: 'Ошибка получения просмотров' });
+        res.status(500).json({ error: 'РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РїСЂРѕСЃРјРѕС‚СЂРѕРІ' });
     }
 });
 // Get all user stories (for profile tab) - includes expired stories
@@ -220,7 +220,7 @@ router.get('/user/:userId/all', async (req, res) => {
                 },
             });
             if (!friendship) {
-                res.status(403).json({ error: 'Нет доступа' });
+                res.status(403).json({ error: 'РќРµС‚ РґРѕСЃС‚СѓРїР°' });
                 return;
             }
         }
@@ -254,7 +254,7 @@ router.get('/user/:userId/all', async (req, res) => {
     }
     catch (error) {
         console.error('Get user stories error:', error);
-        res.status(500).json({ error: 'Ошибка получения историй' });
+        res.status(500).json({ error: 'РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РёСЃС‚РѕСЂРёР№' });
     }
 });
 // Delete own story
@@ -264,7 +264,7 @@ router.delete('/:storyId', async (req, res) => {
         const storyId = parseInt(req.params.storyId, 10);
         const story = await db_1.prisma.story.findUnique({ where: { id: storyId } });
         if (!story || story.userId !== userId) {
-            res.status(403).json({ error: 'Нет прав' });
+            res.status(403).json({ error: 'РќРµС‚ РїСЂР°РІ' });
             return;
         }
         // Delete media file if present
@@ -275,7 +275,7 @@ router.delete('/:storyId', async (req, res) => {
     }
     catch (error) {
         console.error('Delete story error:', error);
-        res.status(500).json({ error: 'Ошибка удаления истории' });
+        res.status(500).json({ error: 'РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ РёСЃС‚РѕСЂРёРё' });
     }
 });
 exports.default = router;

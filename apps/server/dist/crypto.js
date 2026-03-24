@@ -1,13 +1,13 @@
 "use strict";
 /**
- * Nimbus Server-Side Cryptography
+ * Nexo Server-Side Cryptography
  * Multi-layer encryption for server operations
  */
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NimbusServerCrypto = void 0;
+exports.NexoServerCrypto = void 0;
 exports.generateAESKey = generateAESKey;
 exports.generateRSAKeyPair = generateRSAKeyPair;
 exports.deriveKeyFromPassword = deriveKeyFromPassword;
@@ -28,7 +28,7 @@ exports.completeSessionHandshake = completeSessionHandshake;
 exports.tripleEncrypt = tripleEncrypt;
 exports.tripleDecrypt = tripleDecrypt;
 const crypto_1 = __importDefault(require("crypto"));
-// ─── Constants ────────────────────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Constants в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 const ALGORITHMS = {
     aes256gcm: 'aes-256-gcm',
     chacha20: 'chacha20-poly1305',
@@ -45,7 +45,7 @@ const CONFIG = {
     pbkdf2Iterations: 100000,
     chachaNonceLength: 12,
 };
-// ─── Utility Functions ────────────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Utility Functions в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 function bufferToBase64(buffer) {
     return buffer.toString('base64');
 }
@@ -64,7 +64,7 @@ function constantTimeCompare(a, b) {
     }
     return result === 0;
 }
-// ─── Key Generation ───────────────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Key Generation в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 /**
  * Generate AES-256 key for symmetric encryption
  */
@@ -110,7 +110,7 @@ function deriveKeyHKDF(inputKey, salt, info, length = CONFIG.keyLength) {
     return crypto_1.default.pbkdf2Sync(inputKey, combinedSalt, 10000, // Lower iterations for HKDF
     length, 'sha384');
 }
-// ─── Encryption ───────────────────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Encryption в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 /**
  * Encrypt with AES-256-GCM (primary method)
  */
@@ -179,7 +179,7 @@ function decryptChaCha20(encrypted, key) {
     plaintext = Buffer.concat([plaintext, decipher.final()]);
     return plaintext.toString('utf8');
 }
-// ─── Key Wrapping (RSA) ───────────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Key Wrapping (RSA) в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 /**
  * Wrap symmetric key with RSA public key
  */
@@ -204,7 +204,7 @@ function unwrapKeyWithRSA(wrappedKeyBase64, privateKeyPem) {
         oaepHash: 'sha256',
     }, wrappedKey);
 }
-// ─── Hashing & Authentication ─────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Hashing & Authentication в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 /**
  * Hash with SHA-384
  */
@@ -225,7 +225,7 @@ function verifyHMAC(data, signature, key) {
     const expected = createHMAC(data, key);
     return constantTimeCompare(Buffer.from(signature, 'base64'), Buffer.from(expected, 'base64'));
 }
-// ─── Authenticated Envelopes ──────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Authenticated Envelopes в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 /**
  * Create authenticated encryption envelope
  */
@@ -253,7 +253,7 @@ function verifyAndDecryptEnvelope(envelope, encryptionKey, hmacKey) {
     }
     return decryptMessage(envelope.encrypted, encryptionKey);
 }
-// ─── Session Management ───────────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Session Management в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 /**
  * Create secure session with Perfect Forward Secrecy
  */
@@ -279,7 +279,7 @@ function completeSessionHandshake(wrappedSessionKey, privateKeyPem, salt) {
     const sessionKey = unwrapKeyWithRSA(wrappedSessionKey, privateKeyPem);
     // Derive final key with HKDF
     const saltValue = salt || generateRandomBytes(CONFIG.saltLength);
-    const info = Buffer.from('Nimbus-Session-v1', 'utf8');
+    const info = Buffer.from('Nexo-Session-v1', 'utf8');
     return deriveKeyHKDF(sessionKey, saltValue, info);
 }
 function tripleEncrypt(plaintext, rsaPublicKeyPem) {
@@ -325,8 +325,8 @@ function tripleDecrypt(encrypted, rsaPrivateKeyPem) {
     // Decrypt layer 1
     return decryptMessage(layer1Payload, aesKey);
 }
-// ─── Export ───────────────────────────────────────────────────────────
-exports.NimbusServerCrypto = {
+// в”Ђв”Ђв”Ђ Export в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+exports.NexoServerCrypto = {
     // Key generation
     generateAESKey,
     generateRSAKeyPair,
@@ -359,5 +359,5 @@ exports.NimbusServerCrypto = {
     generateRandomBytes,
     constantTimeCompare,
 };
-exports.default = exports.NimbusServerCrypto;
+exports.default = exports.NexoServerCrypto;
 //# sourceMappingURL=crypto.js.map

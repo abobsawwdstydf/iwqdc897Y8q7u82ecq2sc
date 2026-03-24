@@ -46,11 +46,11 @@ const shared_1 = require("../shared");
 const auth_1 = require("../middleware/auth");
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const router = (0, express_1.Router)();
-// ─── Registration rate limiter: 100 registrations per IP per hour (development friendly) ───
+// в”Ђв”Ђв”Ђ Registration rate limiter: 100 registrations per IP per hour (development friendly) в”Ђв”Ђв”Ђ
 const registerLimiter = (0, express_rate_limit_1.default)({
     windowMs: 60 * 60 * 1000, // 1 hour
     max: 100, // Increased for development
-    message: { error: 'Слишком много регистраций с этого IP. Попробуйте через час.' },
+    message: { error: 'РЎР»РёС€РєРѕРј РјРЅРѕРіРѕ СЂРµРіРёСЃС‚СЂР°С†РёР№ СЃ СЌС‚РѕРіРѕ IP. РџРѕРїСЂРѕР±СѓР№С‚Рµ С‡РµСЂРµР· С‡Р°СЃ.' },
     standardHeaders: true,
     legacyHeaders: false,
     validate: false,
@@ -68,7 +68,7 @@ const MAX_FINGERPRINT_ATTEMPTS = 3; // Max 3 registrations per fingerprint per d
 router.post('/register', registerLimiter, async (req, res) => {
     try {
         const { username, displayName, password, bio, fingerprint, captchaAnswer } = req.body;
-        // ── Fingerprint check ──
+        // в”Ђв”Ђ Fingerprint check в”Ђв”Ђ
         if (fingerprint) {
             const now = Date.now();
             const fpData = fingerprintAttempts.get(fingerprint);
@@ -77,7 +77,7 @@ router.post('/register', registerLimiter, async (req, res) => {
                     // Require captcha after max attempts
                     if (!captchaAnswer) {
                         res.status(403).json({
-                            error: 'Слишком много попыток. Требуется капча.',
+                            error: 'РЎР»РёС€РєРѕРј РјРЅРѕРіРѕ РїРѕРїС‹С‚РѕРє. РўСЂРµР±СѓРµС‚СЃСЏ РєР°РїС‡Р°.',
                             requireCaptcha: true
                         });
                         return;
@@ -90,49 +90,49 @@ router.post('/register', registerLimiter, async (req, res) => {
                 fingerprintAttempts.set(fingerprint, { count: 0, resetAt: now + FINGERPRINT_WINDOW_MS });
             }
         }
-        // ── IP cooldown check ──
+        // в”Ђв”Ђ IP cooldown check в”Ђв”Ђ
         const clientIp = req.ip || req.socket.remoteAddress || 'unknown';
         const lastReg = registrationCooldowns.get(clientIp);
         if (lastReg && Date.now() - lastReg < REGISTRATION_COOLDOWN_MS) {
             const waitSeconds = Math.ceil((REGISTRATION_COOLDOWN_MS - (Date.now() - lastReg)) / 1000);
-            res.status(429).json({ error: `Подождите ${waitSeconds} сек. перед созданием нового аккаунта` });
+            res.status(429).json({ error: `РџРѕРґРѕР¶РґРёС‚Рµ ${waitSeconds} СЃРµРє. РїРµСЂРµРґ СЃРѕР·РґР°РЅРёРµРј РЅРѕРІРѕРіРѕ Р°РєРєР°СѓРЅС‚Р°` });
             return;
         }
-        // ── Daily IP limit (soft limit, can be bypassed with fingerprint) ──
+        // в”Ђв”Ђ Daily IP limit (soft limit, can be bypassed with fingerprint) в”Ђв”Ђ
         const accountsFromIp = await db_1.prisma.user.count({ where: { registrationIp: clientIp, createdAt: { gte: new Date(Date.now() - FINGERPRINT_WINDOW_MS) } } });
         if (accountsFromIp >= config_1.config.maxRegistrationsPerIp && !fingerprint) {
             res.status(403).json({
-                error: `Максимум ${config_1.config.maxRegistrationsPerIp} аккаунтов в день с одного IP. Используйте fingerprint или попробуйте позже.`,
+                error: `РњР°РєСЃРёРјСѓРј ${config_1.config.maxRegistrationsPerIp} Р°РєРєР°СѓРЅС‚РѕРІ РІ РґРµРЅСЊ СЃ РѕРґРЅРѕРіРѕ IP. РСЃРїРѕР»СЊР·СѓР№С‚Рµ fingerprint РёР»Рё РїРѕРїСЂРѕР±СѓР№С‚Рµ РїРѕР·Р¶Рµ.`,
                 requireFingerprint: true
             });
             return;
         }
         if (!username || !password) {
-            res.status(400).json({ error: 'Username и пароль обязательны' });
+            res.status(400).json({ error: 'Username Рё РїР°СЂРѕР»СЊ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹' });
             return;
         }
         if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) {
-            res.status(400).json({ error: 'Username: 3-20 символов, только латиница, цифры, _' });
+            res.status(400).json({ error: 'Username: 3-20 СЃРёРјРІРѕР»РѕРІ, С‚РѕР»СЊРєРѕ Р»Р°С‚РёРЅРёС†Р°, С†РёС„СЂС‹, _' });
             return;
         }
         if (password.length < config_1.config.minPasswordLength) {
-            res.status(400).json({ error: `Пароль должен быть не менее ${config_1.config.minPasswordLength} символов` });
+            res.status(400).json({ error: `РџР°СЂРѕР»СЊ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РЅРµ РјРµРЅРµРµ ${config_1.config.minPasswordLength} СЃРёРјРІРѕР»РѕРІ` });
             return;
         }
         // Password can contain any characters (letters, digits, special chars)
         // No specific character requirements for better UX
         // Validate optional fields
         if (displayName !== undefined && (typeof displayName !== 'string' || displayName.length > 50)) {
-            res.status(400).json({ error: 'Имя должно быть не длиннее 50 символов' });
+            res.status(400).json({ error: 'РРјСЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РЅРµ РґР»РёРЅРЅРµРµ 50 СЃРёРјРІРѕР»РѕРІ' });
             return;
         }
         if (bio !== undefined && (typeof bio !== 'string' || bio.length > 500)) {
-            res.status(400).json({ error: 'Био должно быть не длиннее 500 символов' });
+            res.status(400).json({ error: 'Р‘РёРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РЅРµ РґР»РёРЅРЅРµРµ 500 СЃРёРјРІРѕР»РѕРІ' });
             return;
         }
         const existing = await db_1.prisma.user.findUnique({ where: { username: username.toLowerCase() } });
         if (existing) {
-            res.status(400).json({ error: 'Этот username уже занят' });
+            res.status(400).json({ error: 'Р­С‚РѕС‚ username СѓР¶Рµ Р·Р°РЅСЏС‚' });
             return;
         }
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -160,20 +160,20 @@ router.post('/register', registerLimiter, async (req, res) => {
     }
     catch (error) {
         console.error('Registration error:', error);
-        res.status(500).json({ error: 'Ошибка сервера' });
+        res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
     }
 });
-// Вход
+// Р’С…РѕРґ
 router.post('/login', async (req, res) => {
     try {
         const { username, password } = req.body;
         if (!username || !password) {
-            res.status(400).json({ error: 'Username и пароль обязательны' });
+            res.status(400).json({ error: 'Username Рё РїР°СЂРѕР»СЊ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹' });
             return;
         }
         // Validate username format
         if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) {
-            res.status(400).json({ error: 'Username: 3-20 символов, только латиница, цифры, _' });
+            res.status(400).json({ error: 'Username: 3-20 СЃРёРјРІРѕР»РѕРІ, С‚РѕР»СЊРєРѕ Р»Р°С‚РёРЅРёС†Р°, С†РёС„СЂС‹, _' });
             return;
         }
         const user = await db_1.prisma.user.findUnique({
@@ -181,12 +181,12 @@ router.post('/login', async (req, res) => {
             select: { ...shared_1.USER_SELECT, password: true },
         });
         if (!user) {
-            res.status(400).json({ error: 'Неверный username или пароль' });
+            res.status(400).json({ error: 'РќРµРІРµСЂРЅС‹Р№ username РёР»Рё РїР°СЂРѕР»СЊ' });
             return;
         }
         const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) {
-            res.status(400).json({ error: 'Неверный username или пароль' });
+            res.status(400).json({ error: 'РќРµРІРµСЂРЅС‹Р№ username РёР»Рё РїР°СЂРѕР»СЊ' });
             return;
         }
         await db_1.prisma.user.update({
@@ -199,10 +199,10 @@ router.post('/login', async (req, res) => {
     }
     catch (error) {
         console.error('Login error:', error);
-        res.status(500).json({ error: 'Ошибка сервера' });
+        res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
     }
 });
-// Текущий пользователь — uses authenticateToken middleware instead of duplicating JWT parsing
+// РўРµРєСѓС‰РёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ вЂ” uses authenticateToken middleware instead of duplicating JWT parsing
 router.get('/me', auth_1.authenticateToken, async (req, res) => {
     try {
         const user = await db_1.prisma.user.findUnique({
@@ -210,13 +210,13 @@ router.get('/me', auth_1.authenticateToken, async (req, res) => {
             select: shared_1.USER_SELECT,
         });
         if (!user) {
-            res.status(404).json({ error: 'Пользователь не найден' });
+            res.status(404).json({ error: 'РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РЅР°Р№РґРµРЅ' });
             return;
         }
         res.json({ user });
     }
     catch {
-        res.status(500).json({ error: 'Ошибка сервера' });
+        res.status(500).json({ error: 'РћС€РёР±РєР° СЃРµСЂРІРµСЂР°' });
     }
 });
 exports.default = router;

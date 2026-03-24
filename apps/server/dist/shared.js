@@ -13,7 +13,7 @@ const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const uuid_1 = require("uuid");
 const encrypt_1 = require("./encrypt");
-// ─── Prisma select objects ────────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Prisma select objects в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 /** Standard user fields to include in API responses (excludes password) */
 exports.USER_SELECT = {
     id: true,
@@ -49,7 +49,7 @@ exports.MESSAGE_INCLUDE = {
     },
     readBy: { select: { userId: true } },
 };
-// ─── File system helpers ──────────────────────────────────────────────
+// в”Ђв”Ђв”Ђ File system helpers в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 const uploadsRoot = path_1.default.join(__dirname, '../uploads');
 /** Ensure a directory exists (recursive). */
 function ensureDir(dirPath) {
@@ -64,7 +64,7 @@ function deleteUploadedFile(urlPath) {
     try {
         const filename = urlPath.replace(/^\/uploads\//, '');
         const filePath = path_1.default.resolve(uploadsRoot, filename);
-        // Path containment check — prevent directory traversal
+        // Path containment check вЂ” prevent directory traversal
         if (!filePath.startsWith(uploadsRoot)) {
             console.error('Path traversal attempt blocked:', urlPath);
             return;
@@ -77,7 +77,7 @@ function deleteUploadedFile(urlPath) {
         console.error('Failed to delete file:', urlPath, e);
     }
 }
-// ─── Multer configurations ───────────────────────────────────────────
+// в”Ђв”Ђв”Ђ Multer configurations в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 const avatarsDir = path_1.default.join(uploadsRoot, 'avatars');
 ensureDir(avatarsDir);
 ensureDir(uploadsRoot);
@@ -101,7 +101,7 @@ exports.uploadUserAvatar = (0, multer_1.default)({
         if (file.mimetype.startsWith('image/') && exports.ALLOWED_IMAGE_EXTENSIONS.has(ext))
             cb(null, true);
         else
-            cb(new Error('Только изображения (jpg, png, gif, webp, avif)'));
+            cb(new Error('РўРѕР»СЊРєРѕ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ (jpg, png, gif, webp, avif)'));
     },
 });
 /** Multer middleware for group avatar uploads (max 5MB, images only). */
@@ -113,7 +113,7 @@ exports.uploadGroupAvatar = (0, multer_1.default)({
         if (file.mimetype.startsWith('image/') && exports.ALLOWED_IMAGE_EXTENSIONS.has(ext))
             cb(null, true);
         else
-            cb(new Error('Только изображения (jpg, png, gif, webp, avif)'));
+            cb(new Error('РўРѕР»СЊРєРѕ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ (jpg, png, gif, webp, avif)'));
     },
 });
 /** Blocked file extensions that could be served as executable content (kept minimal for functionality). */
@@ -163,14 +163,14 @@ exports.uploadFile = (0, multer_1.default)({
         }
         // Block dangerous executable extensions
         if (BLOCKED_EXTENSIONS.has(ext)) {
-            cb(new Error('Этот тип файла не разрешён'));
+            cb(new Error('Р­С‚РѕС‚ С‚РёРї С„Р°Р№Р»Р° РЅРµ СЂР°Р·СЂРµС€С‘РЅ'));
             return;
         }
         // Allow ALL other files by default (generic files)
         cb(null, true);
     },
 });
-// ─── Post-upload file encryption middleware ───────────────────────────
+// в”Ђв”Ђв”Ђ Post-upload file encryption middleware в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
 /**
  * Express middleware that encrypts an uploaded file in-place after multer
  * has written it to disk. Use after any multer middleware.
@@ -183,7 +183,7 @@ function encryptUploadedFile(req, _res, next) {
         if (req.file) {
             (0, encrypt_1.encryptFileInPlace)(req.file.path);
         }
-        // Multiple files (req.files) — handle both array and field-keyed forms
+        // Multiple files (req.files) вЂ” handle both array and field-keyed forms
         if (req.files) {
             const files = Array.isArray(req.files)
                 ? req.files
@@ -195,7 +195,7 @@ function encryptUploadedFile(req, _res, next) {
     }
     catch (e) {
         console.error('File encryption error:', e);
-        // Don't block the request — file is already saved, just unencrypted
+        // Don't block the request вЂ” file is already saved, just unencrypted
     }
     next();
 }

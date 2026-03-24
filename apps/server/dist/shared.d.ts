@@ -1,4 +1,4 @@
-﻿import multer from 'multer';
+import multer from 'multer';
 import { Request, Response, NextFunction } from 'express';
 /** Standard user fields to include in API responses (excludes password) */
 export declare const USER_SELECT: {

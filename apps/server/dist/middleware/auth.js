@@ -40,7 +40,7 @@ function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
     if (!token) {
-        res.status(401).json({ error: 'Требуется авторизация' });
+        res.status(401).json({ error: 'РўСЂРµР±СѓРµС‚СЃСЏ Р°РІС‚РѕСЂРёР·Р°С†РёСЏ' });
         return;
     }
     try {
@@ -49,7 +49,7 @@ function authenticateToken(req, res, next) {
         next();
     }
     catch {
-        res.status(403).json({ error: 'Недействительный токен' });
+        res.status(403).json({ error: 'РќРµРґРµР№СЃС‚РІРёС‚РµР»СЊРЅС‹Р№ С‚РѕРєРµРЅ' });
         return;
     }
 }

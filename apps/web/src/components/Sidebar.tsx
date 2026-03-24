@@ -70,6 +70,16 @@ export default function Sidebar({ onChatSelect, isOpen = true, onClose }: Sideba
     return 0;
   });
 
+  // Ensure favorites chat exists
+  useEffect(() => {
+    const hasFavorites = chats.some(c => c.type === 'favorites');
+    if (!hasFavorites && !searchQuery) {
+      api.getOrCreateFavorites().then(() => {
+        useChatStore.getState().loadChats();
+      }).catch(console.error);
+    }
+  }, [chats, searchQuery]);
+
   const handleLogout = () => {
     clearStore();
     logout();
