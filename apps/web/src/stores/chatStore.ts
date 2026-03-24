@@ -367,7 +367,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       chats: state.chats.map((chat) => ({
         ...chat,
         members: chat.members.map((m) =>
-          m.user.id === userId
+          m?.user?.id === userId
             ? { ...m, user: { ...m.user, isOnline, lastSeen: lastSeen || m.user.lastSeen } }
             : m
         ),

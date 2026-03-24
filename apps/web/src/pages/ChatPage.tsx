@@ -307,7 +307,6 @@ export default function ChatPage() {
         <Sidebar 
           onChatSelect={() => setShowMobileList(false)}
           isOpen={true}
-          onClose={() => setShowMobileList(false)}
         />
       </div>
 

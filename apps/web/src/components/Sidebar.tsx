@@ -26,10 +26,9 @@ const API_URL = import.meta.env.VITE_API_URL || '';
 interface SidebarProps {
   onChatSelect?: () => void;
   isOpen?: boolean;
-  onClose?: () => void;
 }
 
-export default function Sidebar({ onChatSelect, isOpen = true, onClose }: SidebarProps) {
+export default function Sidebar({ onChatSelect, isOpen = true }: SidebarProps) {
   const { user, logout } = useAuthStore();
   const { chats, activeChat, searchQuery, setSearchQuery, clearStore } = useChatStore();
   const { t } = useLang();
@@ -87,11 +86,6 @@ export default function Sidebar({ onChatSelect, isOpen = true, onClose }: Sideba
 
   return (
     <>
-      {/* Mobile overlay */}
-      {!isOpen && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden" onClick={onClose} />
-      )}
-      
       <div className={`
         fixed md:static inset-y-0 left-0 z-50 md:z-auto
         w-[340px] h-full flex flex-col bg-surface-secondary rounded-3xl overflow-hidden border border-border/50 shadow-2xl relative z-10
@@ -101,14 +95,6 @@ export default function Sidebar({ onChatSelect, isOpen = true, onClose }: Sideba
       `}>
         {/* Шапка */}
         <div className="h-[76px] px-4 flex items-center gap-3 border-b border-border/40 bg-surface-secondary flex-shrink-0">
-          {/* Close button for mobile */}
-          <button
-            onClick={onClose}
-            className="md:hidden p-2 rounded-lg hover:bg-surface-hover transition-colors text-zinc-400 hover:text-white"
-          >
-            <X size={20} />
-          </button>
-          
           <button
             onClick={() => setShowSideMenu(true)}
             className="p-2 rounded-lg hover:bg-surface-hover transition-colors text-zinc-400 hover:text-white"
