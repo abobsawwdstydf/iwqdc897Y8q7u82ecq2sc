@@ -79,7 +79,7 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
   const deleteMenuRef = useRef<HTMLDivElement>(null);
   const chatViewRef = useRef<HTMLDivElement>(null);
 
-  const chat = chats.find((c) => c.id === activeChat);
+  const chat = chats.find((c) => c?.id === activeChat);
   const chatMessages = activeChat ? messages[activeChat] || [] : [];
   const pinnedMsg = activeChat ? pinnedMessages[activeChat] : null;
 
@@ -88,12 +88,12 @@ export default function ChatView({ onStartCall, onStartGroupCall, onStartStream,
     (m) => m.senderId !== user?.id && !m.readBy?.some((r) => r.userId === user?.id)
   ).length;
 
-  const otherMember = chat?.members.find((m) => m.user.id !== user?.id);
+  const otherMember = chat?.members?.find((m) => m?.user?.id !== user?.id);
   const isFavorites = chat?.type === 'favorites';
   const chatName = isFavorites
     ? t('favorites')
     : chat?.type === 'personal'
-      ? otherMember?.user.displayName || otherMember?.user.username || t('chat')
+      ? otherMember?.user?.displayName || otherMember?.user?.username || t('chat')
       : chat?.name || t('group');
   const chatAvatar = isFavorites
     ? null
