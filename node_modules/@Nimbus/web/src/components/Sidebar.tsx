@@ -7,22 +7,18 @@ import {
   MessageSquare,
   X,
   User as UserIcon,
-  Folder,
 } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
 import { useChatStore } from '../stores/chatStore';
-import { useFolderStore } from '../stores/folderStore';
 import { useLang } from '../lib/i18n';
 import { api } from '../lib/api';
 import { getInitials, generateAvatarColor } from '../lib/utils';
 import Avatar from './Avatar';
 import { StoryGroup } from '../lib/types';
 import ChatListItem from './ChatListItem';
-import ChatFolderTab from './ChatFolderTab';
 import NewChatModal from './NewChatModal';
 import UserProfile from './UserProfile';
 import SideMenu from './SideMenu';
-import ChatFolderModal from './ChatFolderModal';
 import StoryViewer, { CreateStoryModal } from './StoryViewer';
 
 const API_URL = import.meta.env.VITE_API_URL || '';
@@ -36,7 +32,6 @@ interface SidebarProps {
 export default function Sidebar({ onChatSelect, isOpen = true, onClose }: SidebarProps) {
   const { user, logout } = useAuthStore();
   const { chats, activeChat, searchQuery, setSearchQuery, clearStore } = useChatStore();
-  const { folders, activeFolder, setActiveFolder, loadFolders, builtInFolders } = useFolderStore();
   const { t } = useLang();
   const [showNewChat, setShowNewChat] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
@@ -44,7 +39,6 @@ export default function Sidebar({ onChatSelect, isOpen = true, onClose }: Sideba
   const [storyGroups, setStoryGroups] = useState<StoryGroup[]>([]);
   const [storyViewerIndex, setStoryViewerIndex] = useState<number | null>(null);
   const [showCreateStory, setShowCreateStory] = useState(false);
-  const [showFolderModal, setShowFolderModal] = useState(false);
 
   const loadStories = () => {
     api.getStories().then(setStoryGroups).catch(console.error);
@@ -52,7 +46,6 @@ export default function Sidebar({ onChatSelect, isOpen = true, onClose }: Sideba
 
   useEffect(() => {
     loadStories();
-    loadFolders();
     const interval = setInterval(loadStories, 30000);
     return () => clearInterval(interval);
   }, []);
@@ -69,28 +62,6 @@ export default function Sidebar({ onChatSelect, isOpen = true, onClose }: Sideba
             m.user.displayName.toLowerCase().includes(q))
       );
     }
-
-    // Folder filter
-    if (activeFolder === 'unread') {
-      return chat.unreadCount > 0;
-    }
-    if (activeFolder === 'personal') {
-      return chat.type === 'personal';
-    }
-    if (activeFolder === 'groups') {
-      return chat.type === 'group';
-    }
-    if (activeFolder === 'channels') {
-      return chat.type === 'channel';
-    }
-    if (typeof activeFolder === 'number') {
-      // Custom folder
-      const folder = folders.find((f) => f.id === activeFolder);
-      if (folder) {
-        return folder.chats.some((fc) => fc.chatId === chat.id);
-      }
-    }
-    // 'all' or default - show all chats
     return true;
   }).sort((a, b) => {
     // Favorites chat always on top
@@ -167,46 +138,6 @@ export default function Sidebar({ onChatSelect, isOpen = true, onClose }: Sideba
                 <X size={14} />
               </button>
             )}
-          </div>
-        </div>
-
-        {/* Папки чатов */}
-        <div className="px-4 pb-3 border-b border-border/20 flex-shrink-0">
-          <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
-            {/* Built-in folders */}
-            {builtInFolders.map((folder) => (
-              <ChatFolderTab
-                key={folder.type}
-                folder={folder}
-                isActive={activeFolder === folder.type}
-                onClick={() => setActiveFolder(folder.type)}
-              />
-            ))}
-            
-            {/* Custom folders */}
-            {folders.map((folder) => (
-              <ChatFolderTab
-                key={folder.id}
-                folder={{
-                  id: folder.id,
-                  name: folder.name,
-                  icon: folder.icon,
-                  color: folder.color,
-                  count: folder.chats.length,
-                }}
-                isActive={activeFolder === folder.id}
-                onClick={() => setActiveFolder(folder.id)}
-              />
-            ))}
-            
-            {/* Add folder button */}
-            <button
-              onClick={() => setShowFolderModal(true)}
-              className="flex items-center gap-1 px-2 py-2 rounded-xl text-sm font-medium text-zinc-500 hover:bg-white/5 hover:text-white transition-all"
-              title={t('addFolder') || 'Добавить папку'}
-            >
-              <Plus size={14} />
-            </button>
           </div>
         </div>
 
@@ -304,16 +235,6 @@ export default function Sidebar({ onChatSelect, isOpen = true, onClose }: Sideba
           />
         )}
       </AnimatePresence>
-      
-      {/* Chat Folder Modal */}
-      <ChatFolderModal
-        isOpen={showFolderModal}
-        onClose={() => setShowFolderModal(false)}
-        onSuccess={() => {
-          loadFolders();
-          setShowFolderModal(false);
-        }}
-      />
     </>
   );
 }
