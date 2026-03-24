@@ -290,15 +290,33 @@ export default function ChatPage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="h-full flex bg-surface p-3 gap-3 overflow-hidden"
+      className="h-full w-full flex bg-surface p-2 md:p-3 gap-2 md:gap-3 overflow-hidden"
     >
-      {/* Sidebar - hidden on mobile when viewing chat */}
-      <div className={`${showMobileList ? 'flex' : 'hidden'} md:flex flex-shrink-0`}>
+      {/* Sidebar - на мобильных на весь экран, на ПК слева */}
+      <div className={`
+        ${showMobileList ? 'flex' : 'hidden'} 
+        md:flex 
+        flex-shrink-0 
+        w-full md:w-auto
+        md:min-w-[340px]
+        absolute md:relative
+        inset-0 md:inset-auto
+        z-20 md:z-auto
+      `}>
         <Sidebar onChatSelect={() => setShowMobileList(false)} />
       </div>
-      
-      {/* ChatView - hidden on mobile when showing list */}
-      <div className={`${!showMobileList ? 'flex' : 'hidden'} md:flex flex-1 min-w-0`}>
+
+      {/* ChatView - на мобильных на весь экран, на ПК справа */}
+      <div className={`
+        ${!showMobileList ? 'flex' : 'hidden'} 
+        md:flex 
+        flex-1 
+        min-w-0
+        absolute md:relative
+        inset-0 md:inset-auto
+        z-20 md:z-auto
+        w-full md:w-auto
+      `}>
         <ChatView
           onStartCall={handleStartCall}
           onStartGroupCall={handleStartGroupCall}

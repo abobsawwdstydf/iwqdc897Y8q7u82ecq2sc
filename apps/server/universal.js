@@ -1017,7 +1017,15 @@ setInterval(cleanupExpiredStories, 10 * 60 * 1000);
 
 if (process.env.NODE_ENV === 'production') {
   const webDist = path.join(__dirname, '../web/dist');
+  
+  // API routes должны обрабатываться ДО SPA routing
+  // SPA routing только для не-API путей
   app.get('*', (req, res) => {
+    // Не перехватываем API запросы
+    if (req.path.startsWith('/api/') || req.path.startsWith('/socket.io/')) {
+      return res.status(404).json({ error: 'API endpoint not found' });
+    }
+    
     const fs = require('fs');
     if (fs.existsSync(path.join(webDist, 'index.html'))) {
       res.sendFile(path.join(webDist, 'index.html'));
