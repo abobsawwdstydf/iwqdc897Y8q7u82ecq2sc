@@ -201,11 +201,11 @@ export default function Sidebar({ onChatSelect, isOpen = true, onClose }: Sideba
 
         {/* Список чатов */}
         <div className="flex-1 overflow-y-auto">
-          {filteredChats.length === 0 ? (
+          {filteredChats.length === 0 && searchQuery ? (
             <div className="flex flex-col items-center justify-center h-full text-zinc-500 gap-3 px-6">
               <MessageSquare size={40} className="opacity-30" />
               <p className="text-sm text-center">
-                {searchQuery ? t('nothingFound') : t('noChats')}
+                {t('nothingFound')}
               </p>
             </div>
           ) : (
