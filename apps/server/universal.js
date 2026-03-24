@@ -445,6 +445,19 @@ const upload = multer({
 });
 
 // ============================================
+// FRONTEND (Production)
+// ============================================
+
+if (process.env.NODE_ENV === 'production') {
+  const webDist = path.join(__dirname, '../../web/dist');
+  console.log(`📁 Frontend: ${webDist}`);
+  app.use(express.static(webDist, {
+    maxAge: '1d',
+    etag: true
+  }));
+}
+
+// ============================================
 // AUTH ROUTES
 // ============================================
 
@@ -995,6 +1008,17 @@ async function cleanupExpiredStories() {
 }
 
 setInterval(cleanupExpiredStories, 10 * 60 * 1000);
+
+// ============================================
+// 404 Handler (SPA Routing)
+// ============================================
+
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+    const webDist = path.join(__dirname, '../../web/dist');
+    res.sendFile(path.join(webDist, 'index.html'));
+  });
+}
 
 // Старт
 start();
