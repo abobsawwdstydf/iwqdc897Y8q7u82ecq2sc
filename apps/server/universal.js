@@ -449,12 +449,21 @@ const upload = multer({
 // ============================================
 
 if (process.env.NODE_ENV === 'production') {
-  const webDist = path.join(__dirname, '../../web/dist');
+  // Путь к фронтенду на Render: apps/web/dist
+  const webDist = path.join(__dirname, '../web/dist');
   console.log(`📁 Frontend: ${webDist}`);
-  app.use(express.static(webDist, {
-    maxAge: '1d',
-    etag: true
-  }));
+  
+  // Проверяем существует ли директория
+  const fs = require('fs');
+  if (fs.existsSync(webDist)) {
+    app.use(express.static(webDist, {
+      maxAge: '1d',
+      etag: true
+    }));
+    console.log('✅ Frontend static files enabled');
+  } else {
+    console.warn('⚠️  Frontend dist not found at:', webDist);
+  }
 }
 
 // ============================================
@@ -1014,9 +1023,18 @@ setInterval(cleanupExpiredStories, 10 * 60 * 1000);
 // ============================================
 
 if (process.env.NODE_ENV === 'production') {
+  const webDist = path.join(__dirname, '../web/dist');
   app.get('*', (req, res) => {
-    const webDist = path.join(__dirname, '../../web/dist');
-    res.sendFile(path.join(webDist, 'index.html'));
+    const fs = require('fs');
+    if (fs.existsSync(path.join(webDist, 'index.html'))) {
+      res.sendFile(path.join(webDist, 'index.html'));
+    } else {
+      res.status(404).json({ 
+        error: 'Frontend not found',
+        path: webDist,
+        message: 'Build may not have completed yet'
+      });
+    }
   });
 }
 
