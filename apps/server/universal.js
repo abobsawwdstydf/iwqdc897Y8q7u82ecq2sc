@@ -478,21 +478,20 @@ app.post('/api/auth/register', authLimiter, async (req, res) => {
       return res.status(400).json({ error: 'Username и пароль обязательны' });
     }
 
-    // Проверяем существует ли пользователь (используем raw query для надёжности)
+    // Проверяем существует ли пользователь
     const existing = await db.query('SELECT id FROM "User" WHERE username = $1', [username]);
     if (existing.rows.length > 0) {
       return res.status(400).json({ error: 'Пользователь уже существует' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const userId = await bcrypt.hash(Date.now().toString(), 10);
 
     // Создаём пользователя через raw query
     const newUser = await db.query(
       `INSERT INTO "User" (username, "displayName", password, bio, "registrationIp", fingerprint, "createdAt", "lastSeen", "isOnline")
        VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW(), false)
        RETURNING id, username, "displayName", avatar, bio, "isOnline", "lastSeen", "createdAt"`,
-      [username, displayName || username, hashedPassword, bio || '', req.ip, fingerprint]
+      [username, displayName || username, hashedPassword, bio || '', req.ip || null, fingerprint || null]
     );
 
     const user = {
@@ -501,7 +500,7 @@ app.post('/api/auth/register', authLimiter, async (req, res) => {
       displayName: newUser.rows[0].displayname || newUser.rows[0].username,
       avatar: newUser.rows[0].avatar,
       bio: newUser.rows[0].bio,
-      isOnline: newUser.rows[0].isonline,
+      isOnline: newUser.rows[0].isonline === 't' || newUser.rows[0].isonline === true,
       lastSeen: newUser.rows[0].lastseen,
       createdAt: newUser.rows[0].createdat
     };
