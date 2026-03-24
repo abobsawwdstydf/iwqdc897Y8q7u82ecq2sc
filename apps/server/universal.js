@@ -93,7 +93,7 @@ const db = new Pool({
 });
 
 // ============================================
-// 💾 REDIS (ОПЦИОНАЛЬНО)
+// 💾 REDIS (ОПЦИОНАЛЬНО + ПОДДЕРЖКА НЕСКОЛЬКИХ URL)
 // ============================================
 
 let redis = null;
@@ -101,48 +101,71 @@ let redisAvailable = false;
 
 async function initRedis() {
   try {
-    const redisUrl = process.env.REDIS_URL || process.env.REDISCLOUD_URL;
+    // Поддержка нескольких URL через запятую
+    const redisUrlsEnv = process.env.REDIS_URL || process.env.REDISCLOUD_URL;
     
-    if (!redisUrl) {
+    if (!redisUrlsEnv) {
       console.log('⚠️  Redis не настроен (REDIS_URL не указан)');
       console.log('⚠️  Очередь файлов будет работать в памяти (медленнее)');
       return;
     }
     
-    redis = new Redis(redisUrl, {
-      maxRetriesPerRequest: 3,
-      retryStrategy: (times) => {
-        if (times > 3) {
-          console.error('❌ Redis не подключился после 3 попыток');
-          return null;
-        }
-        return Math.min(times * 200, 2000);
-      }
-    });
+    // Разбиваем на несколько URL (через запятую или точку с запятой)
+    const redisUrls = redisUrlsEnv.split(/[;,]/).map(url => url.trim()).filter(url => url.length > 0);
     
-    redis.on('error', (err) => {
-      console.error('❌ Redis error:', err.message);
-      redisAvailable = false;
-    });
+    console.log(`🔍 Redis URLs: ${redisUrls.length} (${redisUrls.map(u => u.replace(/\/\/[^@]+@/, '//***@')).join(', ')})`);
     
-    redis.on('connect', () => {
-      console.log('✅ Redis подключён');
-      redisAvailable = true;
-    });
-    
-    // Ждём подключения 5 секунд
-    await new Promise((resolve) => {
-      const timer = setTimeout(resolve, 5000);
-      if (redis) {
-        redis.once('connect', () => {
-          clearTimeout(timer);
-          resolve();
+    // Пытаемся подключиться к каждому по очереди
+    for (const url of redisUrls) {
+      try {
+        console.log(`🔄 Подключение к Redis: ${url.replace(/\/\/[^@]+@/, '//***@')}...`);
+        
+        redis = new Redis(url, {
+          maxRetriesPerRequest: 3,
+          retryStrategy: (times) => {
+            if (times > 3) {
+              console.error(`❌ Redis ${url.replace(/\/\/[^@]+@/, '//***@')} не подключился после 3 попыток`);
+              return null;
+            }
+            return Math.min(times * 200, 2000);
+          }
         });
+        
+        // Ждём подключения 5 секунд
+        await new Promise((resolve, reject) => {
+          const timer = setTimeout(() => reject(new Error('Timeout')), 5000);
+          redis.once('connect', () => {
+            clearTimeout(timer);
+            resolve();
+          });
+          redis.once('error', (err) => {
+            clearTimeout(timer);
+            reject(err);
+          });
+        });
+        
+        console.log(`✅ Redis подключён: ${url.replace(/\/\/[^@]+@/, '//***@')}`);
+        redisAvailable = true;
+        break; // Успешно подключились
+        
+      } catch (err) {
+        console.error(`⚠️  Не удалось подключиться к Redis: ${url.replace(/\/\/[^@]+@/, '//***@')} - ${err.message}`);
+        redis = null;
+        
+        // Пробуем следующий URL
+        if (redisUrls.indexOf(url) < redisUrls.length - 1) {
+          console.log('🔄 Пробуем следующий Redis URL...');
+        }
       }
-    });
+    }
+    
+    if (!redisAvailable) {
+      console.error('❌ Не удалось подключиться ни к одному Redis серверу');
+      console.log('⚠️  Очередь файлов будет работать в памяти (медленнее)');
+    }
     
   } catch (err) {
-    console.error('⚠️  Redis не подключился:', err.message);
+    console.error('❌ Redis не подключился:', err.message);
     redisAvailable = false;
   }
 }
