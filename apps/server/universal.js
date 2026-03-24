@@ -472,7 +472,7 @@ if (process.env.NODE_ENV === 'production') {
 
 app.post('/api/auth/register', authLimiter, async (req, res) => {
   try {
-    const { username, displayName, password, bio, fingerprint } = req.body;
+    const { username, displayName, password, bio } = req.body;
 
     if (!username || !password) {
       return res.status(400).json({ error: 'Username и пароль обязательны' });
@@ -486,12 +486,12 @@ app.post('/api/auth/register', authLimiter, async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Создаём пользователя через raw query
+    // Создаём пользователя через raw query (без fingerprint - нет такой колонки)
     const newUser = await db.query(
-      `INSERT INTO "User" (username, "displayName", password, bio, "registrationIp", fingerprint, "createdAt", "lastSeen", "isOnline")
-       VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW(), false)
+      `INSERT INTO "User" (username, "displayName", password, bio, "createdAt", "lastSeen", "isOnline")
+       VALUES ($1, $2, $3, $4, NOW(), NOW(), false)
        RETURNING id, username, "displayName", avatar, bio, "isOnline", "lastSeen", "createdAt"`,
-      [username, displayName || username, hashedPassword, bio || '', req.ip || null, fingerprint || null]
+      [username, displayName || username, hashedPassword, bio || '']
     );
 
     const user = {
