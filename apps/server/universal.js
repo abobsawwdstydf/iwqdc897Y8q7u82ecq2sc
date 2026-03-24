@@ -93,19 +93,59 @@ const db = new Pool({
 });
 
 // ============================================
-// 💾 REDIS
+// 💾 REDIS (ОПЦИОНАЛЬНО)
 // ============================================
 
-const redis = new Redis(config.redisUrl, {
-  maxRetriesPerRequest: 3,
-  retryStrategy: (times) => {
-    if (times > 3) return null;
-    return Math.min(times * 200, 2000);
-  }
-});
+let redis = null;
+let redisAvailable = false;
 
-redis.on('error', (err) => console.error('❌ Redis error:', err.message));
-redis.on('connect', () => console.log('✅ Redis подключён'));
+async function initRedis() {
+  try {
+    const redisUrl = process.env.REDIS_URL || process.env.REDISCLOUD_URL;
+    
+    if (!redisUrl) {
+      console.log('⚠️  Redis не настроен (REDIS_URL не указан)');
+      console.log('⚠️  Очередь файлов будет работать в памяти (медленнее)');
+      return;
+    }
+    
+    redis = new Redis(redisUrl, {
+      maxRetriesPerRequest: 3,
+      retryStrategy: (times) => {
+        if (times > 3) {
+          console.error('❌ Redis не подключился после 3 попыток');
+          return null;
+        }
+        return Math.min(times * 200, 2000);
+      }
+    });
+    
+    redis.on('error', (err) => {
+      console.error('❌ Redis error:', err.message);
+      redisAvailable = false;
+    });
+    
+    redis.on('connect', () => {
+      console.log('✅ Redis подключён');
+      redisAvailable = true;
+    });
+    
+    // Ждём подключения 5 секунд
+    await new Promise((resolve) => {
+      const timer = setTimeout(resolve, 5000);
+      if (redis) {
+        redis.once('connect', () => {
+          clearTimeout(timer);
+          resolve();
+        });
+      }
+    });
+    
+  } catch (err) {
+    console.error('⚠️  Redis не подключился:', err.message);
+    redisAvailable = false;
+  }
+}
 
 // ============================================
 // 🔐 ШИФРОВАНИЕ (ДВОЙНОЕ)
@@ -866,6 +906,9 @@ async function start() {
     // Создание таблиц
     await createTables();
     
+    // Инициализация Redis (опционально)
+    await initRedis();
+    
     // Инициализация ресурсов
     await initResources();
     
@@ -886,6 +929,7 @@ async function start() {
 ║  Режим: ${(process.env.NODE_ENV || 'development').padEnd(44)}║
 ║  Шифрование: Клиент + Сервер ${''.padEnd(26)}║
 ║  Хранение: Telegram + Discord (БЕЗ локальных файлов)      ║
+║  Redis: ${redisAvailable ? 'Подключён' : 'Не подключён (опционально)'} ${redisAvailable ? ' '.repeat(21) : ' '.repeat(28)}║
 ╠═══════════════════════════════════════════════════════════╣
 ║  📍 РАБОТАЕТ: Render, VDS, Docker, Local                 ║
 ║  🔐 ДВОЙНОЕ ШИФРОВАНИЕ: 20 методов                       ║
