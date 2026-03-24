@@ -724,8 +724,63 @@ function authenticateToken(req, res, next) {
 }
 
 // ============================================
-// API - ХРАНИЛИЩЕ (С ДВОЙНЫМ ШИФРОВАНИЕМ)
+// API: MESSAGES
 // ============================================
+
+app.get('/api/messages/chat/:chatId', authenticateToken, async (req, res) => {
+  try {
+    const chatId = parseInt(req.params.chatId, 10);
+    
+    // Проверяем членство в чате
+    const member = await db.query(
+      'SELECT id FROM "ChatMember" WHERE "chatId" = $1 AND "userId" = $2',
+      [chatId, req.userId]
+    );
+    
+    if (member.rows.length === 0) {
+      return res.status(403).json({ error: 'Нет доступа к чату' });
+    }
+    
+    const messages = await db.query(
+      `SELECT m.*,
+              json_build_object(
+                'id', s.id,
+                'username', s.username,
+                'displayName', s."displayName",
+                'avatar', s.avatar
+              ) as sender,
+              json_build_object(
+                'id', r.id,
+                'username', r.username,
+                'displayName', r."displayName"
+              ) as "replyTo",
+              json_agg(
+                json_build_object(
+                  'id', media.id,
+                  'type', media.type,
+                  'url', media.url,
+                  'filename', media.filename,
+                  'size', media.size,
+                  'duration', media.duration
+                )
+              ) as media
+       FROM "Message" m
+       LEFT JOIN "User" s ON m."senderId" = s.id
+       LEFT JOIN "User" r ON m."replyToId" = r.id
+       LEFT JOIN "Media" media ON m.id = media."messageId"
+       WHERE m."chatId" = $1 AND m."isDeleted" = false
+       GROUP BY m.id, s.id, r.id
+       ORDER BY m."createdAt" ASC
+       LIMIT 100`,
+      [chatId]
+    );
+    
+    res.json(messages.rows);
+  } catch (err) {
+    console.error('Get messages error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // Загрузка: клиент шифрует → сервер шифрует ещё раз → TG/DC
 app.post('/api/upload', authenticateToken, upload.single('file'), async (req, res) => {
